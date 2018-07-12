@@ -27,6 +27,19 @@ uint16_t coine[COINCNUM][COIN_TYPE_NUM]=     // 由币种决定
 {200,	100,50,20,10,5,2,1,0, 0, 	0},//英镑的 的面值 倍数
 };
 
+void save_coin_number (void)
+{
+	para_set_value.data.m_1yuan += *(pre_value.country[COUNTRY_ID].coin[0].data.p_pre_count_cur);
+	para_set_value.data.m_5jiao += (*(pre_value.country[COUNTRY_ID].coin[1].data.p_pre_count_cur));
+	para_set_value.data.m_1jiao_big += (*(pre_value.country[COUNTRY_ID].coin[3].data.p_pre_count_cur));
+	para_set_value.data.m_1jiao += (*(pre_value.country[COUNTRY_ID].coin[4].data.p_pre_count_cur));
+	para_set_value.data.m_5fen +=  *(pre_value.country[COUNTRY_ID].coin[6].data.p_pre_count_cur);
+	para_set_value.data.m_2fen +=  *(pre_value.country[COUNTRY_ID].coin[7].data.p_pre_count_cur);
+	para_set_value.data.m_1fen +=  *(pre_value.country[COUNTRY_ID].coin[8].data.p_pre_count_cur);
+	para_set_value.data.m_10yuan +=  *(pre_value.country[COUNTRY_ID].coin[9].data.p_pre_count_cur);
+	para_set_value.data.m_5yuan +=  *(pre_value.country[COUNTRY_ID].coin[10].data.p_pre_count_cur);
+	write_para ();
+}
 
 void prepare_coin_cmp_value (void)
 {
@@ -92,32 +105,32 @@ int16_t is_good_coin (void)
 
 void coin_recv1_out_func(void)
 {
-	cy_println ("kick 1 out");
+	//cy_println ("kick 1 out");
 	EMKICK1(STARTRUN);
 }
 void coin_recv2_out_func(void)
 {
-	cy_println ("kick 2 out");
+	//cy_println ("kick 2 out");
 	EMKICK2(STARTRUN);
 }
 void coin_recv3_out_func(void)
 {
-	cy_println ("kick 3 out");
+	//cy_println ("kick 3 out");
 	EMKICK3(STARTRUN);
 }
 void coin_recv1_in_func(void)
 {
-	cy_println ("kick 1 in");
+	//cy_println ("kick 1 in");
 	EMKICK1(STOPRUN);
 }
 void coin_recv2_in_func(void)
 {
-	cy_println ("kick 2 in");
+	//cy_println ("kick 2 in");
 	EMKICK2(STOPRUN);
 }
 void coin_recv3_in_func(void)
 {
-	cy_println ("kick 3 in");
+	//cy_println ("kick 3 in");
 	EMKICK3(STOPRUN);
 }
 	

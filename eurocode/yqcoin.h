@@ -23,6 +23,7 @@ extern s_processed_coin_info processed_coin_info;
 #define COINCNUM 4     //目前 可以 计数的 国家币种  的总数量 
 
 void cy_precoincount(void);	// 鉴伪计数
+void save_coin_number (void);
 extern  uint16_t ccstep;
 
 extern  uint32_t coinlearnnumber;

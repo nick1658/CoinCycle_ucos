@@ -271,7 +271,9 @@ void Task1(void *pdata)
 		for (i = 0; i < HOPPER_NUM; i++){
 			if (para_set_value.data.hopper_output_timeout[i] > 0){
 				para_set_value.data.hopper_output_timeout[i]--;
-				if (para_set_value.data.hopper_output_timeout[i] == 0){
+				if ((para_set_value.data.hopper_output_timeout[0] == 0) && 
+					(para_set_value.data.hopper_output_timeout[1] == 0) &&
+					(para_set_value.data.hopper_output_timeout[2] == 0)){
 					cy_println ("hopper %d output coin timeout", i);
 					BELT_MOTOR_STOPRUN();   //斗送入电机
 					cy_println ("stop belt motor 0");
@@ -281,8 +283,14 @@ void Task1(void *pdata)
 		if (para_set_value.data.belt_runtime > 0){
 			para_set_value.data.belt_runtime--;
 			if (para_set_value.data.belt_runtime == 0){
+				if ((para_set_value.data.hopper_output_timeout[0] == 0) && 
+					(para_set_value.data.hopper_output_timeout[1] == 0) &&
+					(para_set_value.data.hopper_output_timeout[2] == 0)){
 				BELT_MOTOR_STOPRUN();   //斗送入电机
 				cy_println ("stop belt motor 1");
+				}else{
+					para_set_value.data.belt_runtime = 1;
+				}
 			}
 		}
 	}
@@ -331,6 +339,7 @@ void TaskStart(void *pdata)
 					refresh_data ();
 				}
 				disp_allcount ();
+				save_coin_number ();
 				sys_env.workstep = 1;
 				break;
 			}

@@ -47,6 +47,7 @@ void system_env_init (void)
 	sys_env.country_index = coinchoose;
 	sys_env.save_ng_data = 1;
 	sys_env.save_good_data = 1;
+	sys_env.auto_clear = 1;
 	sys_env.uart0_cmd_flag = 0xA5;//console 未激活
 	sys_env.password = 1573;
 }
@@ -584,6 +585,12 @@ int get_hex_data (char * buf)
 						//开始找零-----------------------------------------------------
 						BELT_MOTOR_STARTRUN();   //斗送入电机
 						para_set_value.data.hopper_cnt[0] = 0;
+						if (para_set_value.data.hopper_num[0] > para_set_value.data.m_1yuan){
+							para_set_value.data.hopper_num[0] = para_set_value.data.m_1yuan;
+							para_set_value.data.m_1yuan = 0;
+						}else{
+							para_set_value.data.m_1yuan -= para_set_value.data.hopper_num[0];
+						}
 						for (i = 0; i < para_set_value.data.hopper_num[0]; i++){
 							PAYOUT0(STARTRUN);	  //
 							time = para_set_value.data.hopper_pulse; 
@@ -595,6 +602,12 @@ int get_hex_data (char * buf)
 							para_set_value.data.belt_runtime = 10;
 						}
 						para_set_value.data.hopper_cnt[1] = 0;
+						if (para_set_value.data.hopper_num[1] > para_set_value.data.m_5jiao){
+							para_set_value.data.hopper_num[1] = para_set_value.data.m_5jiao;
+							para_set_value.data.m_5jiao = 0;
+						}else{
+							para_set_value.data.m_5jiao -= para_set_value.data.hopper_num[1];
+						}
 						for (i = 0; i < para_set_value.data.hopper_num[1]; i++){
 							PAYOUT1(STARTRUN);	  //
 							time = para_set_value.data.hopper_pulse; 
@@ -606,6 +619,12 @@ int get_hex_data (char * buf)
 							para_set_value.data.belt_runtime = 10;
 						}
 						para_set_value.data.hopper_cnt[2] = 0;
+						if (para_set_value.data.hopper_num[2] > para_set_value.data.m_1jiao){
+							para_set_value.data.hopper_num[2] = para_set_value.data.m_1jiao;
+							para_set_value.data.m_1jiao = 0;
+						}else{
+							para_set_value.data.m_1jiao -= para_set_value.data.hopper_num[2];
+						}
 						for (i = 0; i < para_set_value.data.hopper_num[2]; i++){
 							PAYOUT2(STARTRUN);	  //
 							time = para_set_value.data.hopper_pulse; 
@@ -617,6 +636,7 @@ int get_hex_data (char * buf)
 							para_set_value.data.belt_runtime = 10;
 						}
 						//结束找零-----------------------------------------------------
+						write_para ();
 						break;
 					default:break;
 				}
@@ -1226,6 +1246,36 @@ void set_para_2  (int32_t arg[])
 		}
 		para_set_value.data.adj_offset_position = arg[1];
 		write_para ();
+	}else if (arg[0] == string_to_dec((uint8 *)("coin-num0"))){
+		cy_println("set coin 0 number = %d", arg[1]);
+		if (arg[1] > 9999){
+			arg[1] = 9999;
+		}
+		para_set_value.data.m_1yuan = arg[1];
+		write_para ();
+	}else if (arg[0] == string_to_dec((uint8 *)("coin-num1"))){
+		cy_println("set coin 1 number = %d", arg[1]);
+		if (arg[1] > 9999){
+			arg[1] = 9999;
+		}
+		para_set_value.data.m_5jiao = arg[1];
+		write_para ();
+	}else if (arg[0] == string_to_dec((uint8 *)("coin-num2"))){
+		cy_println("set coin 2 number = %d", arg[1]);
+		if (arg[1] > 9999){
+			arg[1] = 9999;
+		}
+		para_set_value.data.m_1jiao = arg[1];
+		write_para ();
+	}else if (arg[0] == string_to_dec((uint8 *)("coin-all-num"))){
+		cy_println("set coin 0 number = %d", arg[1]);
+		if (arg[1] > 9999){
+			arg[1] = 9999;
+		}
+		para_set_value.data.m_1yuan = arg[1];
+		para_set_value.data.m_5jiao = arg[1];
+		para_set_value.data.m_1jiao = arg[1];
+		write_para ();
 	}else{
 		cy_println ("set_para_2 arg[0] Error arg");
 		return;
@@ -1643,6 +1693,14 @@ void print_coin_env_info (void)
 	cy_println ("ccstep                = %d", ccstep);
 	cy_println("----------------------------------------------------");
 }
+void print_coin_num_info (void)
+{
+	cy_println("-----------------print coin number info----------------");
+	cy_println ("coin 0 number    = %d", para_set_value.data.m_1yuan);
+	cy_println ("coin 1 number    = %d", para_set_value.data.m_5jiao);
+	cy_println ("coin 2 number    = %d", para_set_value.data.m_1jiao);
+	cy_println("----------------------------------------------------");
+}
 
 
 
@@ -1859,21 +1917,23 @@ void do_print(int32_t argc, void *cmd_arg)
 		case 1:
 			if (arg[argc - 1] == string_to_dec((uint8 *)("ng"))){
 				print_ng_data (sys_env.coin_index);
-			}else if (arg[argc - 1] == string_to_dec((uint8 *)("input"))){ // 进行特征值采样
+			}else if (arg[argc - 1] == string_to_dec((uint8 *)("input"))){ // 
 				print_input_status ();
-			}else if (arg[argc - 1] == string_to_dec((uint8 *)("gd"))){ // 进行特征值采样
+			}else if (arg[argc - 1] == string_to_dec((uint8 *)("gd"))){ //
 				print_good_data (sys_env.coin_index);
-			}else if (arg[argc - 1] == string_to_dec((uint8 *)("env-s"))){ // 进行特征值采样
+			}else if (arg[argc - 1] == string_to_dec((uint8 *)("env-s"))){ //
 				print_system_env_info();
 			}else if (arg[argc - 1] == string_to_dec((uint8 *)("speed"))){
 				print_speed ();
-			}else if (arg[argc - 1] == string_to_dec((uint8 *)("env-c"))){ // 进行特征值采样
+			}else if (arg[argc - 1] == string_to_dec((uint8 *)("env-c"))){ // 
 				print_coin_env_info();
-			}else if (arg[argc - 1] == string_to_dec((uint8 *)("pre-set"))){ // 进行特征值采样
+			}else if (arg[argc - 1] == string_to_dec((uint8 *)("coin-number"))){ // 
+				print_coin_num_info();
+			}else if (arg[argc - 1] == string_to_dec((uint8 *)("pre-set"))){ // 
 				print_pre_count_set_value ();
-			}else if (arg[argc - 1] == string_to_dec((uint8 *)("pre-current"))){ // 进行特征值采样
+			}else if (arg[argc - 1] == string_to_dec((uint8 *)("pre-current"))){ //
 				print_pre_count_current ();
-			}else if (arg[argc - 1] == string_to_dec((uint8 *)("password"))){ // 进行特征值采样
+			}else if (arg[argc - 1] == string_to_dec((uint8 *)("password"))){ //
 				cy_println ("%d", sys_env.password);
 			}else{
 				cy_println ("Error %d arg", argc);

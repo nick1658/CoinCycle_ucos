@@ -141,6 +141,15 @@ typedef struct
 	volatile uint16_t hopper_cnt[HOPPER_NUM];
 	volatile uint16_t hopper_output_timeout[HOPPER_NUM];
 	volatile uint16_t belt_runtime;
+	uint16_t m_1yuan;
+	uint16_t m_5jiao;
+	uint16_t m_1jiao;
+	uint16_t m_1jiao_big;
+	uint16_t m_5fen;
+	uint16_t m_2fen;
+	uint16_t m_1fen;
+	uint16_t m_10yuan;
+	uint16_t m_5yuan;
 }s_coin_parameter_value;
 
 typedef union

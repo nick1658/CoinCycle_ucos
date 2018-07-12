@@ -113,7 +113,7 @@ static int16_t hopper_coin_in[HOPPER_NUM] = {0, 0, 0};
 		hopper_coin_in[X] = 1; \
 		para_set_value.data.hopper_cnt[X]++; \
 		para_set_value.data.hopper_output_timeout[X] = 20; \
-		/*para_set_value.data.belt_runtime = 6;*/ \
+		para_set_value.data.belt_runtime = 10; \
 	} \
 }else{ \
 		hopper_coin_in[X] = 0; \
