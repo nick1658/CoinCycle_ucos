@@ -47,8 +47,8 @@ void system_env_init (void)
 	sys_env.country_index = coinchoose;
 	sys_env.save_ng_data = 1;
 	sys_env.save_good_data = 1;
-	sys_env.auto_clear = 1;
-	sys_env.uart0_cmd_flag = 0xA5;//console 未激活
+	//sys_env.uart0_cmd_flag = 0xA5;//console 未激活
+	sys_env.uart0_cmd_flag = 0;//console 未激活
 	sys_env.password = 1573;
 }
 
@@ -397,6 +397,67 @@ int get_hex_struct (s_hex_file *p_hex, char *_data_buf)
 	return AnalyseHEX(_data_buf, p_hex->len * 2 + 11);
 }
 //static uint32_t section_addr = 0, app_size = 0;
+
+
+void coin_dispense (void)
+{	
+	uint32_t i;
+	//开始找零-----------------------------------------------------
+	BELT_MOTOR_STARTRUN();   //斗送入电机
+	para_set_value.data.hopper_cnt[0] = 0;
+	if (para_set_value.data.hopper_num[0] > para_set_value.data.m_1yuan){
+		para_set_value.data.hopper_num[0] = para_set_value.data.m_1yuan;
+		para_set_value.data.m_1yuan = 0;
+	}else{
+		para_set_value.data.m_1yuan -= para_set_value.data.hopper_num[0];
+	}
+	for (i = 0; i < para_set_value.data.hopper_num[0]; i++){
+		PAYOUT0(STARTRUN);	  //
+		time = para_set_value.data.hopper_pulse; 
+		while(time != 0){;}
+		PAYOUT0(STOPRUN);	  // 
+		time = para_set_value.data.hopper_pulse; 
+		while(time != 0){;}
+		para_set_value.data.hopper_output_timeout[0] = 20;//10s
+		para_set_value.data.belt_runtime = 10;
+	}
+	para_set_value.data.hopper_cnt[1] = 0;
+	if (para_set_value.data.hopper_num[1] > para_set_value.data.m_5jiao){
+		para_set_value.data.hopper_num[1] = para_set_value.data.m_5jiao;
+		para_set_value.data.m_5jiao = 0;
+	}else{
+		para_set_value.data.m_5jiao -= para_set_value.data.hopper_num[1];
+	}
+	for (i = 0; i < para_set_value.data.hopper_num[1]; i++){
+		PAYOUT1(STARTRUN);	  //
+		time = para_set_value.data.hopper_pulse; 
+		while(time != 0){;}
+		PAYOUT1(STOPRUN);	  // 
+		time = para_set_value.data.hopper_pulse; 
+		while(time != 0){;}
+		para_set_value.data.hopper_output_timeout[1] = 20;//10s
+		para_set_value.data.belt_runtime = 10;
+	}
+	para_set_value.data.hopper_cnt[2] = 0;
+	if (para_set_value.data.hopper_num[2] > para_set_value.data.m_1jiao){
+		para_set_value.data.hopper_num[2] = para_set_value.data.m_1jiao;
+		para_set_value.data.m_1jiao = 0;
+	}else{
+		para_set_value.data.m_1jiao -= para_set_value.data.hopper_num[2];
+	}
+	for (i = 0; i < para_set_value.data.hopper_num[2]; i++){
+		PAYOUT2(STARTRUN);	  //
+		time = para_set_value.data.hopper_pulse; 
+		while(time != 0){;}
+		PAYOUT2(STOPRUN);	  // 
+		time = para_set_value.data.hopper_pulse; 
+		while(time != 0){;}
+		para_set_value.data.hopper_output_timeout[2] = 20;//10s
+		para_set_value.data.belt_runtime = 10;
+	}
+	//结束找零-----------------------------------------------------
+	write_para ();
+}
 int get_hex_data (char * buf)
 {
 	int i = 0;
@@ -557,6 +618,8 @@ int get_hex_data (char * buf)
 						para_set_value.data.kick_keep_t[4] = para_value;
 						para_set_value.data.kick_keep_t[5] = para_value;
 						break;
+					case 64://拒收设置
+						break;
 					case 80: //找零1元
 						break;
 					case 81: //找零5角
@@ -583,60 +646,8 @@ int get_hex_data (char * buf)
 						}
 						cy_println ();
 						//开始找零-----------------------------------------------------
-						BELT_MOTOR_STARTRUN();   //斗送入电机
-						para_set_value.data.hopper_cnt[0] = 0;
-						if (para_set_value.data.hopper_num[0] > para_set_value.data.m_1yuan){
-							para_set_value.data.hopper_num[0] = para_set_value.data.m_1yuan;
-							para_set_value.data.m_1yuan = 0;
-						}else{
-							para_set_value.data.m_1yuan -= para_set_value.data.hopper_num[0];
-						}
-						for (i = 0; i < para_set_value.data.hopper_num[0]; i++){
-							PAYOUT0(STARTRUN);	  //
-							time = para_set_value.data.hopper_pulse; 
-							while(time != 0){;}
-							PAYOUT0(STOPRUN);	  // 
-							time = para_set_value.data.hopper_pulse; 
-							while(time != 0){;}
-							para_set_value.data.hopper_output_timeout[0] = 20;//10s
-							para_set_value.data.belt_runtime = 10;
-						}
-						para_set_value.data.hopper_cnt[1] = 0;
-						if (para_set_value.data.hopper_num[1] > para_set_value.data.m_5jiao){
-							para_set_value.data.hopper_num[1] = para_set_value.data.m_5jiao;
-							para_set_value.data.m_5jiao = 0;
-						}else{
-							para_set_value.data.m_5jiao -= para_set_value.data.hopper_num[1];
-						}
-						for (i = 0; i < para_set_value.data.hopper_num[1]; i++){
-							PAYOUT1(STARTRUN);	  //
-							time = para_set_value.data.hopper_pulse; 
-							while(time != 0){;}
-							PAYOUT1(STOPRUN);	  // 
-							time = para_set_value.data.hopper_pulse; 
-							while(time != 0){;}
-							para_set_value.data.hopper_output_timeout[1] = 20;//10s
-							para_set_value.data.belt_runtime = 10;
-						}
-						para_set_value.data.hopper_cnt[2] = 0;
-						if (para_set_value.data.hopper_num[2] > para_set_value.data.m_1jiao){
-							para_set_value.data.hopper_num[2] = para_set_value.data.m_1jiao;
-							para_set_value.data.m_1jiao = 0;
-						}else{
-							para_set_value.data.m_1jiao -= para_set_value.data.hopper_num[2];
-						}
-						for (i = 0; i < para_set_value.data.hopper_num[2]; i++){
-							PAYOUT2(STARTRUN);	  //
-							time = para_set_value.data.hopper_pulse; 
-							while(time != 0){;}
-							PAYOUT2(STOPRUN);	  // 
-							time = para_set_value.data.hopper_pulse; 
-							while(time != 0){;}
-							para_set_value.data.hopper_output_timeout[2] = 20;//10s
-							para_set_value.data.belt_runtime = 10;
-						}
+						coin_dispense ();//找零操作
 						//结束找零-----------------------------------------------------
-						write_para ();
 						break;
 					default:break;
 				}
@@ -737,6 +748,14 @@ void update_finish (e_update_flag flag)
 				memset (cmd_analyze.rec_buf, 0, sizeof(cmd_analyze.rec_buf));
 			}
 			break;
+		case CCTALK_COMMAND:
+			if (rec_count > 4){
+				cctalk_protocol (cmd_analyze.rec_buf, rec_count);
+			}
+			sys_env.tty_mode = IDLE_MODE;
+			rec_count = 0;
+			memset (cmd_analyze.rec_buf, 0, sizeof(cmd_analyze.rec_buf));
+			break;
 		default:break;
 	}
 	sys_env.update_flag = NULL_UPDATE;
@@ -744,20 +763,20 @@ void update_finish (e_update_flag flag)
 /*提供给串口中断服务程序，保存串口接收到的单个字符*/
 void fill_rec_buf(char data)
 {
-	if ((data == CTRL_C ) && (sys_env.tty_mode == 0))
+	if ((data == CTRL_C ) && (sys_env.tty_mode == IDLE_MODE))
 	{
 		cy_println ("Op Cancel!");
 		sys_env.sys_break = 1;
 		return;
 	}
-	if (sys_env.uart0_cmd_flag == 0xA5){
+	if (sys_env.uart0_cmd_flag == STOP_MODE){
 		if (0x0D != data){
 			return;
 		}else{
 			sys_env.uart0_cmd_flag = 0;
 		}
 	}
-	if (sys_env.tty_mode == 0x55){ //程序下载
+	if (sys_env.tty_mode == DOWNLOAD_MODE){ //程序下载
 		sys_env.tty_online_ms = TTY_ONLINE_TIME;
 		iap_code_buf[rec_count++] = data;
 		if (rec_count == 1){
@@ -771,12 +790,18 @@ void fill_rec_buf(char data)
 		}
 		if (rec_count >= CODE_BUF_SIZE){
 			rec_count=0;
-			sys_env.tty_mode = 0;
+			sys_env.tty_mode = IDLE_MODE;
 			cy_println("ERROR");//数组越界，表示接受失败
 		}
-	}else if (sys_env.tty_mode == 0xaa){
+	}else if ((sys_env.tty_mode == UART_MODE)){
+		sys_env.tty_online_ms = TTY_UART_ONLINE_TIME;
+		cmd_analyze.rec_buf[rec_count++] = data;
+	}else if ((sys_env.tty_mode == CCTALK_MODE)){
 		sys_env.tty_online_ms = TTY_ONLINE_TIME;
 		cmd_analyze.rec_buf[rec_count++] = data;
+		if (rec_count == (cmd_analyze.rec_buf[1] + 5)){
+			sys_env.tty_online_ms = 1;//接受完毕
+		}
 	}else if (sys_env.uart0_cmd_flag == 0){
 		if (data == '\b'){
 			if (rec_count > 0){
@@ -794,22 +819,25 @@ void fill_rec_buf(char data)
 			}
 			return;
 		}else if (data == ':'){
-			sys_env.tty_mode = 0xaa;
+			sys_env.tty_mode = UART_MODE;
 			sys_env.update_flag = UART_COMMAND;
 			cmd_analyze.rec_buf[rec_count++] = data;
+			sys_env.tty_online_ms = TTY_UART_ONLINE_TIME;
+		}else if (data == CCTALK_ADDR){//CCTALK 地址
+			sys_env.tty_mode = CCTALK_MODE;
+			sys_env.update_flag = CCTALK_COMMAND;
+			cmd_analyze.rec_buf[rec_count++] = data;
 			sys_env.tty_online_ms = TTY_ONLINE_TIME;
+			//cy_println ("cctalk mode");
 		}else{
 			Uart0_sendchar(data);
-			if(0x0D == data){// && 0x0D==cmd_analyze.rec_buf[rec_count-1])
+			if(0x0D == data){
 				if (rec_count > 0){
 					cmd_analyze.rec_buf[rec_count] = '\0';
-					//cy_println ("rec_count = %d", rec_count);
 					rec_count=0;
 				}
 				Uart0_sendchar('\n');
 				sys_env.uart0_cmd_flag = 1;
-				//cy_println ("rec_count = %d", rec_count);
-				//vTaskCmdAnalyze ();
 			}else{
 				cmd_analyze.rec_buf[rec_count] = data;
 				rec_count++;
@@ -2164,7 +2192,7 @@ void write_para_1 (int32_t arg[])
 		memset (iap_code_buf, 0, sizeof(iap_code_buf));
 	}else if (arg[0] == string_to_dec((uint8 *)("start"))){
 		comscreen(Disp_Indexpic[22],Number_IndexpicB);
-		sys_env.tty_mode = 0x55;
+		sys_env.tty_mode = DOWNLOAD_MODE;
 		sys_env.update_flag = UART_UPDATE;
 		rec_count = 0;
 	}else if (arg[0] == string_to_dec((uint8 *)("flash"))){
@@ -2604,7 +2632,7 @@ int do_receive (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		break;
 	case 2 :
 		cy_println ("Enter Receive Code Mode");
-		sys_env.tty_mode = 0x55;
+		sys_env.tty_mode = DOWNLOAD_MODE;
 		rec_count = 0;
 		break;
 	default:

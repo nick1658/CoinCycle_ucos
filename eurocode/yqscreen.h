@@ -71,8 +71,7 @@ void counter_clear (void); //
 #define	ADDR_YZS10	0x053b  //  数据变量显示 ,  预置5, data variable
 
 //-003A
-#define ADDR_CNTB   0x003B  //  图标变量显示  zi xuexi  jiemian learning ,coin name tubiao dispaly
-#define ADDR_CNTB1   0x3B   //  按键值返回  ,  zi xuexi  jiemian learning ,coin name tubiao dispaly
+#define ADDR_CNTB   0x0500  //  图标变量显示  zi xuexi  jiemian learning ,coin name tubiao dispaly
 #define ADDR_LRUN    0x3C	//   按键值返回  ,zi xuexi  jiemian run
 #define	ADDR_A0MA 	0x003D  //   数据变量显示 ,  zi xuexi  jiemian learning ,pre AD0  max
 #define	ADDR_A0MI 	0x003E  //   数据变量显示 , zi xuexi  jiemian learning ,pre AD0  min
@@ -152,6 +151,9 @@ void counter_clear (void); //
 	dgus_chinese(0x400, TIPS, strlen(TIPS)); \
 	dgus_chinese(0x416, MSG, strlen(MSG)); \
 	comscreen(Disp_Indexpic[BJJM],Number_IndexpicB); \
+}
+#define DISPLAY_COIN_INDEX(COIN_INDEX) { \
+		dgus_chinese(0x500, COIN_INDEX, strlen(COIN_INDEX)); \
 }
 
 #define SEND_ERROR(CODE) { \

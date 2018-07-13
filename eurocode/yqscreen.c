@@ -722,9 +722,46 @@ void touchresult(void)      //根据接收到的  数 来决定 执行的任务
 		}
 		break;
 //////////////////////////////
-	case ADDR_CNTB1:  //地址ADDR_CNTB1 0X3B  图标变量
+	case ADDR_CNTB:  //地址ADDR_CNTB1 0X3B  图标变量
 		sys_env.coin_index = (int)touchnum[8];
-		dgus_tf1word(ADDR_CNTB,sys_env.coin_index);	//make sure the tubiao is the return one
+		//dgus_tf1word(ADDR_CNTB,sys_env.coin_index);	//make sure the tubiao is the return one		switch (sys_env.coin_index)
+		switch (sys_env.coin_index)
+		{
+			case 0:
+				DISPLAY_COIN_INDEX ("一元");
+				break;
+			case 1:
+				DISPLAY_COIN_INDEX ("五角铜");
+				break;
+			case 2:
+				DISPLAY_COIN_INDEX ("五角钢");
+				break;
+			case 3:
+				DISPLAY_COIN_INDEX ("一角大铝");
+				break;
+			case 4:
+				DISPLAY_COIN_INDEX ("一角钢");
+				break;
+			case 5:
+				DISPLAY_COIN_INDEX ("一角小铝");
+				break;
+			case 6:
+				DISPLAY_COIN_INDEX ("五分");
+				break;
+			case 7:
+				DISPLAY_COIN_INDEX ("二分");
+				break;
+			case 8:
+				DISPLAY_COIN_INDEX ("一分");
+				break;
+			case 9:
+				DISPLAY_COIN_INDEX ("纪念币十元");
+				break;
+			case 10:
+				DISPLAY_COIN_INDEX ("纪念币五元");
+				break;
+			default:break;
+		}
 		disp_preselflearn(pre_value.country[coinchoose].coin[sys_env.coin_index].data.max0, pre_value.country[coinchoose].coin[sys_env.coin_index].data.min0,
 						  pre_value.country[coinchoose].coin[sys_env.coin_index].data.max1, pre_value.country[coinchoose].coin[sys_env.coin_index].data.min1,
 						  pre_value.country[coinchoose].coin[sys_env.coin_index].data.max2, pre_value.country[coinchoose].coin[sys_env.coin_index].data.min2);
@@ -1031,6 +1068,7 @@ void touchresult(void)      //根据接收到的  数 来决定 执行的任务
 	case ADDR_CNCH1:  //地址ADDR_ZXCY21 bujian zhixing
 		dgus_tf1word(ADDR_CNCH,coinchoose);  //确认 图标变量
 		break;
+	default:break;
 	}
 }
 

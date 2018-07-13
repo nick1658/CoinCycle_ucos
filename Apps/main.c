@@ -38,6 +38,7 @@ void coin_init (void)
 	rWTCON = 0;	// 关闭开门狗
 	system_env_init ();
 	coin_env_init ();
+	cctalk_env_init ();
 	//////////////
 	alertflag = 0; 		 //报错标志位
 
@@ -213,7 +214,7 @@ void Task3(void *pdata)
 		if (sys_env.update_flag != NET_UPDATEING){
 			OSTimeDly(20);
 		}
-		if (sys_env.workstep != 1){//待机状态下才能联网更新
+		if (sys_env.workstep == 10){//待机状态下才能联网更新
 			continue;
 		}
 
@@ -351,9 +352,9 @@ void TaskStart(void *pdata)
 				break;
 			}
 			case 6: {
-				if( adstd_offset() == 1){//  检测基准值，并进行补偿
-				setStdValue	();//设置鉴伪基准值
-				//if (1) {//  检测基准值，并进行补偿
+				//if( adstd_offset() == 1){//  检测基准值，并进行补偿
+				if (1) {//  检测基准值，并进行补偿
+					setStdValue	();//设置鉴伪基准值
 					sys_env.stop_time = STOP_TIME;//无币停机时间
 					sys_env.workstep =10;
 					if ((sys_env.auto_clear == 1) || para_set_value.data.coin_full_rej_pos == 3){//如果设置自动清零，则每次启动都清零计数
@@ -388,19 +389,41 @@ void TaskStart(void *pdata)
 					disp_allcount ();
 				}
 				if (sys_env.stop_time == 0){
-					sys_env.stop_flag++;
-					if (sys_env.stop_flag == 1){
-						STORAGE_DIR_N();//反转
-						sys_env.stop_time = 50;//反转一秒
-					}else if (sys_env.stop_flag == 2){
-						STORAGE_DIR_P();//正转
-						sys_env.stop_time = STOP_TIME;//无币停机时间10秒
-					}else if (sys_env.stop_flag == 3){
-						STORAGE_MOTOR_STOPRUN();	//  转盘电机
-						sys_env.stop_time = 100;//STOP_TIME;//无币停机时间2秒
-					}else if (sys_env.stop_flag == 4){
-						comscreen(Disp_Indexpic[JSJM],Number_IndexpicB);	 // back to the  picture before alert
-						sys_env.workstep =0;
+					switch (sys_env.stop_flag){
+						case 0:
+							STORAGE_DIR_N();//反转
+							sys_env.stop_time = 25;//反转0.5秒
+							sys_env.stop_flag = 1;
+							break;
+						case 1:
+							STORAGE_DIR_P();//正转
+							sys_env.stop_time = STOP_TIME;//无币停机时间10秒
+							sys_env.stop_flag = 2;
+							break;
+						case 2://准备停机...
+							if (sys_env.re_run_time > 0){
+								sys_env.stop_time = STOP_TIME;//无币停机时间10秒
+								sys_env.stop_flag = 0;
+								sys_env.re_run_time--;
+							}else{
+								STORAGE_MOTOR_STOPRUN();	//  转盘电机
+								sys_env.stop_time = 100;//STOP_TIME;//无币停机时间2秒
+								sys_env.stop_flag = 3;
+							}
+							break;
+						case 3:
+							comscreen(Disp_Indexpic[JSJM],Number_IndexpicB);	 // back to the  picture before alert
+							sys_env.workstep =0;
+							sys_env.stop_flag = 6;
+							break;
+						case 4://等待反转完成
+							STORAGE_DIR_P();//正转
+							sys_env.stop_time = STOP_TIME;//无币停机时间10秒
+							sys_env.stop_flag = 0;
+							break;
+						case 5:
+							break;
+						default:break;
 					}
 				}
 				if (sys_env.print_wave_to_pc == 1){

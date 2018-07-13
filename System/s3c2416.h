@@ -1219,6 +1219,7 @@ typedef __I uint8_t vuc8;   /*!< Read Only */
 
 #include "motor.h"
 #include "ucos_ii.h"
+#include "cctalk.h"
 	
 //#define __MY_DEBUG__
 //#define UART_DEBUG	

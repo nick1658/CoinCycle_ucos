@@ -81,8 +81,18 @@ typedef enum {
   UART_UPDATE = 1,
   NET_UPDATE = 2,
   NET_UPDATEING = 3,
-  UART_COMMAND = 4
+  UART_COMMAND = 4,
+  CCTALK_COMMAND = 5
 } e_update_flag;
+
+
+typedef enum {
+  IDLE_MODE = 0x0,
+  STOP_MODE = 0xA1,
+  DOWNLOAD_MODE = 0xA4,
+  UART_MODE = 0xA5,
+  CCTALK_MODE = 0xA6,
+}e_tty_mode;
 
 typedef struct
 {
@@ -100,6 +110,7 @@ typedef struct
 	uint32_t tty_mode;
 	uint32_t hmi_debug_flag;
 	volatile uint32_t stop_time;
+	volatile uint32_t re_run_time;
 	uint32_t stop_flag;
 	uint32_t coin_cross_time;
 	volatile uint32_t tty_online_ms;
@@ -150,10 +161,12 @@ void poll_data (void);
 
 int had_ctrlc (void);
 void clear_ctrlc (void);
+void coin_dispense (void);
 
 int16_t is_repeate (int16_t _coin_index);//  判别 是不是重币的函数
 
 #define TTY_ONLINE_TIME 25
+#define TTY_UART_ONLINE_TIME 2
 
 
 

@@ -289,6 +289,7 @@ void write_coin_value (void)
 void ini_screen (void)
 {
 	int i;
+	//cy_println ("%s", __FUNCTION__);
 	dgus_tf1word(ADDR_CNCH,coinchoose);  //国家币种图标变量
 	dgus_tf1word(ADDR_PGH1,para_set_value.data.coin_full_rej_pos);   // 真币剔除工号
 	dgus_tf1word(ADDR_KICK_DELAY_T0, para_set_value.data.kick_start_delay_t0);	//第一个踢币延时时间
@@ -309,14 +310,18 @@ void ini_screen (void)
 
 	for (i = 0; i < HOPPER_NUM; i++){
 		para_set_value.data.hopper_cnt[i] = 0;
+		para_set_value.data.hopper_output_timeout[i] = 0;
 	}
+	para_set_value.data.hopper_pulse = 200;
+	para_set_value.data.belt_runtime = 0;
 
 	//开机 把每个地址的值给初始化赋一下值
 	disp_KJAmount(); // initial addr on zhu jiemian ze zs forge
 	disp_allcount(); //initial addr on xiandan jiemian
 	disp_data(ADDR_CPZE,ADDR_CPZS,ADDR_CPFG);			//initial addr on jishu jiemian  ze zs forge data variable
 
-	dgus_tf1word(ADDR_CNTB,sys_env.coin_index);	//initial addr on zixuexi jiemian coin name tubiao
+	//dgus_tf1word(ADDR_CNTB,sys_env.coin_index);	//initial addr on zixuexi jiemian coin name tubiao
+	DISPLAY_COIN_INDEX ("1元");
 	disp_preselflearn(pre_value.country[coinchoose].coin[sys_env.coin_index].data.max0,pre_value.country[coinchoose].coin[sys_env.coin_index].data.min0,
 					pre_value.country[coinchoose].coin[sys_env.coin_index].data.max1,pre_value.country[coinchoose].coin[sys_env.coin_index].data.min1,
 					pre_value.country[coinchoose].coin[sys_env.coin_index].data.max2,pre_value.country[coinchoose].coin[sys_env.coin_index].data.min2);	//initial addr on zixuexi jiemian value

@@ -35,24 +35,15 @@ void Uart0_SendByte(int data)
 		if(data=='\n')
 		{
 			while(!(rUTRSTAT0 & 0x2));
-			// Delay(1);                 //because the slow response of hyper_terminal 
 			WrUTXH0('\r');
 		}
 		while(!(rUTRSTAT0 & 0x2));   //Wait until THR is empty.
-		//  Delay(1);
 		WrUTXH0(data);
 } 
 
 void Uart0_sendchar(U8 data)
 {
-//	if(data=='\n')
-//	{
-//		while(!(rUTRSTAT0 & 0x2));
-		// Delay(1);                 //because the slow response of hyper_terminal 
-//		WrUTXH0('\r');
-//	}
 	while(!(rUTRSTAT0 & 0x2));   //Wait until THR is empty.
-	//  Delay(1);
 	WrUTXH0(data);
 } 
 
