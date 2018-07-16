@@ -403,7 +403,6 @@ void coin_dispense (void)
 {	
 	uint32_t i;
 	//开始找零-----------------------------------------------------
-	BELT_MOTOR_STARTRUN();   //斗送入电机
 	para_set_value.data.hopper_cnt[0] = 0;
 	if (para_set_value.data.hopper_num[0] > para_set_value.data.m_1yuan){
 		para_set_value.data.hopper_num[0] = para_set_value.data.m_1yuan;
@@ -412,6 +411,7 @@ void coin_dispense (void)
 		para_set_value.data.m_1yuan -= para_set_value.data.hopper_num[0];
 	}
 	for (i = 0; i < para_set_value.data.hopper_num[0]; i++){
+		BELT_MOTOR_STARTRUN();   //斗送入电机
 		PAYOUT0(STARTRUN);	  //
 		time = para_set_value.data.hopper_pulse; 
 		while(time != 0){;}
@@ -429,6 +429,7 @@ void coin_dispense (void)
 		para_set_value.data.m_5jiao -= para_set_value.data.hopper_num[1];
 	}
 	for (i = 0; i < para_set_value.data.hopper_num[1]; i++){
+		BELT_MOTOR_STARTRUN();   //斗送入电机
 		PAYOUT1(STARTRUN);	  //
 		time = para_set_value.data.hopper_pulse; 
 		while(time != 0){;}
@@ -446,6 +447,7 @@ void coin_dispense (void)
 		para_set_value.data.m_1jiao -= para_set_value.data.hopper_num[2];
 	}
 	for (i = 0; i < para_set_value.data.hopper_num[2]; i++){
+		BELT_MOTOR_STARTRUN();   //斗送入电机
 		PAYOUT2(STARTRUN);	  //
 		time = para_set_value.data.hopper_pulse; 
 		while(time != 0){;}

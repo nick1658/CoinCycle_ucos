@@ -181,10 +181,15 @@ int res_read_buffered (char *recv_buf)
 int res_modify_inhibit_status (char *recv_buf)
 {
 	cctalk_env.coin_inhibit_status = recv_buf[5] << 8 | recv_buf[4];
+	
+	coin_env.inhibit_coin[0] = cctalk_env.coin_inhibit_status & 0x0001;//1元
+	coin_env.inhibit_coin[2] = cctalk_env.coin_inhibit_status & 0x0002;//5角
+	coin_env.inhibit_coin[4] = cctalk_env.coin_inhibit_status & 0x0004;//1角
+	
 	if (cctalk_env.coin_inhibit_status != 0){
 		coin_start ();
 	}else{
-		sys_env.re_run_time = 0;//持续运行
+		sys_env.re_run_time = 1;//持续运行
 	}
 	return cctalk_simple_poll_respond (recv_buf);
 }

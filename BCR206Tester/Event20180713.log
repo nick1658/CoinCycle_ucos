@@ -1,0 +1,120 @@
+[XDTWRITELOGSTART]
+-1        |20180713143059.545|                   BCR206Driver.cpp|               Close
+串口尚未打开，调用失败
+[XDTWRITELOGSTART]
+-1        |20180713143616.693|                   BCR206Driver.cpp|         GetResponse
+[1]ReadData超时
+[XDTWRITELOGSTART]
+-1        |20180713143616.693|                   BCR206Driver.cpp|      GetFirmVersion
+GetResponse失败，返回-2
+[XDTWRITELOGSTART]
+-1        |20180713143655.393|                   BCR206Driver.cpp|         GetResponse
+[1]ReadData超时
+[XDTWRITELOGSTART]
+-1        |20180713143655.393|                   BCR206Driver.cpp|      GetFirmVersion
+GetResponse失败，返回-2
+[XDTWRITELOGSTART]
+-1        |20180713143702.213|                   BCR206Driver.cpp|         GetResponse
+ReadData失败[iRet：5]，期望数据长度[7]
+[XDTWRITELOGSTART]
+-1        |20180713143702.213|                   BCR206Driver.cpp|    EnableAcceptCoin
+GetResponse失败，返回-2
+[XDTWRITELOGSTART]
+-1        |20180713144444.806|                   BCR206Driver.cpp|         GetResponse
+[1]ReadData超时
+[XDTWRITELOGSTART]
+-1        |20180713144444.806|                   BCR206Driver.cpp|DispenseCoinByHopper
+GetResponse失败，返回-2
+[XDTWRITELOGSTART]
+-1        |20180713144555.656|                   BCR206Driver.cpp|         GetResponse
+[1]ReadData超时
+[XDTWRITELOGSTART]
+-1        |20180713144555.656|                   BCR206Driver.cpp|DispenseCoinByHopper
+GetResponse失败，返回-2
+[XDTWRITELOGSTART]
+-1        |20180713154001.127|                   BCR206Driver.cpp|               Close
+串口尚未打开，调用失败
+[XDTWRITELOGSTART]
+-1        |20180713154027.618|                   BCR206Driver.cpp|  QueryAcceptedCount
+串口尚未打开，调用失败
+[XDTWRITELOGSTART]
+-1        |20180713154218.848|                   BCR206Driver.cpp|         GetResponse
+未能找到起始字节
+[XDTWRITELOGSTART]
+-1        |20180713154218.848|                   BCR206Driver.cpp| QueryActivityStatus
+GetResponse失败，返回-2
+[XDTWRITELOGSTART]
+-1        |20180713154256.178|                   BCR206Driver.cpp|         GetResponse
+未能找到起始字节
+[XDTWRITELOGSTART]
+-1        |20180713154256.178|                   BCR206Driver.cpp| QueryActivityStatus
+GetResponse失败，返回-2
+[XDTWRITELOGSTART]
+-1        |20180713154316.838|                   BCR206Driver.cpp|         GetResponse
+未能找到起始字节
+[XDTWRITELOGSTART]
+-1        |20180713154316.838|                   BCR206Driver.cpp| QueryActivityStatus
+GetResponse失败，返回-2
+[XDTWRITELOGSTART]
+-1        |20180713154514.088|                   BCR206Driver.cpp|         GetResponse
+未能找到起始字节
+[XDTWRITELOGSTART]
+-1        |20180713154514.088|                   BCR206Driver.cpp| QueryActivityStatus
+GetResponse失败，返回-2
+[XDTWRITELOGSTART]
+-1        |20180713160955.520|                   BCR206Driver.cpp|    EnableAcceptCoin
+串口尚未打开，调用失败
+[XDTWRITELOGSTART]
+-1        |20180713160958.560|                   BCR206Driver.cpp|    EnableAcceptCoin
+串口尚未打开，调用失败
+[XDTWRITELOGSTART]
+-1        |20180713161439.822|                   BCR206Driver.cpp|    EnableAcceptCoin
+串口尚未打开，调用失败
+[XDTWRITELOGSTART]
+-1        |20180713161628.053|                   BCR206Driver.cpp| QueryActivityStatus
+串口尚未打开，调用失败
+[XDTWRITELOGSTART]
+-1        |20180713161629.553|                   BCR206Driver.cpp|    EnableAcceptCoin
+串口尚未打开，调用失败
+[XDTWRITELOGSTART]
+-1        |20180713161824.979|                   BCR206Driver.cpp| QueryAcceptCoinMask
+串口尚未打开，调用失败
+[XDTWRITELOGSTART]
+-1        |20180713161826.019|                   BCR206Driver.cpp| QueryAcceptCoinMask
+串口尚未打开，调用失败
+[XDTWRITELOGSTART]
+-1        |20180713161827.069|                   BCR206Driver.cpp| QueryAcceptCoinMask
+串口尚未打开，调用失败
+[XDTWRITELOGSTART]
+-1        |20180713161827.829|                   BCR206Driver.cpp| QueryAcceptCoinMask
+串口尚未打开，调用失败
+[XDTWRITELOGSTART]
+-1        |20180713162959.182|                   BCR206Driver.cpp| QueryActivityStatus
+串口尚未打开，调用失败
+[XDTWRITELOGSTART]
+-1        |20180713163002.352|                   BCR206Driver.cpp|    EnableAcceptCoin
+串口尚未打开，调用失败
+[XDTWRITELOGSTART]
+-1        |20180713172122.890|                   BCR206Driver.cpp|         GetResponse
+[1]ReadData超时
+[XDTWRITELOGSTART]
+-1        |20180713172122.890|                   BCR206Driver.cpp|DispenseCoinByHopper
+GetResponse失败，返回-2
+[XDTWRITELOGSTART]
+-1        |20180713172459.890|                   BCR206Driver.cpp|         GetResponse
+未能找到起始字节
+[XDTWRITELOGSTART]
+-1        |20180713172459.890|                   BCR206Driver.cpp|DispenseCoinByHopper
+GetResponse失败，返回-2
+[XDTWRITELOGSTART]
+-1        |20180713172648.320|                   BCR206Driver.cpp|         GetResponse
+[1]ReadData超时
+[XDTWRITELOGSTART]
+-1        |20180713172648.320|                   BCR206Driver.cpp|DispenseCoinByHopper
+GetResponse失败，返回-2
+[XDTWRITELOGSTART]
+-1        |20180713172912.281|                   BCR206Driver.cpp|         GetResponse
+未能找到起始字节
+[XDTWRITELOGSTART]
+-1        |20180713172912.281|                   BCR206Driver.cpp|DispenseCoinByHopper
+GetResponse失败，返回-2

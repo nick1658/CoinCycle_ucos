@@ -27,17 +27,35 @@ uint16_t coine[COINCNUM][COIN_TYPE_NUM]=     // 由币种决定
 {200,	100,50,20,10,5,2,1,0, 0, 	0},//英镑的 的面值 倍数
 };
 
+void update_coin_number (void)
+{
+	para_set_value.data.m_1yuan = *(pre_value.country[COUNTRY_ID].coin[0].data.p_pre_count_cur);
+	para_set_value.data.m_5jiao = (*(pre_value.country[COUNTRY_ID].coin[1].data.p_pre_count_cur));
+	para_set_value.data.m_1jiao_big = 0;//(*(pre_value.country[COUNTRY_ID].coin[3].data.p_pre_count_cur));
+	para_set_value.data.m_1jiao = (*(pre_value.country[COUNTRY_ID].coin[4].data.p_pre_count_cur));
+	para_set_value.data.m_5fen =  0;//*(pre_value.country[COUNTRY_ID].coin[6].data.p_pre_count_cur);
+	para_set_value.data.m_2fen =  0;//*(pre_value.country[COUNTRY_ID].coin[7].data.p_pre_count_cur);
+	para_set_value.data.m_1fen =  0;//*(pre_value.country[COUNTRY_ID].coin[8].data.p_pre_count_cur);
+	para_set_value.data.m_10yuan = 0;//*(pre_value.country[COUNTRY_ID].coin[9].data.p_pre_count_cur);
+	para_set_value.data.m_5yuan = 0;//*(pre_value.country[COUNTRY_ID].coin[10].data.p_pre_count_cur);
+}
+
+void recover_coin_number (void)
+{
+	*(pre_value.country[COUNTRY_ID].coin[0].data.p_pre_count_cur)= para_set_value.data.m_1yuan;
+	(*(pre_value.country[COUNTRY_ID].coin[1].data.p_pre_count_cur)) = para_set_value.data.m_5jiao;
+	(*(pre_value.country[COUNTRY_ID].coin[3].data.p_pre_count_cur)) = 0;//para_set_value.data.m_1jiao_big;
+	(*(pre_value.country[COUNTRY_ID].coin[4].data.p_pre_count_cur)) = para_set_value.data.m_1jiao;
+	*(pre_value.country[COUNTRY_ID].coin[6].data.p_pre_count_cur) = 0;//para_set_value.data.m_5fen;
+	*(pre_value.country[COUNTRY_ID].coin[7].data.p_pre_count_cur) = 0;//para_set_value.data.m_2fen;
+	*(pre_value.country[COUNTRY_ID].coin[8].data.p_pre_count_cur) = 0;//para_set_value.data.m_1fen;
+	*(pre_value.country[COUNTRY_ID].coin[9].data.p_pre_count_cur) = 0;//para_set_value.data.m_10yuan;
+	*(pre_value.country[COUNTRY_ID].coin[10].data.p_pre_count_cur) = 0;//para_set_value.data.m_5yuan;
+}
+
 void save_coin_number (void)
 {
-	para_set_value.data.m_1yuan += *(pre_value.country[COUNTRY_ID].coin[0].data.p_pre_count_cur);
-	para_set_value.data.m_5jiao += (*(pre_value.country[COUNTRY_ID].coin[1].data.p_pre_count_cur));
-	para_set_value.data.m_1jiao_big += (*(pre_value.country[COUNTRY_ID].coin[3].data.p_pre_count_cur));
-	para_set_value.data.m_1jiao += (*(pre_value.country[COUNTRY_ID].coin[4].data.p_pre_count_cur));
-	para_set_value.data.m_5fen +=  *(pre_value.country[COUNTRY_ID].coin[6].data.p_pre_count_cur);
-	para_set_value.data.m_2fen +=  *(pre_value.country[COUNTRY_ID].coin[7].data.p_pre_count_cur);
-	para_set_value.data.m_1fen +=  *(pre_value.country[COUNTRY_ID].coin[8].data.p_pre_count_cur);
-	para_set_value.data.m_10yuan +=  *(pre_value.country[COUNTRY_ID].coin[9].data.p_pre_count_cur);
-	para_set_value.data.m_5yuan +=  *(pre_value.country[COUNTRY_ID].coin[10].data.p_pre_count_cur);
+	//update_coin_number ();
 	write_para ();
 }
 
@@ -155,6 +173,7 @@ void cy_precoincount(void)
 		}
 		if ((good_coin < 0) ||  ((para_set_value.data.coin_full_rej_pos == 1) &&
 								 ((*(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_pre_count_set) == 0) ||
+								  (coin_env.inhibit_coin[good_coin] == 0) ||
 								  (*pre_value.country[COUNTRY_ID].coin[good_coin].data.p_pre_count_full_flag == 1)))){ //假币 返回值小于0
 			if (coin_env.kick_Q[coin_env.kick_Q_index] == 0){
 				coin_env.kick_Q[coin_env.kick_Q_index] = para_set_value.data.kick_start_delay_t0;

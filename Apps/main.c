@@ -337,7 +337,7 @@ void TaskStart(void *pdata)
 				ALL_STOP();//停掉所有的输出
 				if (sys_env.sys_runing_time_total > 0){
 					sys_env.coin_speed = ((processed_coin_info.total_coin - processed_coin_info.total_coin_old) * 60) / (sys_env.sys_runing_time_total / 10000);
-					refresh_data ();
+					//refresh_data ();
 				}
 				disp_allcount ();
 				save_coin_number ();
@@ -352,8 +352,8 @@ void TaskStart(void *pdata)
 				break;
 			}
 			case 6: {
-				//if( adstd_offset() == 1){//  检测基准值，并进行补偿
-				if (1) {//  检测基准值，并进行补偿
+				if( adstd_offset() == 1){//  检测基准值，并进行补偿
+				//if (1) {//  检测基准值，并进行补偿
 					setStdValue	();//设置鉴伪基准值
 					sys_env.stop_time = STOP_TIME;//无币停机时间
 					sys_env.workstep =10;
@@ -381,6 +381,7 @@ void TaskStart(void *pdata)
 			}
 			case 10:{        //main  proceed
 				runfunction();	 //转盘动作函数
+				update_coin_number ();
 				if(blockflag == 0){//堵币
 					SEND_ERROR(PRESSMLOCKED);
 				}
@@ -391,7 +392,7 @@ void TaskStart(void *pdata)
 				if (sys_env.stop_time == 0){
 					switch (sys_env.stop_flag){
 						case 0:
-							STORAGE_DIR_N();//反转
+							//STORAGE_DIR_N();//反转
 							sys_env.stop_time = 25;//反转0.5秒
 							sys_env.stop_flag = 1;
 							break;

@@ -544,7 +544,7 @@ void get_ad_value (void)
 	std_ad0 /= ADSAMPNUM;
 	std_ad1 /= ADSAMPNUM;
 	std_ad2 /= ADSAMPNUM;
-	cy_print("A0 :%d   A1 :%d  A2 :%d  \r\n",std_ad0,std_ad1,std_ad2);
+	//cy_print("A0 :%d   A1 :%d  A2 :%d  \r\n",std_ad0,std_ad1,std_ad2);
 }
 
 uint16_t adstd_offset()    //  检测 基准值   有不大偏差进行补偿
