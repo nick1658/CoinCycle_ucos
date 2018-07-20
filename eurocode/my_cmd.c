@@ -401,14 +401,12 @@ int get_hex_struct (s_hex_file *p_hex, char *_data_buf)
 
 void coin_dispense (void)
 {	
+	set_active_resister (ACT_L_R_DISPENSING_COIN, 0);
 	uint32_t i;
 	//开始找零-----------------------------------------------------
 	para_set_value.data.hopper_cnt[0] = 0;
 	if (para_set_value.data.hopper_num[0] > para_set_value.data.m_1yuan){
 		para_set_value.data.hopper_num[0] = para_set_value.data.m_1yuan;
-		para_set_value.data.m_1yuan = 0;
-	}else{
-		para_set_value.data.m_1yuan -= para_set_value.data.hopper_num[0];
 	}
 	for (i = 0; i < para_set_value.data.hopper_num[0]; i++){
 		BELT_MOTOR_STARTRUN();   //斗送入电机
@@ -424,9 +422,6 @@ void coin_dispense (void)
 	para_set_value.data.hopper_cnt[1] = 0;
 	if (para_set_value.data.hopper_num[1] > para_set_value.data.m_5jiao){
 		para_set_value.data.hopper_num[1] = para_set_value.data.m_5jiao;
-		para_set_value.data.m_5jiao = 0;
-	}else{
-		para_set_value.data.m_5jiao -= para_set_value.data.hopper_num[1];
 	}
 	for (i = 0; i < para_set_value.data.hopper_num[1]; i++){
 		BELT_MOTOR_STARTRUN();   //斗送入电机
@@ -442,9 +437,6 @@ void coin_dispense (void)
 	para_set_value.data.hopper_cnt[2] = 0;
 	if (para_set_value.data.hopper_num[2] > para_set_value.data.m_1jiao){
 		para_set_value.data.hopper_num[2] = para_set_value.data.m_1jiao;
-		para_set_value.data.m_1jiao = 0;
-	}else{
-		para_set_value.data.m_1jiao -= para_set_value.data.hopper_num[2];
 	}
 	for (i = 0; i < para_set_value.data.hopper_num[2]; i++){
 		BELT_MOTOR_STARTRUN();   //斗送入电机
@@ -460,6 +452,22 @@ void coin_dispense (void)
 	//结束找零-----------------------------------------------------
 	write_para ();
 }
+//
+void fin_coin_dispense (void)
+{
+	reset_active_resister (ACT_L_R_DISPENSING_COIN, 0);
+	
+	para_set_value.data.m_1yuan -= para_set_value.data.hopper_cnt[0];
+	para_set_value.data.m_5jiao -= para_set_value.data.hopper_cnt[1];
+	para_set_value.data.m_1jiao -= para_set_value.data.hopper_cnt[2];
+	cctalk_env.payed_money_out =  para_set_value.data.hopper_cnt[0] * 100 + 
+																para_set_value.data.hopper_cnt[1] * 50 + 
+																para_set_value.data.hopper_cnt[2] * 10;
+	cctalk_env.unpayed_money_out = para_set_value.data.hopper_num[0] * 100 + 
+																para_set_value.data.hopper_num[1] * 50 + 
+																para_set_value.data.hopper_num[2] * 10;
+}
+
 int get_hex_data (char * buf)
 {
 	int i = 0;
@@ -1011,14 +1019,14 @@ void coin_start (void)
 		prepic_num =JSJM;
 		comscreen(Disp_Indexpic[JSYX],Number_IndexpicB);	 // back to the  picture before alert
 		sys_env.workstep = 3;
-		dbg("begin working\r\n");
+		//dbg("begin working\r\n");
 	}
 }
 
 void coin_stop (void)
 {
 	runstep = 40;   //开始停机
-	dbg("end working %s %d\n", __FILE__, __LINE__);
+	//dbg("end working %s %d\n", __FILE__, __LINE__);
 }
 
 void coin_clear (void)

@@ -178,9 +178,28 @@ enum cctalk_crc_mode  {
 #define HOPPER_STATUS_HIGH (0x02)
 
 
+#define ACT_L_R_SINGULATOR_RUNNING 		(0x01)
+#define ACT_L_R_ESCALATOR_RUNNING			(0x02)
+#define ACT_L_R_ACCEPTING_COIN 				(0x04)
+#define ACT_L_R_DISPENSING_COIN 			(0x08)
+#define ACT_L_R_FAULT_DETECTED		 		(0x10)
+#define ACT_L_R_AVALANCHE_DETECTED		(0x20)
+#define ACT_L_R_INITIALISHING 				(0x40)
+#define ACT_L_R_ENTRYFLAPOPEN	 				(0x80)
+
+#define ACT_H_R_COINTINUOUS_REJECTS		(0x01)
+#define ACT_H_R_HOPPER_CONF_CHANGED		(0x02)
+#define ACT_H_R_REJECTDIVERT_ACTIVE 	(0x04)
+#define ACT_H_R_EXIT_CUP_FULL 				(0x08)
+#define ACT_H_R_NORMAL_FAULT_DETECTED	(0x10)
+#define ACT_H_R_IN_TEST_MODE					(0x20)
+
+
 typedef struct
 {
 	uint8_t dispense_event_ctr;
+	uint8_t act_resister_l;
+	uint8_t act_resister_h;
 	uint8_t hopper_status[HOPPER_NUM];
 	uint16_t hopper_balance[HOPPER_NUM];
 	uint16_t coin_master_inhibit_status;
@@ -193,9 +212,13 @@ typedef struct
 
 
 
+extern s_cctalk_env cctalk_env;
 
 void cctalk_env_init (void);
 int cctalk_protocol (char *buf, uint32_t len);
+void update_hopper_status (void);
+void set_active_resister (uint8_t reg_l, uint8_t reg_h);
+void reset_active_resister (uint8_t reg_l, uint8_t reg_h);
 
 
 

@@ -162,6 +162,7 @@ void poll_data (void);
 int had_ctrlc (void);
 void clear_ctrlc (void);
 void coin_dispense (void);
+void fin_coin_dispense (void);
 
 int16_t is_repeate (int16_t _coin_index);//  判别 是不是重币的函数
 

@@ -77,41 +77,14 @@ void Timer4_Init(unsigned short us, void (*Callback)(void), unsigned short enabl
 }
 
 
-#define KICK_Q_SCAN(N) if (coin_env.kick_Q[N] > 0) {\
-	coin_env.kick_Q[N]--; \
-	if (coin_env.kick_Q[N] == 0){ \
-		EMKICK0(STARTRUN);	  \
-		processed_coin_info.total_ng++; \
-		coin_env.kick_keep_t0 = para_set_value.data.kick_keep_t0;\
-	}\
-}
-#define FULL_KICK_Q_SCAN(N) if (coin_env.full_kick_Q[N] > 0) {\
-	coin_env.full_kick_Q[N]--; \
-	if (coin_env.full_kick_Q[N] == 0){ \
-		EMKICK1(STARTRUN);	  \
-		coin_env.full_kick_keep_t1 = para_set_value.data.kick_keep_t1;\
-	}\
-}
 
-#define RECV_KICK_Q_SCAN(M,N) if (coin_env.recv_kick_Q[M][N] > 0) {\
-	coin_env.recv_kick_Q[M][N]--; \
-	if (coin_env.recv_kick_Q[M][N] == 0){ \
-		(*coin_env.p_coin_recv_func[M])(); \
-		coin_env.recv_kick_keep_t[M] = para_set_value.data.kick_keep_t[M];\
-	}\
-}
-#define RECV_KICK_KEEP_SCAN(M) if (coin_env.recv_kick_keep_t[M] > 0) {\
-	coin_env.recv_kick_keep_t[M]--; \
-	if (coin_env.recv_kick_keep_t[M] == 0){ \
-		(*coin_env.p_coin_kick_keep_func[M])(); \
-	}\
-}
 
 static int16_t hopper_coin_in[HOPPER_NUM] = {0, 0, 0};
 #define HOPPER_COUNTER(X) if (HOPPER##X##_CNT_IN == 0){ \
 	if (hopper_coin_in[X] == 0){ \
 		hopper_coin_in[X] = 1; \
 		para_set_value.data.hopper_cnt[X]++; \
+		para_set_value.data.hopper_num[X]--; \
 		para_set_value.data.hopper_output_timeout[X] = 20; \
 		para_set_value.data.belt_runtime = 10; \
 	} \
@@ -123,32 +96,6 @@ extern void main_task(void);
 void Timer3_IRQ(void)
 {   
 	main_task ();
-	KICK_Q_SCAN(0);
-	KICK_Q_SCAN(1);
-	//FULL_KICK_Q_SCAN(0);
-	//FULL_KICK_Q_SCAN(1);
-	RECV_KICK_Q_SCAN(0, 0);
-	RECV_KICK_Q_SCAN(0, 1);
-	RECV_KICK_Q_SCAN(0, 2);
-	RECV_KICK_Q_SCAN(0, 3);
-	
-	RECV_KICK_Q_SCAN(1, 0);
-	RECV_KICK_Q_SCAN(1, 1);
-	RECV_KICK_Q_SCAN(1, 2);
-	RECV_KICK_Q_SCAN(1, 3);
-	RECV_KICK_Q_SCAN(2, 0);
-	RECV_KICK_Q_SCAN(2, 1);
-	RECV_KICK_Q_SCAN(2, 2);
-	RECV_KICK_Q_SCAN(2, 3);
-	
-	RECV_KICK_Q_SCAN(4, 0);
-	RECV_KICK_Q_SCAN(4, 1);
-	RECV_KICK_Q_SCAN(4, 2);
-	RECV_KICK_Q_SCAN(4, 3);
-	RECV_KICK_Q_SCAN(5, 0);
-	RECV_KICK_Q_SCAN(5, 1);
-	RECV_KICK_Q_SCAN(5, 2);
-	RECV_KICK_Q_SCAN(5, 3);
 	
 	HOPPER_COUNTER(0);
 	HOPPER_COUNTER(1);

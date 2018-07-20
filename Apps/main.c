@@ -147,8 +147,8 @@ void coin_init (void)
 
  	sys_env.workstep = 0; //停机状态
 	print_system_env_info ();//串口打印编译信息和系统环境变量，便于调试。
-//	setStdValue	();//设置鉴伪基准值，后面每次启动之前都会设置一次，因为鉴伪基准值会随温度在一定范围内变化
-//	adstd_offset ();//设置补偿值，后面每次启动之前都会补偿一次，因为鉴伪基准值会随温度在一定范围内变化
+	adstd_offset ();//设置补偿值，后面每次启动之前都会补偿一次，因为鉴伪基准值会随温度在一定范围内变化
+	setStdValue	();//设置鉴伪基准值，后面每次启动之前都会设置一次，因为鉴伪基准值会随温度在一定范围内变化
 
 	comscreen(Disp_Indexpic[JSJM],Number_IndexpicB);	  // 跳转到主界面
 	sys_env.system_delay = para_set_value.data.system_boot_delay;
@@ -260,7 +260,7 @@ void Task1(void *pdata)
 		OSTimeDly(500); // LED3 1000ms闪烁void
 		for (i = 0; i < HOPPER_NUM; i++){
 			if (para_set_value.data.hopper_cnt[i] > 0){
-				if (para_set_value.data.hopper_cnt[i] == para_set_value.data.hopper_num[i]){
+				if (para_set_value.data.hopper_num[i] == 0){
 					cy_println ("hopper %d output coin %d", i, para_set_value.data.hopper_cnt[i]);
 					para_set_value.data.hopper_cnt[i] = 0;
 					para_set_value.data.hopper_output_timeout[i] = 0;
@@ -277,6 +277,7 @@ void Task1(void *pdata)
 					(para_set_value.data.hopper_output_timeout[2] == 0)){
 					cy_println ("hopper %d output coin timeout", i);
 					BELT_MOTOR_STOPRUN();   //斗送入电机
+					fin_coin_dispense ();
 					cy_println ("stop belt motor 0");
 				}
 			}
@@ -287,7 +288,8 @@ void Task1(void *pdata)
 				if ((para_set_value.data.hopper_output_timeout[0] == 0) && 
 					(para_set_value.data.hopper_output_timeout[1] == 0) &&
 					(para_set_value.data.hopper_output_timeout[2] == 0)){
-				BELT_MOTOR_STOPRUN();   //斗送入电机
+					BELT_MOTOR_STOPRUN();   //斗送入电机
+					fin_coin_dispense ();
 				cy_println ("stop belt motor 1");
 				}else{
 					para_set_value.data.belt_runtime = 1;
@@ -339,6 +341,7 @@ void TaskStart(void *pdata)
 					sys_env.coin_speed = ((processed_coin_info.total_coin - processed_coin_info.total_coin_old) * 60) / (sys_env.sys_runing_time_total / 10000);
 					//refresh_data ();
 				}
+				reset_active_resister (ACT_L_R_ACCEPTING_COIN, 0);
 				disp_allcount ();
 				save_coin_number ();
 				sys_env.workstep = 1;
@@ -352,8 +355,8 @@ void TaskStart(void *pdata)
 				break;
 			}
 			case 6: {
-				if( adstd_offset() == 1){//  检测基准值，并进行补偿
-				//if (1) {//  检测基准值，并进行补偿
+				//if( adstd_offset() == 1){//  检测基准值，并进行补偿
+				if (1) {//  检测基准值，并进行补偿
 					setStdValue	();//设置鉴伪基准值
 					sys_env.stop_time = STOP_TIME;//无币停机时间
 					sys_env.workstep =10;
@@ -377,6 +380,8 @@ void TaskStart(void *pdata)
 					SEND_ERROR(ADSTDEEROR);   //传感器下有币
 					dbg("the voltage is wrong \r\n");
 				}
+				
+				set_active_resister (ACT_L_R_ACCEPTING_COIN, 0);
 				break;
 			}
 			case 10:{        //main  proceed

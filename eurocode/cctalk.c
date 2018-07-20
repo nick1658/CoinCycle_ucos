@@ -18,7 +18,9 @@ void cctalk_env_init (void)
 
 
 
-
+void check_res_flag (void)
+{
+}
 uint8_t cctalk_calc_checksum (char * buf, uint8_t len)
 {
 	int16_t i;
@@ -41,7 +43,7 @@ int cctalk_send (uint8_t res_addr, uint8_t * data_buf, int16_t data_len)
 	cctalk_send_buf[0] = res_addr;
 	cctalk_send_buf[1] = data_len;
 	cctalk_send_buf[2] = CCTALK_ADDR;
-	cctalk_send_buf[3] = 0;
+	cctalk_send_buf[3] = 0x00;
 	for (i = 0; i < data_len; i++){
 		cctalk_send_buf[i + 4] = data_buf[i];
 	}
@@ -213,17 +215,11 @@ int res_modify_hopper_balance (char *recv_buf)
 	}
 	if (hopper_index < HOPPER_NUM){
 		cctalk_env.hopper_balance[hopper_index] =  recv_buf[5] +  recv_buf[6] * 256;
-		if (cctalk_env.hopper_balance[hopper_index] < 10){
-			cctalk_env.hopper_status[hopper_index] = HOPPER_STATUS_LOW;
-		}else if (cctalk_env.hopper_balance[hopper_index] > 300){
-			cctalk_env.hopper_status[hopper_index] = HOPPER_STATUS_HIGH;
-		}else{
-			cctalk_env.hopper_status[hopper_index] = 0;
-		}
 	}
 	para_set_value.data.m_1yuan = cctalk_env.hopper_balance[0];
 	para_set_value.data.m_5jiao = cctalk_env.hopper_balance[1];
 	para_set_value.data.m_1jiao = cctalk_env.hopper_balance[2];
+	check_res_flag ();
 	return cctalk_simple_poll_respond (recv_buf);
 }
 int res_request_hopper_balance (char *recv_buf)
@@ -283,17 +279,43 @@ int res_request_hopper_balance (char *recv_buf)
 	return 0;
 }
 //
+
+void set_active_resister (uint8_t reg_l, uint8_t reg_h)
+{
+	 cctalk_env.act_resister_l |= reg_l;
+	 cctalk_env.act_resister_h |= reg_h;
+}
+void reset_active_resister (uint8_t reg_l, uint8_t reg_h)
+{
+	 cctalk_env.act_resister_l &= (~reg_l);
+	 cctalk_env.act_resister_h &= (~reg_h);
+}
+
 int res_request_active_resister (char *recv_buf)
 {
 	uint8_t data_buf_tmp[2];
 	///////////////////////////////////////////////////////////////////
-	data_buf_tmp[0] = 2;//低字节
-	data_buf_tmp[1] = 1;//高字节
+	data_buf_tmp[0] = cctalk_env.act_resister_l;//低字节
+	data_buf_tmp[1] =  cctalk_env.act_resister_h;//高字节
 	///////////////////////////////////////////////////////////////////
 	cctalk_send (recv_buf[2], data_buf_tmp, sizeof(data_buf_tmp));
 	return 0;
 }
 //
+
+void update_hopper_status (void)
+{
+	uint8_t i;
+	for (i = 0; i < HOPPER_NUM; i++){
+		if (cctalk_env.hopper_balance[i] < 10){
+			cctalk_env.hopper_status[i] = HOPPER_STATUS_LOW;
+		}else if (cctalk_env.hopper_balance[i] > 300){
+			cctalk_env.hopper_status[i] = HOPPER_STATUS_HIGH;
+		}else{
+			cctalk_env.hopper_status[i] = 0;
+		}
+	}
+}
 int res_request_hopper_status (char *recv_buf)
 {
 	uint8_t hopper_index_tmp = recv_buf[4];
@@ -303,9 +325,10 @@ int res_request_hopper_status (char *recv_buf)
 		hopper_index_tmp -= 3;
 	}
 	if (hopper_index_tmp < HOPPER_NUM){
-			data_buf_tmp[0] = cctalk_env.hopper_status[hopper_index_tmp];//低字节
+		update_hopper_status ();
+		data_buf_tmp[0] = cctalk_env.hopper_status[hopper_index_tmp];//低字节
 	}else{
-			data_buf_tmp[0] = 0;
+		data_buf_tmp[0] = 0;
 	}
 	///////////////////////////////////////////////////////////////////
 	cctalk_send (recv_buf[2], data_buf_tmp, sizeof(data_buf_tmp));
@@ -444,6 +467,7 @@ int res_clear_money_counters (char *recv_buf)
 	para_set_value.data.m_1yuan = cctalk_env.hopper_balance[0];
 	para_set_value.data.m_5jiao = cctalk_env.hopper_balance[1];
 	para_set_value.data.m_1jiao = cctalk_env.hopper_balance[2];
+	check_res_flag ();
 	return cctalk_simple_poll_respond (recv_buf);
 }
 //
@@ -455,6 +479,7 @@ int res_pay_money_out (char *recv_buf)
 													 recv_buf[7] << 24;
 	//找零钱
 	cctalk_env.dispense_event_ctr++;//找零事件加1
+	check_res_flag ();
 	return cctalk_simple_poll_respond (recv_buf);
 }
 //
@@ -465,6 +490,7 @@ int res_purge_hopper(char *recv_buf)
 	hopper_index = recv_buf[4];//0xFF 表示清空所有Hopper，否则代表Hopper序号
 	coin_num = recv_buf[5];//0x0 代表清空hopper_index对应的Hopper，否则代表出的硬币数，最多255
 	//清空操作
+	check_res_flag ();
 	return cctalk_simple_poll_respond (recv_buf);
 }
 //
@@ -524,6 +550,7 @@ int res_request_hopper_pattern(char *recv_buf)
 		}
 		cctalk_env.dispense_event_ctr++;//找零事件加1
 	}
+	check_res_flag ();
 	return cctalk_simple_poll_respond (recv_buf);
 }
 //
@@ -622,7 +649,7 @@ int cctalk_protocol (char *buf, uint32_t len)
 	}
 	return 0;
 }
-
+//
 
 
 

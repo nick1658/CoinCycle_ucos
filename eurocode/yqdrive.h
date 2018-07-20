@@ -94,6 +94,38 @@
 
 #define  IR_DETECT_ON   0	//  //红外对射传感器 0 表示有遮挡
 
+
+
+#define KICK_Q_SCAN(N) if (coin_env.kick_Q[N] > 0) {\
+	coin_env.kick_Q[N]--; \
+	if (coin_env.kick_Q[N] == 0){ \
+		EMKICK0(STARTRUN);	  \
+		processed_coin_info.total_ng++; \
+		coin_env.kick_keep_t0 = para_set_value.data.kick_keep_t0;\
+	}\
+}
+#define FULL_KICK_Q_SCAN(N) if (coin_env.full_kick_Q[N] > 0) {\
+	coin_env.full_kick_Q[N]--; \
+	if (coin_env.full_kick_Q[N] == 0){ \
+		EMKICK1(STARTRUN);	  \
+		coin_env.full_kick_keep_t1 = para_set_value.data.kick_keep_t1;\
+	}\
+}
+
+#define RECV_KICK_Q_SCAN(M,N) if (coin_env.recv_kick_Q[M][N] > 0) {\
+	coin_env.recv_kick_Q[M][N]--; \
+	if (coin_env.recv_kick_Q[M][N] == 0){ \
+		(*coin_env.p_coin_recv_func[M])(); \
+		coin_env.recv_kick_keep_t[M] = para_set_value.data.kick_keep_t[M];\
+	}\
+}
+#define RECV_KICK_KEEP_SCAN(M) if (coin_env.recv_kick_keep_t[M] > 0) {\
+	coin_env.recv_kick_keep_t[M]--; \
+	if (coin_env.recv_kick_keep_t[M] == 0){ \
+		(*coin_env.p_coin_kick_keep_func[M])(); \
+	}\
+}
+
 ////////////////////////////
 void deviceinit(void);	//开机前初始化
 
