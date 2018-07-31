@@ -930,87 +930,53 @@ void touchresult(void)      //根据接收到的  数 来决定 执行的任务
 				}
 				break;
 			case 0x07://踢币电磁铁0
-				time = para_set_value.data.kick_start_delay_t0; //kick_start_delay_time*0.1ms
+				pulse_time = para_set_value.data.kick_start_delay_t0; //kick_start_delay_time*0.1ms
 				dgus_tf1word(ADDR_KICK1_M,1);
-				while(time != 0){;}
+				while(pulse_time != 0){;}
 				EMKICK0(STARTRUN);	  // kick out
 				cy_println ("kick0 start");
-				time = para_set_value.data.kick_keep_t0;	  //kick_keep_time*0.1ms
-				while(time != 0){;}
+				pulse_time = para_set_value.data.kick_keep_t0;	  //kick_keep_time*0.1ms
+				while(pulse_time != 0){;}
 				EMKICK0(STOPRUN);	  // kick in
 				cy_println ("kick0 stop");
 				dgus_tf1word(ADDR_KICK1_M,0);
 				break;
 			case 0x08://踢币电磁铁1
-				time = para_set_value.data.kick_start_delay_t[0]*10; //kick_start_delay_time*0.1ms
+				pulse_time = para_set_value.data.kick_start_delay_t[0]*10; //kick_start_delay_time*0.1ms
 				dgus_tf1word(ADDR_KICK2_M,1);
-				while(time != 0){;}
+				while(pulse_time != 0){;}
 				EMKICK1(STARTRUN);	  // kick out
 				cy_println ("kick1 start");
-				time = para_set_value.data.kick_keep_t[0];	  //kick_keep_time*0.1ms
-				while(time != 0){;}
+				pulse_time = para_set_value.data.kick_keep_t[0];	  //kick_keep_time*0.1ms
+				while(pulse_time != 0){;}
 				EMKICK1(STOPRUN);	  // kick in
 				cy_println ("kick1 stop");
 				dgus_tf1word(ADDR_KICK2_M,0);
 				break;
 			case 0x09://踢币电磁铁2
-				time = para_set_value.data.kick_start_delay_t[2]*10; //kick_start_delay_time*0.1ms
-				while(time != 0){;}
+				pulse_time = para_set_value.data.kick_start_delay_t[2]*10; //kick_start_delay_time*0.1ms
+				while(pulse_time != 0){;}
 				EMKICK2(STARTRUN);	  // kick out
 				cy_println ("kick2 start");
-				time = para_set_value.data.kick_keep_t[2];	  //kick_keep_time*0.1ms
-				while(time != 0){;}
+				pulse_time = para_set_value.data.kick_keep_t[2];	  //kick_keep_time*0.1ms
+				while(pulse_time != 0){;}
 				EMKICK2(STOPRUN);	  // kick in
 				cy_println ("kick2 stop");
 				break;
 			case 0x0a://踢币电磁铁3
-				time = para_set_value.data.kick_start_delay_t[4]*10; //kick_start_delay_time*0.1ms
-				while(time != 0){;}
+				pulse_time = para_set_value.data.kick_start_delay_t[4]*10; //kick_start_delay_time*0.1ms
+				while(pulse_time != 0){;}
 				EMKICK3(STARTRUN);	  // kick out
 				cy_println ("kick3 start");
-				time = para_set_value.data.kick_keep_t[4];	  //kick_keep_time*0.1ms
-				while(time != 0){;}
+				pulse_time = para_set_value.data.kick_keep_t[4];	  //kick_keep_time*0.1ms
+				while(pulse_time != 0){;}
 				EMKICK3(STOPRUN);	  // kick in
 				cy_println ("kick3 stop");
 				break;
 			case 0x0B://Hopper 0
-				cy_println ("hopper 0 start");
-				para_set_value.data.hopper_cnt[0] = 0;
-				for (i = 0; i < para_set_value.data.hopper_num[0]; i++){
-					PAYOUT0(STARTRUN);	  //
-					time = para_set_value.data.hopper_pulse; //
-					while(time != 0){;}
-					PAYOUT0(STOPRUN);	  // 
-					time = para_set_value.data.hopper_pulse; //
-					while(time != 0){;}
-					para_set_value.data.hopper_output_timeout[0] = 20;//10s
-				}
-				break;
 			case 0x0C://Hopper 1
-				cy_println ("hopper 1 start");
-				para_set_value.data.hopper_cnt[1] = 0;
-				for (i = 0; i < para_set_value.data.hopper_num[1]; i++){
-					PAYOUT1(STARTRUN);	  // 
-					time = para_set_value.data.hopper_pulse; 
-					while(time != 0){;}
-					PAYOUT1(STOPRUN);	  // 
-					time = para_set_value.data.hopper_pulse; 
-					while(time != 0){;}
-					para_set_value.data.hopper_output_timeout[1] = 20;//10s
-				}
-				break;
 			case 0x0D://Hopper 2
-				cy_println ("hopper 2 start");
-				para_set_value.data.hopper_cnt[2] = 0;
-				for (i = 0; i < para_set_value.data.hopper_num[2]; i++){
-					PAYOUT2(STARTRUN);	  // 
-					time = para_set_value.data.hopper_pulse; 
-					while(time != 0){;}
-					PAYOUT2(STOPRUN);	  //
-					time = para_set_value.data.hopper_pulse; 
-					while(time != 0){;}
-					para_set_value.data.hopper_output_timeout[2] = 20;//10s
-				}
+				coin_dispense ();
 				break;
 			default:break;
 		}

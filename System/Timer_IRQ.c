@@ -85,8 +85,12 @@ static int16_t hopper_coin_in[HOPPER_NUM] = {0, 0, 0};
 		hopper_coin_in[X] = 1; \
 		para_set_value.data.hopper_cnt[X]++; \
 		para_set_value.data.hopper_num[X]--; \
-		para_set_value.data.hopper_output_timeout[X] = 20; \
-		para_set_value.data.belt_runtime = 10; \
+		if (para_set_value.data.hopper_output_timeout[X] > 0){ \
+			para_set_value.data.hopper_output_timeout[X] = 20; \
+		} \
+		if (para_set_value.data.belt_runtime > 0){ \
+			para_set_value.data.belt_runtime = 10; \
+		} \
 	} \
 }else{ \
 		hopper_coin_in[X] = 0; \
@@ -114,7 +118,7 @@ void Timer3_IRQ(void)
 	RECV_KICK_KEEP_SCAN(5);
 	
 	coin_cross_time++;
-	if(time > 0){time--;}
+	if(pulse_time > 0){pulse_time--;}
 }
 
 

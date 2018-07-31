@@ -67,3 +67,4 @@ dkms.conf
 *.Administrator
 *.iex
 *.asm
+*.log

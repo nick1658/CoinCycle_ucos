@@ -2,7 +2,7 @@
 
 volatile uint32_t runtime = 0;   // // 执行件用的计时变量
 unsigned short int runstep = 0;   //  部件动作步骤号
-volatile uint32_t time = 0;   // //部件测试时踢币电磁铁用的计时变量
+volatile uint32_t pulse_time = 0;   // //部件测试时踢币电磁铁用的计时变量
 
 
 static int coin_in_flag = 1;

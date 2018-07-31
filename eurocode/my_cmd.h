@@ -166,7 +166,7 @@ void fin_coin_dispense (void);
 
 int16_t is_repeate (int16_t _coin_index);//  判别 是不是重币的函数
 
-#define TTY_ONLINE_TIME 25
+#define TTY_ONLINE_TIME 50
 #define TTY_UART_ONLINE_TIME 2
 
 

@@ -253,44 +253,40 @@ void Task2(void *pdata)
 }
 void Task1(void *pdata)
 {
+#if OS_CRITICAL_METHOD == 3u                     /* Allocate storage for CPU status register           */
+    OS_CPU_SR  cpu_sr = 0u;
+#endif
 	int i;
 	(void)pdata;
 	while (1) {
 		LED2_NOT;
 		OSTimeDly(500); // LED3 1000ms闪烁void
-		for (i = 0; i < HOPPER_NUM; i++){
-			if (para_set_value.data.hopper_cnt[i] > 0){
-				if (para_set_value.data.hopper_num[i] == 0){
-					cy_println ("hopper %d output coin %d", i, para_set_value.data.hopper_cnt[i]);
-					para_set_value.data.hopper_cnt[i] = 0;
-					para_set_value.data.hopper_output_timeout[i] = 0;
-					//BELT_MOTOR_STARTRUN();   //斗送入电机
-				}
-			}
-		}
 
 		for (i = 0; i < HOPPER_NUM; i++){
 			if (para_set_value.data.hopper_output_timeout[i] > 0){
+				OS_ENTER_CRITICAL();
 				para_set_value.data.hopper_output_timeout[i]--;
+				OS_EXIT_CRITICAL();
 				if ((para_set_value.data.hopper_output_timeout[0] == 0) && 
 					(para_set_value.data.hopper_output_timeout[1] == 0) &&
 					(para_set_value.data.hopper_output_timeout[2] == 0)){
 					cy_println ("hopper %d output coin timeout", i);
 					BELT_MOTOR_STOPRUN();   //斗送入电机
-					fin_coin_dispense ();
 					cy_println ("stop belt motor 0");
 				}
 			}
 		}
 		if (para_set_value.data.belt_runtime > 0){
+			OS_ENTER_CRITICAL();
 			para_set_value.data.belt_runtime--;
+			OS_EXIT_CRITICAL();
 			if (para_set_value.data.belt_runtime == 0){
 				if ((para_set_value.data.hopper_output_timeout[0] == 0) && 
 					(para_set_value.data.hopper_output_timeout[1] == 0) &&
 					(para_set_value.data.hopper_output_timeout[2] == 0)){
 					BELT_MOTOR_STOPRUN();   //斗送入电机
 					fin_coin_dispense ();
-				cy_println ("stop belt motor 1");
+					cy_println ("stop belt motor 2");
 				}else{
 					para_set_value.data.belt_runtime = 1;
 				}
@@ -355,8 +351,8 @@ void TaskStart(void *pdata)
 				break;
 			}
 			case 6: {
-				//if( adstd_offset() == 1){//  检测基准值，并进行补偿
-				if (1) {//  检测基准值，并进行补偿
+				if( adstd_offset() == 1){//  检测基准值，并进行补偿
+				//if (1) {//  检测基准值，并进行补偿
 					setStdValue	();//设置鉴伪基准值
 					sys_env.stop_time = STOP_TIME;//无币停机时间
 					sys_env.workstep =10;

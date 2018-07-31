@@ -515,6 +515,7 @@ int res_verify_money_out(char *recv_buf)
 int res_request_hopper_pattern(char *recv_buf)
 {
 	#define MAX_HOPPER_NUM 6
+	int res_flag;
 	uint16_t data_len, i, hopper_index_tmp, hopper_num_tmp;
 	uint8_t hopper_tmp[MAX_HOPPER_NUM][2];//最多支持六个Hopper
 	
@@ -535,6 +536,8 @@ int res_request_hopper_pattern(char *recv_buf)
 				para_set_value.data.hopper_num[hopper_index_tmp] = hopper_num_tmp;
 			}
 		}
+		check_res_flag ();
+		res_flag = cctalk_simple_poll_respond (recv_buf);
 		coin_dispense ();
 		cctalk_env.hopper_balance[0] = para_set_value.data.m_1yuan;
 		cctalk_env.hopper_balance[1] = para_set_value.data.m_5jiao;
@@ -550,8 +553,7 @@ int res_request_hopper_pattern(char *recv_buf)
 		}
 		cctalk_env.dispense_event_ctr++;//找零事件加1
 	}
-	check_res_flag ();
-	return cctalk_simple_poll_respond (recv_buf);
+	return res_flag;
 }
 //
 

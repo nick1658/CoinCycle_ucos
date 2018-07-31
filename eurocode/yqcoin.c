@@ -191,7 +191,7 @@ void cy_precoincount(void)
 				processed_coin_info.total_good++;
 				//coin_env.coin_Q[coin_env.coin_Q_remain] = COIN_GOOD_FLAG;//用真币剔除工位剔除
 				if (coin_env.recv_kick_Q[good_coin][coin_env.recv_kick_Q_index[good_coin]] == 0){
-					coin_env.recv_kick_Q[good_coin][coin_env.recv_kick_Q_index[good_coin]] = para_set_value.data.kick_start_delay_t[good_coin]*10;
+					coin_env.recv_kick_Q[good_coin][coin_env.recv_kick_Q_index[good_coin]] = para_set_value.data.kick_start_delay_t[good_coin];
 					coin_env.recv_kick_Q_index[good_coin]++;
 					coin_env.recv_kick_Q_index[good_coin] %= RECV_KICK_Q_LEN;
 				}else{//收币队列追尾错误

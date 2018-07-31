@@ -1,4 +1,4 @@
-#ifndef __YQDRIVE_H__
+    #ifndef __YQDRIVE_H__
 #define __YQDRIVE_H__
 
 
@@ -133,7 +133,7 @@ void deviceinit(void);	//开机前初始化
 
 extern volatile uint32_t runtime;   // // 执行件 用的计时
 extern unsigned short int runstep;  //  部件动作步骤号
-extern volatile uint32_t time;   // //踢币电磁铁 用的计时
+extern volatile uint32_t pulse_time;   // //踢币电磁铁 用的计时
 
 
 void runfunction(void);   //部件动作函数

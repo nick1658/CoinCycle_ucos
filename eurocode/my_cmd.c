@@ -401,21 +401,22 @@ int get_hex_struct (s_hex_file *p_hex, char *_data_buf)
 
 void coin_dispense (void)
 {	
+	uint32_t i, pulse_temp = 0;
 	set_active_resister (ACT_L_R_DISPENSING_COIN, 0);
-	uint32_t i;
 	//开始找零-----------------------------------------------------
 	para_set_value.data.hopper_cnt[0] = 0;
 	if (para_set_value.data.hopper_num[0] > para_set_value.data.m_1yuan){
 		para_set_value.data.hopper_num[0] = para_set_value.data.m_1yuan;
 	}
-	for (i = 0; i < para_set_value.data.hopper_num[0]; i++){
+	pulse_temp = para_set_value.data.hopper_num[0];
+	for (i = 0; i < pulse_temp; i++){
 		BELT_MOTOR_STARTRUN();   //斗送入电机
 		PAYOUT0(STARTRUN);	  //
-		time = para_set_value.data.hopper_pulse; 
-		while(time != 0){;}
+		pulse_time = para_set_value.data.hopper_pulse; 
+		while(pulse_time != 0){;}
 		PAYOUT0(STOPRUN);	  // 
-		time = para_set_value.data.hopper_pulse; 
-		while(time != 0){;}
+		pulse_time = para_set_value.data.hopper_pulse; 
+		while(pulse_time != 0){;}
 		para_set_value.data.hopper_output_timeout[0] = 20;//10s
 		para_set_value.data.belt_runtime = 10;
 	}
@@ -423,14 +424,15 @@ void coin_dispense (void)
 	if (para_set_value.data.hopper_num[1] > para_set_value.data.m_5jiao){
 		para_set_value.data.hopper_num[1] = para_set_value.data.m_5jiao;
 	}
-	for (i = 0; i < para_set_value.data.hopper_num[1]; i++){
+	pulse_temp = para_set_value.data.hopper_num[1];
+	for (i = 0; i < pulse_temp; i++){
 		BELT_MOTOR_STARTRUN();   //斗送入电机
 		PAYOUT1(STARTRUN);	  //
-		time = para_set_value.data.hopper_pulse; 
-		while(time != 0){;}
+		pulse_time = para_set_value.data.hopper_pulse; 
+		while(pulse_time != 0){;}
 		PAYOUT1(STOPRUN);	  // 
-		time = para_set_value.data.hopper_pulse; 
-		while(time != 0){;}
+		pulse_time = para_set_value.data.hopper_pulse; 
+		while(pulse_time != 0){;}
 		para_set_value.data.hopper_output_timeout[1] = 20;//10s
 		para_set_value.data.belt_runtime = 10;
 	}
@@ -438,14 +440,15 @@ void coin_dispense (void)
 	if (para_set_value.data.hopper_num[2] > para_set_value.data.m_1jiao){
 		para_set_value.data.hopper_num[2] = para_set_value.data.m_1jiao;
 	}
-	for (i = 0; i < para_set_value.data.hopper_num[2]; i++){
+	pulse_temp = para_set_value.data.hopper_num[2];
+	for (i = 0; i < pulse_temp; i++){
 		BELT_MOTOR_STARTRUN();   //斗送入电机
 		PAYOUT2(STARTRUN);	  //
-		time = para_set_value.data.hopper_pulse; 
-		while(time != 0){;}
+		pulse_time = para_set_value.data.hopper_pulse; 
+		while(pulse_time != 0){;}
 		PAYOUT2(STOPRUN);	  // 
-		time = para_set_value.data.hopper_pulse; 
-		while(time != 0){;}
+		pulse_time = para_set_value.data.hopper_pulse; 
+		while(pulse_time != 0){;}
 		para_set_value.data.hopper_output_timeout[2] = 20;//10s
 		para_set_value.data.belt_runtime = 10;
 	}
@@ -456,10 +459,17 @@ void coin_dispense (void)
 void fin_coin_dispense (void)
 {
 	reset_active_resister (ACT_L_R_DISPENSING_COIN, 0);
-	
-	para_set_value.data.m_1yuan -= para_set_value.data.hopper_cnt[0];
-	para_set_value.data.m_5jiao -= para_set_value.data.hopper_cnt[1];
-	para_set_value.data.m_1jiao -= para_set_value.data.hopper_cnt[2];
+
+	cy_println ("hopper0 out");
+	if (para_set_value.data.m_1yuan >= para_set_value.data.hopper_cnt[0]){
+		para_set_value.data.m_1yuan -= para_set_value.data.hopper_cnt[0];
+	}
+	if (para_set_value.data.m_5jiao >= para_set_value.data.hopper_cnt[1]){
+		para_set_value.data.m_5jiao -= para_set_value.data.hopper_cnt[1];
+	}
+	if (para_set_value.data.m_1jiao >= para_set_value.data.hopper_cnt[2]){
+		para_set_value.data.m_1jiao -= para_set_value.data.hopper_cnt[2];
+	}
 	cctalk_env.payed_money_out =  para_set_value.data.hopper_cnt[0] * 100 + 
 																para_set_value.data.hopper_cnt[1] * 50 + 
 																para_set_value.data.hopper_cnt[2] * 10;
