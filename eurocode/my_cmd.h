@@ -114,6 +114,7 @@ typedef struct
 	uint32_t stop_flag;
 	uint32_t coin_cross_time;
 	volatile uint32_t tty_online_ms;
+	volatile uint32_t coin_dispense;
 	uint32_t coin_over;
 	uint32_t coin_leave;
 	uint32_t AD_data_len;

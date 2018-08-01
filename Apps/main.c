@@ -299,7 +299,36 @@ OS_STK  TaskStartStk[TASK_START_STK_SIZE];
 OS_STK  Task1Stk[TASK1_STK_SIZE];
 OS_STK  Task2Stk[TASK2_STK_SIZE];
 OS_STK  Task3Stk[TASK3_STK_SIZE];
+OS_STK  Task4Stk[TASK4_STK_SIZE];
 
+
+
+void Task4(void *pdata)
+{
+	uint16_t i;
+	(void*)pdata;
+	
+	while (1){
+		if (sys_env.coin_dispense == 1){
+			coin_dispense ();
+			cctalk_env.hopper_balance[0] = para_set_value.data.m_1yuan;
+			cctalk_env.hopper_balance[1] = para_set_value.data.m_5jiao;
+			cctalk_env.hopper_balance[2] = para_set_value.data.m_1jiao;
+			for (i = 0; i < HOPPER_NUM; i++){
+				if (cctalk_env.hopper_balance[i] < 10){
+					cctalk_env.hopper_status[i] = HOPPER_STATUS_LOW;
+				}else if (cctalk_env.hopper_balance[i] > 300){
+					cctalk_env.hopper_status[i] = HOPPER_STATUS_HIGH;
+				}else{
+					cctalk_env.hopper_status[i] = 0;
+				}
+			}
+			cctalk_env.dispense_event_ctr++;//’“¡„ ¬º˛º”1
+			sys_env.coin_dispense = 0;
+		}
+		delay_ms (20);
+	}
+}
 
 void TaskStart(void *pdata)
 {
@@ -325,6 +354,7 @@ void TaskStart(void *pdata)
 	OSTaskCreate(Task1, (void *)0, &Task1Stk[TASK1_STK_SIZE - 1], Task1Prio);
 	OSTaskCreate(Task2, (void *)0, &Task2Stk[TASK2_STK_SIZE - 1], Task2Prio);
 	OSTaskCreate(Task3, (void *)0, &Task3Stk[TASK3_STK_SIZE - 1], Task3Prio);
+	OSTaskCreate(Task4, (void *)0, &Task4Stk[TASK4_STK_SIZE - 1], Task4Prio);
 
 	while (1) {
 		OSTimeDly(10); // LED2 500ms…¡À∏

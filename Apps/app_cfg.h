@@ -12,6 +12,9 @@
 #define TASK2_STK_SIZE 		1024
 #define Task2Prio 			12
 // 任务Task3的栈及优先级分配
+#define TASK4_STK_SIZE 		4096
+#define Task4Prio 			13
+// 任务Task3的栈及优先级分配
 #define TASK3_STK_SIZE 		4096
 #define Task3Prio 			9
 // 定时器优先级配置

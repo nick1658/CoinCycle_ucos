@@ -402,13 +402,15 @@ int get_hex_struct (s_hex_file *p_hex, char *_data_buf)
 void coin_dispense (void)
 {	
 	uint32_t i, pulse_temp = 0;
-	set_active_resister (ACT_L_R_DISPENSING_COIN, 0);
 	//开始找零-----------------------------------------------------
 	para_set_value.data.hopper_cnt[0] = 0;
 	if (para_set_value.data.hopper_num[0] > para_set_value.data.m_1yuan){
 		para_set_value.data.hopper_num[0] = para_set_value.data.m_1yuan;
 	}
 	pulse_temp = para_set_value.data.hopper_num[0];
+	if (pulse_temp > 0){
+		set_active_resister (ACT_L_R_DISPENSING_COIN, 0);
+	}
 	for (i = 0; i < pulse_temp; i++){
 		BELT_MOTOR_STARTRUN();   //斗送入电机
 		PAYOUT0(STARTRUN);	  //
@@ -425,6 +427,9 @@ void coin_dispense (void)
 		para_set_value.data.hopper_num[1] = para_set_value.data.m_5jiao;
 	}
 	pulse_temp = para_set_value.data.hopper_num[1];
+	if (pulse_temp > 0){
+		set_active_resister (ACT_L_R_DISPENSING_COIN, 0);
+	}
 	for (i = 0; i < pulse_temp; i++){
 		BELT_MOTOR_STARTRUN();   //斗送入电机
 		PAYOUT1(STARTRUN);	  //
@@ -441,6 +446,9 @@ void coin_dispense (void)
 		para_set_value.data.hopper_num[2] = para_set_value.data.m_1jiao;
 	}
 	pulse_temp = para_set_value.data.hopper_num[2];
+	if (pulse_temp > 0){
+		set_active_resister (ACT_L_R_DISPENSING_COIN, 0);
+	}
 	for (i = 0; i < pulse_temp; i++){
 		BELT_MOTOR_STARTRUN();   //斗送入电机
 		PAYOUT2(STARTRUN);	  //

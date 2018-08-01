@@ -18,10 +18,10 @@ void cctalk_env_init (void)
 
 
 
-uint16_t check_res_flag (void)
+uint16_t check_res_flag (uint8_t flag)
 {
 	uint16_t re_code = 1;
-	if (cctalk_env.act_resister_l == 0){
+	if (cctalk_env.act_resister_l & flag){
 		re_code = 0;
 	}
 	return re_code;
@@ -196,14 +196,14 @@ int res_read_buffered (char *recv_buf)
 
 int res_modify_inhibit_status (char *recv_buf)
 {
-	if (check_res_flag() == 0){
+	if (check_res_flag(ACT_L_R_DISPENSING_COIN) == 1){
 		cctalk_env.coin_inhibit_status = recv_buf[5] << 8 | recv_buf[4];
-		
+		//OS_ENTER_CRITICAL();
 		coin_env.inhibit_coin[0] = cctalk_env.coin_inhibit_status & 0x0001;//1元
 		coin_env.inhibit_coin[2] = cctalk_env.coin_inhibit_status & 0x0002;//5角
 		coin_env.inhibit_coin[4] = cctalk_env.coin_inhibit_status & 0x0004;//1角
-		
-		if (cctalk_env.coin_inhibit_status != 0){
+		//OS_EXIT_CRITICAL();
+		if (cctalk_env.coin_inhibit_status != 0 && sys_env.workstep == 1){
 			coin_start ();
 		}else{
 			sys_env.re_run_time = 1;//持续运行
@@ -228,7 +228,7 @@ int res_Perform_self_check (char *recv_buf)
 int res_modify_hopper_balance (char *recv_buf)
 {
 	uint8_t hopper_index = recv_buf[4];
-	if (check_res_flag () == 0){
+	if (check_res_flag (ACT_L_R_DISPENSING_COIN | ACT_L_R_ACCEPTING_COIN) == 1){
 		if (hopper_index > 0){
 			hopper_index--;
 		}
@@ -482,7 +482,7 @@ int res_request_money_in (char *recv_buf)
 int res_clear_money_counters (char *recv_buf)
 {
 	int i;
-	if (check_res_flag () == 0){
+	if (check_res_flag (ACT_L_R_ACCEPTING_COIN | ACT_L_R_DISPENSING_COIN) == 1){
 		for (i = 0; i < HOPPER_NUM; i++){
 			cctalk_env.hopper_balance[i] = 0;
 		}
@@ -503,7 +503,7 @@ int res_pay_money_out (char *recv_buf)
 													 recv_buf[7] << 24;
 	//找零钱
 	cctalk_env.dispense_event_ctr++;//找零事件加1
-	check_res_flag ();
+//	check_res_flag ();
 	return cctalk_simple_poll_respond (recv_buf);
 }
 //
@@ -514,7 +514,7 @@ int res_purge_hopper(char *recv_buf)
 	hopper_index = recv_buf[4];//0xFF 表示清空所有Hopper，否则代表Hopper序号
 	coin_num = recv_buf[5];//0x0 代表清空hopper_index对应的Hopper，否则代表出的硬币数，最多255
 	//清空操作
-	check_res_flag ();
+//	check_res_flag ();
 	return cctalk_simple_poll_respond (recv_buf);
 }
 //
@@ -544,7 +544,7 @@ int res_request_hopper_pattern(char *recv_buf)
 	uint8_t hopper_tmp[MAX_HOPPER_NUM][2];//最多支持六个Hopper
 	
 	//按数量找零操作
-	if (check_res_flag () == 0){
+	if (check_res_flag (ACT_L_R_ACCEPTING_COIN | ACT_L_R_DISPENSING_COIN) == 1){
 		res_flag = cctalk_simple_poll_respond (recv_buf);
 		data_len = recv_buf[1];
 		if (data_len <= MAX_HOPPER_NUM * 2){
@@ -562,20 +562,9 @@ int res_request_hopper_pattern(char *recv_buf)
 					para_set_value.data.hopper_num[hopper_index_tmp] = hopper_num_tmp;
 				}
 			}
-			coin_dispense ();
-			cctalk_env.hopper_balance[0] = para_set_value.data.m_1yuan;
-			cctalk_env.hopper_balance[1] = para_set_value.data.m_5jiao;
-			cctalk_env.hopper_balance[2] = para_set_value.data.m_1jiao;
-			for (i = 0; i < HOPPER_NUM; i++){
-				if (cctalk_env.hopper_balance[i] < 10){
-					cctalk_env.hopper_status[i] = HOPPER_STATUS_LOW;
-				}else if (cctalk_env.hopper_balance[i] > 300){
-					cctalk_env.hopper_status[i] = HOPPER_STATUS_HIGH;
-				}else{
-					cctalk_env.hopper_status[i] = 0;
-				}
+			if (sys_env.coin_dispense == 0){
+				sys_env.coin_dispense = 1;
 			}
-			cctalk_env.dispense_event_ctr++;//找零事件加1
 		}
 	}else{
 		cctalk_set_NAK ();
