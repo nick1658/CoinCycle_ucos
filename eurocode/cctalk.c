@@ -18,8 +18,13 @@ void cctalk_env_init (void)
 
 
 
-void check_res_flag (void)
+uint16_t check_res_flag (void)
 {
+	uint16_t re_code = 1;
+	if (cctalk_env.act_resister_l == 0){
+		re_code = 0;
+	}
+	return re_code;
 }
 uint8_t cctalk_calc_checksum (char * buf, uint8_t len)
 {
@@ -34,7 +39,16 @@ uint8_t cctalk_calc_checksum (char * buf, uint8_t len)
 //	}
 	return (uint8_t)(256 - sum);//自动截断
 }
-int cctalk_send (uint8_t res_addr, uint8_t * data_buf, int16_t data_len)
+void cctalk_set_NAK (void)
+{
+	cctalk_send_buf[3] = 0x05;
+}
+void cctalk_set_ACK (void)
+{
+	cctalk_send_buf[3] = 0x00;
+}
+//
+int cctalk_send (const uint8_t res_addr, const uint8_t * data_buf, const int16_t data_len)
 {
 	int16_t i;
 	int8_t sum = 0;
@@ -43,7 +57,7 @@ int cctalk_send (uint8_t res_addr, uint8_t * data_buf, int16_t data_len)
 	cctalk_send_buf[0] = res_addr;
 	cctalk_send_buf[1] = data_len;
 	cctalk_send_buf[2] = CCTALK_ADDR;
-	cctalk_send_buf[3] = 0x00;
+	//cctalk_send_buf[3] = 0x00;
 	for (i = 0; i < data_len; i++){
 		cctalk_send_buf[i + 4] = data_buf[i];
 	}
@@ -54,12 +68,12 @@ int cctalk_send (uint8_t res_addr, uint8_t * data_buf, int16_t data_len)
 	for (i = 0; i < total_len; i++){
 		Uart0_sendchar (cctalk_send_buf[i]);
 	}
+	cctalk_set_ACK ();
 	return 0;
 }
+//
 
-
-
-int cctalk_simple_poll_respond (char *recv_buf)
+int cctalk_simple_poll_respond (const char *recv_buf)
 {
 	//uint8_t data_buf_tmp[10];
 	cctalk_send (recv_buf[2], 0, 0);
@@ -182,16 +196,20 @@ int res_read_buffered (char *recv_buf)
 
 int res_modify_inhibit_status (char *recv_buf)
 {
-	cctalk_env.coin_inhibit_status = recv_buf[5] << 8 | recv_buf[4];
-	
-	coin_env.inhibit_coin[0] = cctalk_env.coin_inhibit_status & 0x0001;//1元
-	coin_env.inhibit_coin[2] = cctalk_env.coin_inhibit_status & 0x0002;//5角
-	coin_env.inhibit_coin[4] = cctalk_env.coin_inhibit_status & 0x0004;//1角
-	
-	if (cctalk_env.coin_inhibit_status != 0){
-		coin_start ();
+	if (check_res_flag() == 0){
+		cctalk_env.coin_inhibit_status = recv_buf[5] << 8 | recv_buf[4];
+		
+		coin_env.inhibit_coin[0] = cctalk_env.coin_inhibit_status & 0x0001;//1元
+		coin_env.inhibit_coin[2] = cctalk_env.coin_inhibit_status & 0x0002;//5角
+		coin_env.inhibit_coin[4] = cctalk_env.coin_inhibit_status & 0x0004;//1角
+		
+		if (cctalk_env.coin_inhibit_status != 0){
+			coin_start ();
+		}else{
+			sys_env.re_run_time = 1;//持续运行
+		}
 	}else{
-		sys_env.re_run_time = 1;//持续运行
+		cctalk_set_NAK ();
 	}
 	return cctalk_simple_poll_respond (recv_buf);
 }
@@ -210,16 +228,19 @@ int res_Perform_self_check (char *recv_buf)
 int res_modify_hopper_balance (char *recv_buf)
 {
 	uint8_t hopper_index = recv_buf[4];
-	if (hopper_index > 0){
-		hopper_index--;
+	if (check_res_flag () == 0){
+		if (hopper_index > 0){
+			hopper_index--;
+		}
+		if (hopper_index < HOPPER_NUM){
+			cctalk_env.hopper_balance[hopper_index] =  recv_buf[5] +  recv_buf[6] * 256;
+		}
+		para_set_value.data.m_1yuan = cctalk_env.hopper_balance[0];
+		para_set_value.data.m_5jiao = cctalk_env.hopper_balance[1];
+		para_set_value.data.m_1jiao = cctalk_env.hopper_balance[2];
+	}else{
+		cctalk_set_NAK ();
 	}
-	if (hopper_index < HOPPER_NUM){
-		cctalk_env.hopper_balance[hopper_index] =  recv_buf[5] +  recv_buf[6] * 256;
-	}
-	para_set_value.data.m_1yuan = cctalk_env.hopper_balance[0];
-	para_set_value.data.m_5jiao = cctalk_env.hopper_balance[1];
-	para_set_value.data.m_1jiao = cctalk_env.hopper_balance[2];
-	check_res_flag ();
 	return cctalk_simple_poll_respond (recv_buf);
 }
 int res_request_hopper_balance (char *recv_buf)
@@ -461,13 +482,16 @@ int res_request_money_in (char *recv_buf)
 int res_clear_money_counters (char *recv_buf)
 {
 	int i;
-	for (i = 0; i < HOPPER_NUM; i++){
-		cctalk_env.hopper_balance[i] = 0;
+	if (check_res_flag () == 0){
+		for (i = 0; i < HOPPER_NUM; i++){
+			cctalk_env.hopper_balance[i] = 0;
+		}
+		para_set_value.data.m_1yuan = cctalk_env.hopper_balance[0];
+		para_set_value.data.m_5jiao = cctalk_env.hopper_balance[1];
+		para_set_value.data.m_1jiao = cctalk_env.hopper_balance[2];
+	}else{
+		cctalk_set_NAK ();
 	}
-	para_set_value.data.m_1yuan = cctalk_env.hopper_balance[0];
-	para_set_value.data.m_5jiao = cctalk_env.hopper_balance[1];
-	para_set_value.data.m_1jiao = cctalk_env.hopper_balance[2];
-	check_res_flag ();
 	return cctalk_simple_poll_respond (recv_buf);
 }
 //
@@ -520,38 +544,42 @@ int res_request_hopper_pattern(char *recv_buf)
 	uint8_t hopper_tmp[MAX_HOPPER_NUM][2];//最多支持六个Hopper
 	
 	//按数量找零操作
-	data_len = recv_buf[1];
-	if (data_len <= MAX_HOPPER_NUM * 2){
-		memcpy (&hopper_tmp[0][0], &recv_buf[4], data_len);
-		for (i = 0; i < HOPPER_NUM; i++){
-			para_set_value.data.hopper_num[i] = 0;
-		}
-		for (i = 0; i < data_len / 2; i++){
-			hopper_index_tmp = hopper_tmp[i][0];
-			hopper_num_tmp = hopper_tmp[i][1];
-			if (hopper_index_tmp > 0){
-				hopper_index_tmp--;
-			}
-			if (hopper_index_tmp < HOPPER_NUM){
-				para_set_value.data.hopper_num[hopper_index_tmp] = hopper_num_tmp;
-			}
-		}
-		check_res_flag ();
+	if (check_res_flag () == 0){
 		res_flag = cctalk_simple_poll_respond (recv_buf);
-		coin_dispense ();
-		cctalk_env.hopper_balance[0] = para_set_value.data.m_1yuan;
-		cctalk_env.hopper_balance[1] = para_set_value.data.m_5jiao;
-		cctalk_env.hopper_balance[2] = para_set_value.data.m_1jiao;
-		for (i = 0; i < HOPPER_NUM; i++){
-			if (cctalk_env.hopper_balance[i] < 10){
-				cctalk_env.hopper_status[i] = HOPPER_STATUS_LOW;
-			}else if (cctalk_env.hopper_balance[i] > 300){
-				cctalk_env.hopper_status[i] = HOPPER_STATUS_HIGH;
-			}else{
-				cctalk_env.hopper_status[i] = 0;
+		data_len = recv_buf[1];
+		if (data_len <= MAX_HOPPER_NUM * 2){
+			memcpy (&hopper_tmp[0][0], &recv_buf[4], data_len);
+			for (i = 0; i < HOPPER_NUM; i++){
+				para_set_value.data.hopper_num[i] = 0;
 			}
+			for (i = 0; i < data_len / 2; i++){
+				hopper_index_tmp = hopper_tmp[i][0];
+				hopper_num_tmp = hopper_tmp[i][1];
+				if (hopper_index_tmp > 0){
+					hopper_index_tmp--;
+				}
+				if (hopper_index_tmp < HOPPER_NUM){
+					para_set_value.data.hopper_num[hopper_index_tmp] = hopper_num_tmp;
+				}
+			}
+			coin_dispense ();
+			cctalk_env.hopper_balance[0] = para_set_value.data.m_1yuan;
+			cctalk_env.hopper_balance[1] = para_set_value.data.m_5jiao;
+			cctalk_env.hopper_balance[2] = para_set_value.data.m_1jiao;
+			for (i = 0; i < HOPPER_NUM; i++){
+				if (cctalk_env.hopper_balance[i] < 10){
+					cctalk_env.hopper_status[i] = HOPPER_STATUS_LOW;
+				}else if (cctalk_env.hopper_balance[i] > 300){
+					cctalk_env.hopper_status[i] = HOPPER_STATUS_HIGH;
+				}else{
+					cctalk_env.hopper_status[i] = 0;
+				}
+			}
+			cctalk_env.dispense_event_ctr++;//找零事件加1
 		}
-		cctalk_env.dispense_event_ctr++;//找零事件加1
+	}else{
+		cctalk_set_NAK ();
+		res_flag = cctalk_simple_poll_respond (recv_buf);
 	}
 	return res_flag;
 }
