@@ -63,10 +63,8 @@ typedef struct
 	void (*p_coin_recv_func[COIN_TYPE_NUM])(void);
 	void (*p_coin_kick_keep_func[COIN_TYPE_NUM])(void);
 
-	uint16_t coin_Q[COIN_Q_LEN];//硬币经过队列
-	uint16_t coin_Q_index;
-	uint16_t coin_Q_remain;
 	uint16_t inhibit_coin[COIN_TYPE_NUM]; //拒收硬币设置位
+	uint16_t cycle_box_full;
 }s_coin_env;
 
 //各函数申明    步骤号  参数变量定义

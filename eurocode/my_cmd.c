@@ -403,62 +403,45 @@ void coin_dispense (void)
 {	
 	uint32_t i, pulse_temp = 0;
 	//开始找零-----------------------------------------------------
-	para_set_value.data.hopper_cnt[0] = 0;
-	if (para_set_value.data.hopper_num[0] > para_set_value.data.m_1yuan){
-		para_set_value.data.hopper_num[0] = para_set_value.data.m_1yuan;
+	for (i = 0; i < HOPPER_NUM; i++){
+		para_set_value.data.hopper_dispense_cnt[i] = 0;
+		if (para_set_value.data.hopper_dispense_num[i] > para_set_value.data.hopper_balance[i]){
+			para_set_value.data.hopper_dispense_num[i] = para_set_value.data.hopper_balance[i];
+		}
+		if (para_set_value.data.hopper_dispense_num[i] > 0){
+			set_active_resister (ACT_L_R_DISPENSING_COIN, 0);
+			BELT_MOTOR_STARTRUN();   //斗送入电机
+			para_set_value.data.belt_runtime = 10;
+			para_set_value.data.hopper_output_timeout[2] = 20;//10s
+		}
 	}
-	pulse_temp = para_set_value.data.hopper_num[0];
-	if (pulse_temp > 0){
-		set_active_resister (ACT_L_R_DISPENSING_COIN, 0);
-	}
+	pulse_temp = para_set_value.data.hopper_dispense_num[0];
 	for (i = 0; i < pulse_temp; i++){
-		BELT_MOTOR_STARTRUN();   //斗送入电机
 		PAYOUT0(STARTRUN);	  //
 		pulse_time = para_set_value.data.hopper_pulse; 
 		while(pulse_time != 0){;}
 		PAYOUT0(STOPRUN);	  // 
 		pulse_time = para_set_value.data.hopper_pulse; 
 		while(pulse_time != 0){;}
-		para_set_value.data.hopper_output_timeout[0] = 20;//10s
-		para_set_value.data.belt_runtime = 10;
 	}
-	para_set_value.data.hopper_cnt[1] = 0;
-	if (para_set_value.data.hopper_num[1] > para_set_value.data.m_5jiao){
-		para_set_value.data.hopper_num[1] = para_set_value.data.m_5jiao;
-	}
-	pulse_temp = para_set_value.data.hopper_num[1];
-	if (pulse_temp > 0){
-		set_active_resister (ACT_L_R_DISPENSING_COIN, 0);
-	}
+
+	pulse_temp = para_set_value.data.hopper_dispense_num[1];
 	for (i = 0; i < pulse_temp; i++){
-		BELT_MOTOR_STARTRUN();   //斗送入电机
 		PAYOUT1(STARTRUN);	  //
 		pulse_time = para_set_value.data.hopper_pulse; 
 		while(pulse_time != 0){;}
 		PAYOUT1(STOPRUN);	  // 
 		pulse_time = para_set_value.data.hopper_pulse; 
 		while(pulse_time != 0){;}
-		para_set_value.data.hopper_output_timeout[1] = 20;//10s
-		para_set_value.data.belt_runtime = 10;
 	}
-	para_set_value.data.hopper_cnt[2] = 0;
-	if (para_set_value.data.hopper_num[2] > para_set_value.data.m_1jiao){
-		para_set_value.data.hopper_num[2] = para_set_value.data.m_1jiao;
-	}
-	pulse_temp = para_set_value.data.hopper_num[2];
-	if (pulse_temp > 0){
-		set_active_resister (ACT_L_R_DISPENSING_COIN, 0);
-	}
+	pulse_temp = para_set_value.data.hopper_dispense_num[2];
 	for (i = 0; i < pulse_temp; i++){
-		BELT_MOTOR_STARTRUN();   //斗送入电机
 		PAYOUT2(STARTRUN);	  //
 		pulse_time = para_set_value.data.hopper_pulse; 
 		while(pulse_time != 0){;}
 		PAYOUT2(STOPRUN);	  // 
 		pulse_time = para_set_value.data.hopper_pulse; 
 		while(pulse_time != 0){;}
-		para_set_value.data.hopper_output_timeout[2] = 20;//10s
-		para_set_value.data.belt_runtime = 10;
 	}
 	//结束找零-----------------------------------------------------
 	write_para ();
@@ -466,24 +449,30 @@ void coin_dispense (void)
 //
 void fin_coin_dispense (void)
 {
+	uint16_t i;
 	reset_active_resister (ACT_L_R_DISPENSING_COIN, 0);
 
-	cy_println ("hopper0 out");
-	if (para_set_value.data.m_1yuan >= para_set_value.data.hopper_cnt[0]){
-		para_set_value.data.m_1yuan -= para_set_value.data.hopper_cnt[0];
+	for (i = 0; i < HOPPER_NUM; i++){
+		if (para_set_value.data.coin_cycle_box[i] > para_set_value.data.hopper_dispense_cnt[i]){
+			para_set_value.data.coin_cycle_box[i] -= para_set_value.data.hopper_dispense_cnt[i];
+			para_set_value.data.hopper_balance[i] -= para_set_value.data.hopper_dispense_cnt[i];
+		}
 	}
-	if (para_set_value.data.m_5jiao >= para_set_value.data.hopper_cnt[1]){
-		para_set_value.data.m_5jiao -= para_set_value.data.hopper_cnt[1];
+	for (i = 0; i < HOPPER_NUM; i++){
+		if (para_set_value.data.hopper_balance[i] < 10){
+			cctalk_env.hopper_status[i] = HOPPER_STATUS_LOW;
+		}else if (para_set_value.data.hopper_balance[i] > 300){
+			cctalk_env.hopper_status[i] = HOPPER_STATUS_HIGH;
+		}else{
+			cctalk_env.hopper_status[i] = 0;
+		}
 	}
-	if (para_set_value.data.m_1jiao >= para_set_value.data.hopper_cnt[2]){
-		para_set_value.data.m_1jiao -= para_set_value.data.hopper_cnt[2];
-	}
-	cctalk_env.payed_money_out =  para_set_value.data.hopper_cnt[0] * 100 + 
-																para_set_value.data.hopper_cnt[1] * 50 + 
-																para_set_value.data.hopper_cnt[2] * 10;
-	cctalk_env.unpayed_money_out = para_set_value.data.hopper_num[0] * 100 + 
-																para_set_value.data.hopper_num[1] * 50 + 
-																para_set_value.data.hopper_num[2] * 10;
+	cctalk_env.payed_money_out =  para_set_value.data.hopper_dispense_cnt[0] * 100 + 
+																para_set_value.data.hopper_dispense_cnt[1] * 50 + 
+																para_set_value.data.hopper_dispense_cnt[2] * 10;
+	cctalk_env.unpayed_money_out = para_set_value.data.hopper_dispense_num[0] * 100 + 
+																para_set_value.data.hopper_dispense_num[1] * 50 + 
+																para_set_value.data.hopper_dispense_num[2] * 10;
 }
 
 int get_hex_data (char * buf)
@@ -667,10 +656,10 @@ int get_hex_data (char * buf)
 					case 80:
 						for (i = 0; i < p_hex.len; i++){
 							if (i < HOPPER_NUM){
-								para_set_value.data.hopper_num[i] = p_hex.data[i];
+								para_set_value.data.hopper_dispense_num[i] = p_hex.data[i];
 							}else{//错误
 							}
-							cy_print ("coin %d:%d ",i, para_set_value.data.hopper_num[i]);
+							cy_print ("coin %d:%d ",i, para_set_value.data.hopper_dispense_num[i]);
 						}
 						cy_println ();
 						//开始找零-----------------------------------------------------
@@ -1307,30 +1296,30 @@ void set_para_2  (int32_t arg[])
 		if (arg[1] > 9999){
 			arg[1] = 9999;
 		}
-		para_set_value.data.m_1yuan = arg[1];
+		para_set_value.data.hopper_balance[0] = arg[1];
 		write_para ();
 	}else if (arg[0] == string_to_dec((uint8 *)("coin-num1"))){
 		cy_println("set coin 1 number = %d", arg[1]);
 		if (arg[1] > 9999){
 			arg[1] = 9999;
 		}
-		para_set_value.data.m_5jiao = arg[1];
+		para_set_value.data.hopper_balance[1] = arg[1];
 		write_para ();
 	}else if (arg[0] == string_to_dec((uint8 *)("coin-num2"))){
 		cy_println("set coin 2 number = %d", arg[1]);
 		if (arg[1] > 9999){
 			arg[1] = 9999;
 		}
-		para_set_value.data.m_1jiao = arg[1];
+		para_set_value.data.hopper_balance[2] = arg[1];
 		write_para ();
 	}else if (arg[0] == string_to_dec((uint8 *)("coin-all-num"))){
 		cy_println("set coin 0 number = %d", arg[1]);
 		if (arg[1] > 9999){
 			arg[1] = 9999;
 		}
-		para_set_value.data.m_1yuan = arg[1];
-		para_set_value.data.m_5jiao = arg[1];
-		para_set_value.data.m_1jiao = arg[1];
+		para_set_value.data.hopper_balance[0] = arg[1];
+		para_set_value.data.hopper_balance[1] = arg[1];
+		para_set_value.data.hopper_balance[2] = arg[1];
 		write_para ();
 	}else{
 		cy_println ("set_para_2 arg[0] Error arg");
@@ -1752,9 +1741,9 @@ void print_coin_env_info (void)
 void print_coin_num_info (void)
 {
 	cy_println("-----------------print coin number info----------------");
-	cy_println ("coin 0 number    = %d", para_set_value.data.m_1yuan);
-	cy_println ("coin 1 number    = %d", para_set_value.data.m_5jiao);
-	cy_println ("coin 2 number    = %d", para_set_value.data.m_1jiao);
+	cy_println ("coin 0 number    = %d", para_set_value.data.hopper_balance[0]);
+	cy_println ("coin 1 number    = %d", para_set_value.data.hopper_balance[1]);
+	cy_println ("coin 2 number    = %d", para_set_value.data.hopper_balance[2]);
 	cy_println("----------------------------------------------------");
 }
 
@@ -1929,7 +1918,7 @@ void print_pre_count_current (void)
 	cy_println("--------------------print pre_count_current value--------------------", coinchoose);
 	for (i = 0; i < 9; i++)
 	{
-		cy_println ("   %d      %6d", i, *(pre_value.country[coinchoose].coin[i].data.p_pre_count_cur));
+		cy_println ("   %d      %6d", i, *(pre_value.country[coinchoose].coin[i].data.p_cycle_count_cur));
 	}
 	cy_println("---------------------------------------------------------------------");
 }

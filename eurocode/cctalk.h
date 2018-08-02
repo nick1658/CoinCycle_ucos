@@ -201,7 +201,6 @@ typedef struct
 	uint8_t act_resister_l;
 	uint8_t act_resister_h;
 	uint8_t hopper_status[HOPPER_NUM];
-	uint16_t hopper_balance[HOPPER_NUM];
 	uint16_t coin_master_inhibit_status;
 	uint16_t coin_inhibit_status;
 	uint32_t cctalk_version;

@@ -233,11 +233,12 @@ int res_modify_hopper_balance (char *recv_buf)
 			hopper_index--;
 		}
 		if (hopper_index < HOPPER_NUM){
-			cctalk_env.hopper_balance[hopper_index] =  recv_buf[5] +  recv_buf[6] * 256;
+			if (para_set_value.data.coin_cycle_box[hopper_index] > para_set_value.data.hopper_balance[hopper_index]){
+				para_set_value.data.coin_cycle_box[hopper_index] -= para_set_value.data.hopper_balance[hopper_index];
+			}
+			para_set_value.data.hopper_balance[hopper_index] =  recv_buf[5] +  recv_buf[6] * 256;
+			para_set_value.data.coin_cycle_box[hopper_index] += para_set_value.data.hopper_balance[hopper_index];
 		}
-		para_set_value.data.m_1yuan = cctalk_env.hopper_balance[0];
-		para_set_value.data.m_5jiao = cctalk_env.hopper_balance[1];
-		para_set_value.data.m_1jiao = cctalk_env.hopper_balance[2];
 	}else{
 		cctalk_set_NAK ();
 	}
@@ -261,8 +262,8 @@ int res_request_hopper_balance (char *recv_buf)
 			data_buf_tmp[3] = '0';//
 			data_buf_tmp[4] = '0';//
 			data_buf_tmp[5] = 'B';//
-			data_buf_tmp[6] = (para_set_value.data.m_1yuan & 0xff);//
-			data_buf_tmp[7] = (para_set_value.data.m_1yuan >> 8 & 0xff);//
+			data_buf_tmp[6] = (para_set_value.data.hopper_balance[0] & 0xff);//
+			data_buf_tmp[7] = (para_set_value.data.hopper_balance[0] >> 8 & 0xff);//
 			break;
 		case 1://hopper 2 0.5元
 			data_buf_tmp[0] = 'C';//
@@ -271,8 +272,8 @@ int res_request_hopper_balance (char *recv_buf)
 			data_buf_tmp[3] = '5';//
 			data_buf_tmp[4] = '0';//
 			data_buf_tmp[5] = 'B';//
-			data_buf_tmp[6] = (para_set_value.data.m_5jiao & 0xff);//
-			data_buf_tmp[7] = (para_set_value.data.m_5jiao >> 8 & 0xff);//
+			data_buf_tmp[6] = (para_set_value.data.hopper_balance[1] & 0xff);//
+			data_buf_tmp[7] = (para_set_value.data.hopper_balance[1] >> 8 & 0xff);//
 			break;
 		case 2://hopper 3 0.1元
 			data_buf_tmp[0] = 'C';//
@@ -281,8 +282,8 @@ int res_request_hopper_balance (char *recv_buf)
 			data_buf_tmp[3] = '1';//
 			data_buf_tmp[4] = '0';//
 			data_buf_tmp[5] = 'B';//
-			data_buf_tmp[6] = (para_set_value.data.m_1jiao & 0xff);//
-			data_buf_tmp[7] = (para_set_value.data.m_1jiao >> 8 & 0xff);//
+			data_buf_tmp[6] = (para_set_value.data.hopper_balance[2] & 0xff);//
+			data_buf_tmp[7] = (para_set_value.data.hopper_balance[2] >> 8 & 0xff);//
 			break;
 		default:
 			data_buf_tmp[0] = 'C';//
@@ -328,9 +329,9 @@ void update_hopper_status (void)
 {
 	uint8_t i;
 	for (i = 0; i < HOPPER_NUM; i++){
-		if (cctalk_env.hopper_balance[i] < 10){
+		if (para_set_value.data.hopper_balance[i] < 10){
 			cctalk_env.hopper_status[i] = HOPPER_STATUS_LOW;
-		}else if (cctalk_env.hopper_balance[i] > 300){
+		}else if (para_set_value.data.hopper_balance[i] > 300){
 			cctalk_env.hopper_status[i] = HOPPER_STATUS_HIGH;
 		}else{
 			cctalk_env.hopper_status[i] = 0;
@@ -445,13 +446,10 @@ int res_request_coins_in_by_type (char *recv_buf)
 	///////////////////////////////////////////////////////////////////
 	sys_env.re_run_time = 1;//持续运行
 	///////////////////////////////////////////////////////////////////
-	cctalk_env.hopper_balance[0] = para_set_value.data.m_1yuan;
-	cctalk_env.hopper_balance[1] = para_set_value.data.m_5jiao;
-	cctalk_env.hopper_balance[2] = para_set_value.data.m_1jiao;
 	for (i = 0; i < 16; i++){
 		if (i < HOPPER_NUM){
-			data_buf_tmp[0 + 2*i] = cctalk_env.hopper_balance[i] & 0xFF;//低字节
-			data_buf_tmp[1 + 2*i] = (cctalk_env.hopper_balance[i] >> 8) & 0xFF;//高字节
+			data_buf_tmp[0 + 2*i] = para_set_value.data.coin_cycle_box[i] & 0xFF;//低字节
+			data_buf_tmp[1 + 2*i] = (para_set_value.data.coin_cycle_box[i] >> 8) & 0xFF;//高字节
 		}else{
 			data_buf_tmp[0 + 2*i] = 0;//低字节
 			data_buf_tmp[1 + 2*i] = 0;//高字节
@@ -466,9 +464,9 @@ int res_request_money_in (char *recv_buf)
 {
 	uint32_t money_in_tmp = 0;
 	uint8_t data_buf_tmp[4];
-	money_in_tmp = para_set_value.data.m_1yuan * 100 + 
-								 para_set_value.data.m_5jiao * 50 + 
-								 para_set_value.data.m_1jiao * 10;
+	money_in_tmp = para_set_value.data.coin_cycle_box[0] * 100 + 
+								 para_set_value.data.coin_cycle_box[1] * 50 + 
+								 para_set_value.data.coin_cycle_box[2] * 10;
 	///////////////////////////////////////////////////////////////////
 	data_buf_tmp[0] = money_in_tmp & 0xFF;//
 	data_buf_tmp[1] = (money_in_tmp >> 8) & 0xFF;//
@@ -484,26 +482,24 @@ int res_clear_money_counters (char *recv_buf)
 	int i;
 	if (check_res_flag (ACT_L_R_ACCEPTING_COIN | ACT_L_R_DISPENSING_COIN) == 1){
 		for (i = 0; i < HOPPER_NUM; i++){
-			cctalk_env.hopper_balance[i] = 0;
+			para_set_value.data.hopper_balance[i] = 0;
+			para_set_value.data.coin_cycle_box[i] = 0;
 		}
-		para_set_value.data.m_1yuan = cctalk_env.hopper_balance[0];
-		para_set_value.data.m_5jiao = cctalk_env.hopper_balance[1];
-		para_set_value.data.m_1jiao = cctalk_env.hopper_balance[2];
 	}else{
 		cctalk_set_NAK ();
 	}
 	return cctalk_simple_poll_respond (recv_buf);
 }
-//
+//暂不支持按金额找零
 int res_pay_money_out (char *recv_buf)
 {
-	cctalk_env.payed_money_out = recv_buf[4] | 
+	cctalk_env.payed_money_out = 0;
+	cctalk_env.unpayed_money_out = recv_buf[4] | 
 													 recv_buf[5] << 8 |
 													 recv_buf[6] << 16 |
 													 recv_buf[7] << 24;
 	//找零钱
 	cctalk_env.dispense_event_ctr++;//找零事件加1
-//	check_res_flag ();
 	return cctalk_simple_poll_respond (recv_buf);
 }
 //
@@ -550,7 +546,7 @@ int res_request_hopper_pattern(char *recv_buf)
 		if (data_len <= MAX_HOPPER_NUM * 2){
 			memcpy (&hopper_tmp[0][0], &recv_buf[4], data_len);
 			for (i = 0; i < HOPPER_NUM; i++){
-				para_set_value.data.hopper_num[i] = 0;
+				para_set_value.data.hopper_dispense_num[i] = 0;
 			}
 			for (i = 0; i < data_len / 2; i++){
 				hopper_index_tmp = hopper_tmp[i][0];
@@ -559,7 +555,7 @@ int res_request_hopper_pattern(char *recv_buf)
 					hopper_index_tmp--;
 				}
 				if (hopper_index_tmp < HOPPER_NUM){
-					para_set_value.data.hopper_num[hopper_index_tmp] = hopper_num_tmp;
+					para_set_value.data.hopper_dispense_num[hopper_index_tmp] = hopper_num_tmp;
 				}
 			}
 			if (sys_env.coin_dispense == 0){

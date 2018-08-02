@@ -137,19 +137,12 @@ typedef struct
 	uint16_t kick_start_delay_t[COIN_TYPE_NUM];
 	uint16_t kick_keep_t[COIN_TYPE_NUM];
 	uint16_t hopper_pulse;
-	uint16_t hopper_num[HOPPER_NUM];
-	volatile uint16_t hopper_cnt[HOPPER_NUM];
+	volatile uint32_t hopper_dispense_num[HOPPER_NUM];
+	volatile uint32_t hopper_balance[HOPPER_NUM];
+	volatile uint32_t hopper_dispense_cnt[HOPPER_NUM];
+	volatile uint32_t coin_cycle_box[HOPPER_NUM];
 	volatile uint16_t hopper_output_timeout[HOPPER_NUM];
 	volatile uint16_t belt_runtime;
-	uint16_t m_1yuan;
-	uint16_t m_5jiao;
-	uint16_t m_1jiao;
-	uint16_t m_1jiao_big;
-	uint16_t m_5fen;
-	uint16_t m_2fen;
-	uint16_t m_1fen;
-	uint16_t m_10yuan;
-	uint16_t m_5yuan;
 }s_coin_parameter_value;
 
 typedef union
@@ -178,8 +171,9 @@ typedef struct
 	int16_t offsetmin1;
 	int16_t offsetmax2;
 	int16_t offsetmin2;
-	uint32_t * p_pre_count_set;
-	uint32_t * p_pre_count_cur;
+	volatile uint32_t * p_pre_count_set;
+	volatile uint32_t * p_cycle_count_cur;
+	volatile uint32_t * p_hopper_balance_cur;
 	uint32_t * p_pre_count_full_flag;
 	uint32_t * p_coinval;
 	uint32_t coin_type;

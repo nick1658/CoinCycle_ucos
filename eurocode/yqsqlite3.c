@@ -266,13 +266,22 @@ void read_coin_value(void) 	 // read  COIN  0--8
 		//count_coin_temp[pre_value.country[COUNTRY_ID].coin[i].data.coin_type].pre_count_set = 50;
 		//para_set_value.data.precoin_set_num[i] = 50;
 		pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_set 	= &count_coin_temp[pre_value.country[COUNTRY_ID].coin[i].data.coin_type].pre_count_set;//预置计数设置值
-		pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_cur = &count_coin_temp[pre_value.country[COUNTRY_ID].coin[i].data.coin_type].pre_count_cur;//预置计数当前值
 		pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_full_flag = &count_coin_temp[pre_value.country[COUNTRY_ID].coin[i].data.coin_type].full_flag;//预置计数到达标志
 		pre_value.country[COUNTRY_ID].coin[i].data.p_coinval = &count_coin_temp[pre_value.country[COUNTRY_ID].coin[i].data.coin_type].coinval;//包装卷数
 
 		*pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_set = para_set_value.data.precoin_set_num[pre_value.country[COUNTRY_ID].coin[i].data.coin_type];//预置计数设置值初始化
 		*pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_full_flag = 0;//预置计数到达标志清零
 	}
+	pre_value.country[COUNTRY_ID].coin[0].data.p_cycle_count_cur = &para_set_value.data.coin_cycle_box[0];//
+	pre_value.country[COUNTRY_ID].coin[1].data.p_cycle_count_cur = &para_set_value.data.coin_cycle_box[1];//
+	pre_value.country[COUNTRY_ID].coin[2].data.p_cycle_count_cur = &para_set_value.data.coin_cycle_box[1];//
+	pre_value.country[COUNTRY_ID].coin[4].data.p_cycle_count_cur = &para_set_value.data.coin_cycle_box[2];//
+	pre_value.country[COUNTRY_ID].coin[5].data.p_cycle_count_cur = &para_set_value.data.coin_cycle_box[2];//
+	pre_value.country[COUNTRY_ID].coin[0].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[0];//
+	pre_value.country[COUNTRY_ID].coin[1].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[1];//
+	pre_value.country[COUNTRY_ID].coin[2].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[1];//
+	pre_value.country[COUNTRY_ID].coin[4].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[2];//
+	pre_value.country[COUNTRY_ID].coin[5].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[2];//
 }
 
 
@@ -303,13 +312,13 @@ void ini_screen (void)
 	dgus_tf1word(ADDR_MOTOR_IDLE_T, para_set_value.data.motor_idle_t);	//无币空转等待时间
 	dgus_tf1word(ADDR_PRE_COUNT_STOP_N, para_set_value.data.pre_count_stop_n);	//满币停机数，设置为1则任意一种硬币达到预置数就停机
 	dgus_tf1word(ADDR_LEVEL100,cn0copmaxc0[coinchoose]);	//清分等级，暂时没有设置
-	dgus_tf1word(ADDR_HOPPER0_NUM, para_set_value.data.hopper_num[0]);
-	dgus_tf1word(ADDR_HOPPER1_NUM, para_set_value.data.hopper_num[1]);
-	dgus_tf1word(ADDR_HOPPER2_NUM, para_set_value.data.hopper_num[2]);
+	dgus_tf1word(ADDR_HOPPER0_NUM, para_set_value.data.hopper_dispense_num[0]);
+	dgus_tf1word(ADDR_HOPPER1_NUM, para_set_value.data.hopper_dispense_num[1]);
+	dgus_tf1word(ADDR_HOPPER2_NUM, para_set_value.data.hopper_dispense_num[2]);
 	para_set_value.data.hopper_pulse = 200;//20ms
 
 	for (i = 0; i < HOPPER_NUM; i++){
-		para_set_value.data.hopper_cnt[i] = 0;
+		para_set_value.data.hopper_dispense_cnt[i] = 0;
 		para_set_value.data.hopper_output_timeout[i] = 0;
 	}
 	para_set_value.data.hopper_pulse = 200;

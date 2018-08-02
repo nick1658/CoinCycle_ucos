@@ -83,8 +83,8 @@ static int16_t hopper_coin_in[HOPPER_NUM] = {0, 0, 0};
 #define HOPPER_COUNTER(X) if (HOPPER##X##_CNT_IN == 0){ \
 	if (hopper_coin_in[X] == 0){ \
 		hopper_coin_in[X] = 1; \
-		para_set_value.data.hopper_cnt[X]++; \
-		para_set_value.data.hopper_num[X]--; \
+		para_set_value.data.hopper_dispense_cnt[X]++; \
+		para_set_value.data.hopper_dispense_num[X]--; \
 		if (para_set_value.data.hopper_output_timeout[X] > 0){ \
 			para_set_value.data.hopper_output_timeout[X] = 20; \
 		} \

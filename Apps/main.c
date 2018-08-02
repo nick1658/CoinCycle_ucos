@@ -305,24 +305,10 @@ OS_STK  Task4Stk[TASK4_STK_SIZE];
 
 void Task4(void *pdata)
 {
-	uint16_t i;
-	(void*)pdata;
-	
+	(void)pdata;
 	while (1){
 		if (sys_env.coin_dispense == 1){
 			coin_dispense ();
-			cctalk_env.hopper_balance[0] = para_set_value.data.m_1yuan;
-			cctalk_env.hopper_balance[1] = para_set_value.data.m_5jiao;
-			cctalk_env.hopper_balance[2] = para_set_value.data.m_1jiao;
-			for (i = 0; i < HOPPER_NUM; i++){
-				if (cctalk_env.hopper_balance[i] < 10){
-					cctalk_env.hopper_status[i] = HOPPER_STATUS_LOW;
-				}else if (cctalk_env.hopper_balance[i] > 300){
-					cctalk_env.hopper_status[i] = HOPPER_STATUS_HIGH;
-				}else{
-					cctalk_env.hopper_status[i] = 0;
-				}
-			}
 			cctalk_env.dispense_event_ctr++;//找零事件加1
 			sys_env.coin_dispense = 0;
 		}
@@ -332,7 +318,6 @@ void Task4(void *pdata)
 
 void TaskStart(void *pdata)
 {
-	int i = 0;
 #if OS_CRITICAL_METHOD == 3u                     /* Allocate storage for CPU status register           */
     OS_CPU_SR  cpu_sr = 0u;
 #endif
@@ -386,22 +371,6 @@ void TaskStart(void *pdata)
 					setStdValue	();//设置鉴伪基准值
 					sys_env.stop_time = STOP_TIME;//无币停机时间
 					sys_env.workstep =10;
-					if ((sys_env.auto_clear == 1) || para_set_value.data.coin_full_rej_pos == 3){//如果设置自动清零，则每次启动都清零计数
-						for (i = 0; i < COIN_TYPE_NUM; i++){
-							*pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_full_flag = 0; //
-							*pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_cur = 0; //
-							coin_env.full_stack_num = 0;
-						}
-						processed_coin_info.total_money =0;
-						processed_coin_info.total_coin = 0;
-						processed_coin_info.total_good = 0;
-						processed_coin_info.total_ng = 0;
-						processed_coin_info.coinnumber = 0;
-						good_value_index = 0;
-						ng_value_index = 0;
-						disp_allcount();
-						disp_data(ADDR_CPZE,ADDR_CPZS,ADDR_CPFG);			//when counting pre ze zs foege data variable
-					}
 				}else{
 					SEND_ERROR(ADSTDEEROR);   //传感器下有币
 					dbg("the voltage is wrong \r\n");
@@ -412,7 +381,6 @@ void TaskStart(void *pdata)
 			}
 			case 10:{        //main  proceed
 				runfunction();	 //转盘动作函数
-				update_coin_number ();
 				if(blockflag == 0){//堵币
 					SEND_ERROR(PRESSMLOCKED);
 				}
@@ -421,42 +389,8 @@ void TaskStart(void *pdata)
 					disp_allcount ();
 				}
 				if (sys_env.stop_time == 0){
-					switch (sys_env.stop_flag){
-						case 0:
-							//STORAGE_DIR_N();//反转
-							sys_env.stop_time = 25;//反转0.5秒
-							sys_env.stop_flag = 1;
-							break;
-						case 1:
-							STORAGE_DIR_P();//正转
-							sys_env.stop_time = STOP_TIME;//无币停机时间10秒
-							sys_env.stop_flag = 2;
-							break;
-						case 2://准备停机...
-							if (sys_env.re_run_time > 0){
-								sys_env.stop_time = STOP_TIME;//无币停机时间10秒
-								sys_env.stop_flag = 0;
-								sys_env.re_run_time--;
-							}else{
-								STORAGE_MOTOR_STOPRUN();	//  转盘电机
-								sys_env.stop_time = 100;//STOP_TIME;//无币停机时间2秒
-								sys_env.stop_flag = 3;
-							}
-							break;
-						case 3:
-							comscreen(Disp_Indexpic[JSJM],Number_IndexpicB);	 // back to the  picture before alert
-							sys_env.workstep =0;
-							sys_env.stop_flag = 6;
-							break;
-						case 4://等待反转完成
-							STORAGE_DIR_P();//正转
-							sys_env.stop_time = STOP_TIME;//无币停机时间10秒
-							sys_env.stop_flag = 0;
-							break;
-						case 5:
-							break;
-						default:break;
-					}
+						comscreen(Disp_Indexpic[JSJM],Number_IndexpicB);	 // back to the  picture before alert
+						sys_env.workstep =0;
 				}
 				if (sys_env.print_wave_to_pc == 1){
 					if (sys_env.AD_buf_sending == 1){

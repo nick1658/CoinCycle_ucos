@@ -13,16 +13,11 @@ void deviceinit(void)	//开机先把通道上的币挡下去
 	int good_coin;
 
 	processed_coin_info.total_coin_old = processed_coin_info.total_coin;
-	//cy_println("begin init full coin num %d ...", coin_env.full_stack_num);
 	for (i = 0; i < coin_env.full_stack_num; i++){//预置计数模式时，当某种硬币的计数值达到预置值，就可以清零该硬币的计数
-		//cy_println("begin init i = %d", i);
-		good_coin = coin_env.full_coin_stack[i];
-		if (*(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_pre_count_cur) >= *(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_pre_count_set)){
-			*(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_pre_count_cur) = 0;
-			*pre_value.country[COUNTRY_ID].coin[good_coin].data.p_pre_count_full_flag = 0;
+		if (*(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_hopper_balance_cur) >= *(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_pre_count_set)){
+			*pre_value.country[COUNTRY_ID].coin[good_coin].data.p_pre_count_full_flag = 1;
 		}
 	}
-	//cy_println("finish init = %d", i);
 	disp_allcount();
 	coin_env.full_stack_num = 0;
 	ch0_count =0;
@@ -32,15 +27,8 @@ void deviceinit(void)	//开机先把通道上的币挡下去
 	sys_env.re_run_time = 0;
 	coin_in_flag = 0;
 	coin_in_flag_old = 0;
-	//sys_env.AD_buf_index = 0;
-	//Detect_AD_Value_buf_p = Detect_AD_Value_buf[sys_env.AD_buf_index];
 	ccstep = 0;
 
-	for (i = 0; i < COIN_Q_LEN; i++){//初始化硬币队列
-		coin_env.coin_Q[i] = FREE_Q_FLAG;
-	}
-	coin_env.coin_Q_index = 0;
-	coin_env.coin_Q_remain = 0;
 
 	processed_coin_info.coinnumber = 0;
 	blockflag = ADBLOCKT;
@@ -48,7 +36,6 @@ void deviceinit(void)	//开机先把通道上的币挡下去
 	STORAGE_DIR_P();//正转
 	runstep =0; //正常工作步骤号
 	sys_env.sys_runing_time = 0;
-	recover_coin_number ();
 	//cy_println("finish init coin_env");
 }
 
