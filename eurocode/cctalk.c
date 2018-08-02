@@ -233,7 +233,7 @@ int res_modify_hopper_balance (char *recv_buf)
 			hopper_index--;
 		}
 		if (hopper_index < HOPPER_NUM){
-			if (para_set_value.data.coin_cycle_box[hopper_index] > para_set_value.data.hopper_balance[hopper_index]){
+			if (para_set_value.data.coin_cycle_box[hopper_index] >= para_set_value.data.hopper_balance[hopper_index]){
 				para_set_value.data.coin_cycle_box[hopper_index] -= para_set_value.data.hopper_balance[hopper_index];
 			}
 			para_set_value.data.hopper_balance[hopper_index] =  recv_buf[5] +  recv_buf[6] * 256;

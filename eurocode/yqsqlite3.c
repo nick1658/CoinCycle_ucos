@@ -336,7 +336,7 @@ void ini_screen (void)
 					pre_value.country[coinchoose].coin[sys_env.coin_index].data.max2,pre_value.country[coinchoose].coin[sys_env.coin_index].data.min2);	//initial addr on zixuexi jiemian value
 
 
-	para_set_value.data.system_mode = 1;//清分模式
+	para_set_value.data.system_mode = 0;//清分模式
 	dgus_tf1word(ADDR_MODE, para_set_value.data.system_mode);
 	for (i = 0; i < COIN_TYPE_NUM; i++){
 		if (para_set_value.data.system_mode == 0){

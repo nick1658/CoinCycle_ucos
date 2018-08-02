@@ -402,20 +402,26 @@ int get_hex_struct (s_hex_file *p_hex, char *_data_buf)
 void coin_dispense (void)
 {	
 	uint32_t i, pulse_temp = 0;
+	uint32_t hopper_dispense_num_tmp[HOPPER_NUM];
 	//开始找零-----------------------------------------------------
 	for (i = 0; i < HOPPER_NUM; i++){
 		para_set_value.data.hopper_dispense_cnt[i] = 0;
 		if (para_set_value.data.hopper_dispense_num[i] > para_set_value.data.hopper_balance[i]){
 			para_set_value.data.hopper_dispense_num[i] = para_set_value.data.hopper_balance[i];
 		}
+		if (pulse_temp < para_set_value.data.hopper_dispense_num[i]){
+			pulse_temp = para_set_value.data.hopper_dispense_num[i];
+		}
+		hopper_dispense_num_tmp[i] = para_set_value.data.hopper_dispense_num[i];
 		if (para_set_value.data.hopper_dispense_num[i] > 0){
 			set_active_resister (ACT_L_R_DISPENSING_COIN, 0);
 			BELT_MOTOR_STARTRUN();   //斗送入电机
-			para_set_value.data.belt_runtime = 10;
-			para_set_value.data.hopper_output_timeout[2] = 20;//10s
+			para_set_value.data.belt_runtime = BELT_RUN_TIME;
+//			para_set_value.data.hopper_output_timeout[i] = 20;//10s
 		}
 	}
-	pulse_temp = para_set_value.data.hopper_dispense_num[0];
+#ifdef DISPENSE_METHED_0
+	pulse_temp = hopper_dispense_num_tmp[0];
 	for (i = 0; i < pulse_temp; i++){
 		PAYOUT0(STARTRUN);	  //
 		pulse_time = para_set_value.data.hopper_pulse; 
@@ -425,7 +431,7 @@ void coin_dispense (void)
 		while(pulse_time != 0){;}
 	}
 
-	pulse_temp = para_set_value.data.hopper_dispense_num[1];
+	pulse_temp = hopper_dispense_num_tmp1];
 	for (i = 0; i < pulse_temp; i++){
 		PAYOUT1(STARTRUN);	  //
 		pulse_time = para_set_value.data.hopper_pulse; 
@@ -434,7 +440,7 @@ void coin_dispense (void)
 		pulse_time = para_set_value.data.hopper_pulse; 
 		while(pulse_time != 0){;}
 	}
-	pulse_temp = para_set_value.data.hopper_dispense_num[2];
+	pulse_temp = hopper_dispense_num_tmp[2];
 	for (i = 0; i < pulse_temp; i++){
 		PAYOUT2(STARTRUN);	  //
 		pulse_time = para_set_value.data.hopper_pulse; 
@@ -443,6 +449,29 @@ void coin_dispense (void)
 		pulse_time = para_set_value.data.hopper_pulse; 
 		while(pulse_time != 0){;}
 	}
+#else
+	for (i = 0; i < pulse_temp; i++){
+		if (hopper_dispense_num_tmp[0] > 0){
+			PAYOUT0(STARTRUN);	  //
+			hopper_dispense_num_tmp[0]--;
+		}
+		if (hopper_dispense_num_tmp[1] > 0){
+			PAYOUT1(STARTRUN);	  //
+			hopper_dispense_num_tmp[1]--;
+		}
+		if (hopper_dispense_num_tmp[2] > 0){
+			PAYOUT2(STARTRUN);	  //
+			hopper_dispense_num_tmp[2]--;
+		}
+		pulse_time = para_set_value.data.hopper_pulse; 
+		while(pulse_time != 0){;}
+		PAYOUT0(STOPRUN);	  // 
+		PAYOUT1(STOPRUN);	  // 
+		PAYOUT2(STOPRUN);	  // 
+		pulse_time = para_set_value.data.hopper_pulse; 
+		while(pulse_time != 0){;}
+	}
+#endif
 	//结束找零-----------------------------------------------------
 	write_para ();
 }
@@ -453,7 +482,7 @@ void fin_coin_dispense (void)
 	reset_active_resister (ACT_L_R_DISPENSING_COIN, 0);
 
 	for (i = 0; i < HOPPER_NUM; i++){
-		if (para_set_value.data.coin_cycle_box[i] > para_set_value.data.hopper_dispense_cnt[i]){
+		if (para_set_value.data.coin_cycle_box[i] >= para_set_value.data.hopper_dispense_cnt[i]){
 			para_set_value.data.coin_cycle_box[i] -= para_set_value.data.hopper_dispense_cnt[i];
 			para_set_value.data.hopper_balance[i] -= para_set_value.data.hopper_dispense_cnt[i];
 		}

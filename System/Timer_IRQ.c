@@ -51,7 +51,11 @@ void Timer4_Stop(void)
 	rTCON &= ~(0x1 << 20); // 定时器停止
 }
 
-// 1us ~ 23ms
+// 1us ~ 23ms			
+//		if (para_set_value.data.hopper_output_timeout[X] > 0){ \
+			para_set_value.data.hopper_output_timeout[X] = 20; \
+		} \
+//
 void Timer4_Init(unsigned short us, void (*Callback)(void), unsigned short enable_int)
 {
 // 定时器4时钟频率为PCLK(66M)/(5+1)/4=2750KHZ
@@ -85,11 +89,8 @@ static int16_t hopper_coin_in[HOPPER_NUM] = {0, 0, 0};
 		hopper_coin_in[X] = 1; \
 		para_set_value.data.hopper_dispense_cnt[X]++; \
 		para_set_value.data.hopper_dispense_num[X]--; \
-		if (para_set_value.data.hopper_output_timeout[X] > 0){ \
-			para_set_value.data.hopper_output_timeout[X] = 20; \
-		} \
 		if (para_set_value.data.belt_runtime > 0){ \
-			para_set_value.data.belt_runtime = 10; \
+			para_set_value.data.belt_runtime = BELT_RUN_TIME; \
 		} \
 	} \
 }else{ \

@@ -212,7 +212,7 @@ void Task3(void *pdata)
 	(void)pdata;
 	while (1) {
 		if (sys_env.update_flag != NET_UPDATEING){
-			OSTimeDly(20);
+			OSTimeDly(300);
 		}
 		if (sys_env.workstep == 10){//待机状态下才能联网更新
 			continue;
@@ -256,40 +256,33 @@ void Task1(void *pdata)
 #if OS_CRITICAL_METHOD == 3u                     /* Allocate storage for CPU status register           */
     OS_CPU_SR  cpu_sr = 0u;
 #endif
-	int i;
 	(void)pdata;
 	while (1) {
 		LED2_NOT;
 		OSTimeDly(500); // LED3 1000ms闪烁void
 
-		for (i = 0; i < HOPPER_NUM; i++){
-			if (para_set_value.data.hopper_output_timeout[i] > 0){
-				OS_ENTER_CRITICAL();
-				para_set_value.data.hopper_output_timeout[i]--;
-				OS_EXIT_CRITICAL();
-				if ((para_set_value.data.hopper_output_timeout[0] == 0) && 
-					(para_set_value.data.hopper_output_timeout[1] == 0) &&
-					(para_set_value.data.hopper_output_timeout[2] == 0)){
-					cy_println ("hopper %d output coin timeout", i);
-					BELT_MOTOR_STOPRUN();   //斗送入电机
-					cy_println ("stop belt motor 0");
-				}
-			}
-		}
+//		for (i = 0; i < HOPPER_NUM; i++){
+//			if (para_set_value.data.hopper_output_timeout[i] > 0){
+//				OS_ENTER_CRITICAL();
+//				para_set_value.data.hopper_output_timeout[i]--;
+//				OS_EXIT_CRITICAL();
+//				if ((para_set_value.data.hopper_output_timeout[0] == 0) && 
+//					(para_set_value.data.hopper_output_timeout[1] == 0) &&
+//					(para_set_value.data.hopper_output_timeout[2] == 0)){
+//					cy_println ("hopper %d output coin timeout", i);
+//					BELT_MOTOR_STOPRUN();   //斗送入电机
+//					cy_println ("stop belt motor 0");
+//				}
+//			}
+//		}
 		if (para_set_value.data.belt_runtime > 0){
 			OS_ENTER_CRITICAL();
 			para_set_value.data.belt_runtime--;
 			OS_EXIT_CRITICAL();
 			if (para_set_value.data.belt_runtime == 0){
-				if ((para_set_value.data.hopper_output_timeout[0] == 0) && 
-					(para_set_value.data.hopper_output_timeout[1] == 0) &&
-					(para_set_value.data.hopper_output_timeout[2] == 0)){
-					BELT_MOTOR_STOPRUN();   //斗送入电机
-					fin_coin_dispense ();
-					cy_println ("stop belt motor 2");
-				}else{
-					para_set_value.data.belt_runtime = 1;
-				}
+				BELT_MOTOR_STOPRUN();   //斗送入电机
+				fin_coin_dispense ();
+				cy_println ("stop belt motor 2");
 			}
 		}
 	}
@@ -312,7 +305,7 @@ void Task4(void *pdata)
 			cctalk_env.dispense_event_ctr++;//找零事件加1
 			sys_env.coin_dispense = 0;
 		}
-		delay_ms (20);
+		OSTimeDly (200);
 	}
 }
 
@@ -389,8 +382,16 @@ void TaskStart(void *pdata)
 					disp_allcount ();
 				}
 				if (sys_env.stop_time == 0){
+					if (sys_env.re_run_time > 0){
+						sys_env.stop_time = STOP_TIME;//
+						sys_env.stop_flag = 0;
+						sys_env.re_run_time--;
+					}else{
+						STORAGE_MOTOR_STOPRUN();	//
+						sys_env.stop_time = 100;//STOP_TIME;//	
 						comscreen(Disp_Indexpic[JSJM],Number_IndexpicB);	 // back to the  picture before alert
 						sys_env.workstep =0;
+					}
 				}
 				if (sys_env.print_wave_to_pc == 1){
 					if (sys_env.AD_buf_sending == 1){

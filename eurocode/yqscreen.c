@@ -185,13 +185,13 @@ void disp_allcount(void)     //pre counting ,detail list
     //OS_ENTER_CRITICAL();
 		disp_buf.m_1yuan = *(pre_value.country[COUNTRY_ID].coin[0].data.p_cycle_count_cur);
 		disp_buf.m_5jiao = (*(pre_value.country[COUNTRY_ID].coin[1].data.p_cycle_count_cur));
-		disp_buf.m_1jiao_big = (*(pre_value.country[COUNTRY_ID].coin[3].data.p_cycle_count_cur));
+		disp_buf.m_1jiao_big = 0;//(*(pre_value.country[COUNTRY_ID].coin[3].data.p_cycle_count_cur));
 		disp_buf.m_1jiao = (*(pre_value.country[COUNTRY_ID].coin[4].data.p_cycle_count_cur));
-		disp_buf.m_5fen =  *(pre_value.country[COUNTRY_ID].coin[6].data.p_cycle_count_cur);
-		disp_buf.m_2fen =  *(pre_value.country[COUNTRY_ID].coin[7].data.p_cycle_count_cur);
-		disp_buf.m_1fen =  *(pre_value.country[COUNTRY_ID].coin[8].data.p_cycle_count_cur);
-		disp_buf.m_10yuan =  *(pre_value.country[COUNTRY_ID].coin[9].data.p_cycle_count_cur);
-		disp_buf.m_5yuan =  *(pre_value.country[COUNTRY_ID].coin[10].data.p_cycle_count_cur);
+		disp_buf.m_5fen =  0;//*(pre_value.country[COUNTRY_ID].coin[6].data.p_cycle_count_cur);
+		disp_buf.m_2fen =  0;//*(pre_value.country[COUNTRY_ID].coin[7].data.p_cycle_count_cur);
+		disp_buf.m_1fen =  0;//*(pre_value.country[COUNTRY_ID].coin[8].data.p_cycle_count_cur);
+		disp_buf.m_10yuan =  0;//*(pre_value.country[COUNTRY_ID].coin[9].data.p_cycle_count_cur);
+		disp_buf.m_5yuan =  0;//*(pre_value.country[COUNTRY_ID].coin[10].data.p_cycle_count_cur);
 		disp_buf.total_good = processed_coin_info.total_good;
 		disp_buf.total_ng = processed_coin_info.total_ng;
 		disp_buf.total_money = processed_coin_info.total_money;
@@ -201,12 +201,12 @@ void disp_allcount(void)     //pre counting ,detail list
 		dgus_tf2word(ADDR_XD10, disp_buf.m_1yuan);		//list 1
 		dgus_tf2word(ADDR_XD5, disp_buf.m_5jiao);					//	 list 0.5
 		dgus_tf2word(ADDR_XD1, disp_buf.m_1jiao);	//	 list 0.1
-		dgus_tf2word(ADDR_XDB1, disp_buf.m_1jiao_big);	//	 list 0.1
-		dgus_tf2word(ADDR_XD05, disp_buf.m_5fen);			//	  list 0.05
-		dgus_tf2word(ADDR_XD02, disp_buf.m_2fen);			//	  list 0.02
-		dgus_tf2word(ADDR_XD01, disp_buf.m_1fen);			//	  list 0.01
-		dgus_tf2word(ADDR_XD1000, disp_buf.m_10yuan);			//	  list 10
-		dgus_tf2word(ADDR_XD500, disp_buf.m_5yuan);			//	  list 5
+		//dgus_tf2word(ADDR_XDB1, disp_buf.m_1jiao_big);	//	 list 0.1
+		//dgus_tf2word(ADDR_XD05, disp_buf.m_5fen);			//	  list 0.05
+		//dgus_tf2word(ADDR_XD02, disp_buf.m_2fen);			//	  list 0.02
+		//dgus_tf2word(ADDR_XD01, disp_buf.m_1fen);			//	  list 0.01
+		//dgus_tf2word(ADDR_XD1000, disp_buf.m_10yuan);			//	  list 10
+		//dgus_tf2word(ADDR_XD500, disp_buf.m_5yuan);			//	  list 5
 		dgus_tf2word(ADDR_XDZS,disp_buf.total_good);				//	  list number
 		dgus_tf2word(ADDR_XDFG,disp_buf.total_ng);			//	  list forge
 		dgus_tf2word(ADDR_CPZE, disp_buf.total_money);	//pre worker money
