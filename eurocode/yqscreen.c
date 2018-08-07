@@ -183,15 +183,15 @@ void disp_allcount(void)     //pre counting ,detail list
 #endif
 	if( coinchoose == CN0){
     //OS_ENTER_CRITICAL();
-		disp_buf.m_1yuan = *(pre_value.country[COUNTRY_ID].coin[0].data.p_cycle_count_cur);
-		disp_buf.m_5jiao = (*(pre_value.country[COUNTRY_ID].coin[1].data.p_cycle_count_cur));
-		disp_buf.m_1jiao_big = 0;//(*(pre_value.country[COUNTRY_ID].coin[3].data.p_cycle_count_cur));
-		disp_buf.m_1jiao = (*(pre_value.country[COUNTRY_ID].coin[4].data.p_cycle_count_cur));
-		disp_buf.m_5fen =  0;//*(pre_value.country[COUNTRY_ID].coin[6].data.p_cycle_count_cur);
-		disp_buf.m_2fen =  0;//*(pre_value.country[COUNTRY_ID].coin[7].data.p_cycle_count_cur);
-		disp_buf.m_1fen =  0;//*(pre_value.country[COUNTRY_ID].coin[8].data.p_cycle_count_cur);
-		disp_buf.m_10yuan =  0;//*(pre_value.country[COUNTRY_ID].coin[9].data.p_cycle_count_cur);
-		disp_buf.m_5yuan =  0;//*(pre_value.country[COUNTRY_ID].coin[10].data.p_cycle_count_cur);
+		disp_buf.m_1yuan = *(pre_value.country[COUNTRY_ID].coin[0].data.p_count_cur);
+		disp_buf.m_5jiao = (*(pre_value.country[COUNTRY_ID].coin[1].data.p_count_cur));
+		disp_buf.m_1jiao_big = 0;//(*(pre_value.country[COUNTRY_ID].coin[3].data.p_count_cur));
+		disp_buf.m_1jiao = (*(pre_value.country[COUNTRY_ID].coin[4].data.p_count_cur));
+		disp_buf.m_5fen =  0;//*(pre_value.country[COUNTRY_ID].coin[6].data.p_count_cur);
+		disp_buf.m_2fen =  0;//*(pre_value.country[COUNTRY_ID].coin[7].data.p_count_cur);
+		disp_buf.m_1fen =  0;//*(pre_value.country[COUNTRY_ID].coin[8].data.p_count_cur);
+		disp_buf.m_10yuan =  0;//*(pre_value.country[COUNTRY_ID].coin[9].data.p_count_cur);
+		disp_buf.m_5yuan =  0;//*(pre_value.country[COUNTRY_ID].coin[10].data.p_count_cur);
 		disp_buf.total_good = processed_coin_info.total_good;
 		disp_buf.total_ng = processed_coin_info.total_ng;
 		disp_buf.total_money = processed_coin_info.total_money;
@@ -492,7 +492,7 @@ void counter_clear (void) //
 	int i;
 	for (i = 0; i < COIN_TYPE_NUM; i++){
 		*pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_full_flag = 0; //
-		*pre_value.country[COUNTRY_ID].coin[i].data.p_cycle_count_cur = 0; //
+		*pre_value.country[COUNTRY_ID].coin[i].data.p_count_cur = 0; //
 		*pre_value.country[COUNTRY_ID].coin[i].data.p_hopper_balance_cur = 0; //
 		*pre_value.country[COUNTRY_ID].coin[i].data.p_coinval = 0;
 		coin_env.full_stack_num = 0;
@@ -630,7 +630,7 @@ void touchresult(void)      //根据接收到的  数 来决定 执行的任务
 				yqsql_exec(DBINSERT);
 				disp_KJAmount(); // initial addr on zhu jiemian ze zs forge
 				for(ci = 0;ci<9;ci++)
-					*(pre_value.country[COUNTRY_ID].coin[ci].data.p_cycle_count_cur) = 0;
+					*(pre_value.country[COUNTRY_ID].coin[ci].data.p_count_cur) = 0;
  				processed_coin_info.total_money =0;
 				processed_coin_info.total_good = 0;
 				processed_coin_info.total_ng = 0;
@@ -879,7 +879,7 @@ void touchresult(void)      //根据接收到的  数 来决定 执行的任务
 			int i;
 			for (i = 0; i < COIN_TYPE_NUM; i++){
 				*pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_full_flag = 0; //
-				*pre_value.country[COUNTRY_ID].coin[i].data.p_cycle_count_cur = 0; //
+				*pre_value.country[COUNTRY_ID].coin[i].data.p_count_cur = 0; //
 				*pre_value.country[COUNTRY_ID].coin[i].data.p_hopper_balance_cur = 0; //
 				coin_env.full_stack_num = 0;
 			}

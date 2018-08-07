@@ -203,7 +203,7 @@ int res_modify_inhibit_status (char *recv_buf)
 		coin_env.inhibit_coin[2] = cctalk_env.coin_inhibit_status & 0x0002;//5角
 		coin_env.inhibit_coin[4] = cctalk_env.coin_inhibit_status & 0x0004;//1角
 		//OS_EXIT_CRITICAL();
-		if (cctalk_env.coin_inhibit_status != 0 && sys_env.workstep == 1){
+		if ((cctalk_env.coin_inhibit_status & 0x07) != 0 && sys_env.workstep == 1){
 			coin_start ();
 		}else{
 			sys_env.re_run_time = 1;//持续运行
@@ -233,11 +233,11 @@ int res_modify_hopper_balance (char *recv_buf)
 			hopper_index--;
 		}
 		if (hopper_index < HOPPER_NUM){
-			if (para_set_value.data.coin_cycle_box[hopper_index] >= para_set_value.data.hopper_balance[hopper_index]){
-				para_set_value.data.coin_cycle_box[hopper_index] -= para_set_value.data.hopper_balance[hopper_index];
+			if (para_set_value.data.coin_total_num[hopper_index] >= para_set_value.data.hopper_balance[hopper_index]){
+				para_set_value.data.coin_total_num[hopper_index] -= para_set_value.data.hopper_balance[hopper_index];
 			}
 			para_set_value.data.hopper_balance[hopper_index] =  recv_buf[5] +  recv_buf[6] * 256;
-			para_set_value.data.coin_cycle_box[hopper_index] += para_set_value.data.hopper_balance[hopper_index];
+			para_set_value.data.coin_total_num[hopper_index] += para_set_value.data.hopper_balance[hopper_index];
 		}
 	}else{
 		cctalk_set_NAK ();
@@ -448,8 +448,8 @@ int res_request_coins_in_by_type (char *recv_buf)
 	///////////////////////////////////////////////////////////////////
 	for (i = 0; i < 16; i++){
 		if (i < HOPPER_NUM){
-			data_buf_tmp[0 + 2*i] = para_set_value.data.coin_cycle_box[i] & 0xFF;//低字节
-			data_buf_tmp[1 + 2*i] = (para_set_value.data.coin_cycle_box[i] >> 8) & 0xFF;//高字节
+			data_buf_tmp[0 + 2*i] = para_set_value.data.coin_current_receive[i] & 0xFF;//低字节
+			data_buf_tmp[1 + 2*i] = (para_set_value.data.coin_current_receive[i] >> 8) & 0xFF;//高字节
 		}else{
 			data_buf_tmp[0 + 2*i] = 0;//低字节
 			data_buf_tmp[1 + 2*i] = 0;//高字节
@@ -464,9 +464,7 @@ int res_request_money_in (char *recv_buf)
 {
 	uint32_t money_in_tmp = 0;
 	uint8_t data_buf_tmp[4];
-	money_in_tmp = para_set_value.data.coin_cycle_box[0] * 100 + 
-								 para_set_value.data.coin_cycle_box[1] * 50 + 
-								 para_set_value.data.coin_cycle_box[2] * 10;
+	money_in_tmp = processed_coin_info.total_money;
 	///////////////////////////////////////////////////////////////////
 	data_buf_tmp[0] = money_in_tmp & 0xFF;//
 	data_buf_tmp[1] = (money_in_tmp >> 8) & 0xFF;//
@@ -479,12 +477,8 @@ int res_request_money_in (char *recv_buf)
 //
 int res_clear_money_counters (char *recv_buf)
 {
-	int i;
 	if (check_res_flag (ACT_L_R_ACCEPTING_COIN | ACT_L_R_DISPENSING_COIN) == 1){
-		for (i = 0; i < HOPPER_NUM; i++){
-			para_set_value.data.hopper_balance[i] = 0;
-			para_set_value.data.coin_cycle_box[i] = 0;
-		}
+		processed_coin_info.total_money = 0;
 	}else{
 		cctalk_set_NAK ();
 	}
@@ -505,10 +499,10 @@ int res_pay_money_out (char *recv_buf)
 //
 int res_purge_hopper(char *recv_buf)
 {
-	uint8_t hopper_index;
-	uint8_t coin_num;
-	hopper_index = recv_buf[4];//0xFF 表示清空所有Hopper，否则代表Hopper序号
-	coin_num = recv_buf[5];//0x0 代表清空hopper_index对应的Hopper，否则代表出的硬币数，最多255
+//	uint8_t hopper_index;
+//	uint8_t coin_num;
+//	hopper_index = recv_buf[4];//0xFF 表示清空所有Hopper，否则代表Hopper序号
+//	coin_num = recv_buf[5];//0x0 代表清空hopper_index对应的Hopper，否则代表出的硬币数，最多255
 	//清空操作
 //	check_res_flag ();
 	return cctalk_simple_poll_respond (recv_buf);

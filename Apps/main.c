@@ -260,21 +260,6 @@ void Task1(void *pdata)
 	while (1) {
 		LED2_NOT;
 		OSTimeDly(500); // LED3 1000ms…¡À∏void
-
-//		for (i = 0; i < HOPPER_NUM; i++){
-//			if (para_set_value.data.hopper_output_timeout[i] > 0){
-//				OS_ENTER_CRITICAL();
-//				para_set_value.data.hopper_output_timeout[i]--;
-//				OS_EXIT_CRITICAL();
-//				if ((para_set_value.data.hopper_output_timeout[0] == 0) && 
-//					(para_set_value.data.hopper_output_timeout[1] == 0) &&
-//					(para_set_value.data.hopper_output_timeout[2] == 0)){
-//					cy_println ("hopper %d output coin timeout", i);
-//					BELT_MOTOR_STOPRUN();   //∂∑ÀÕ»ÎµÁª˙
-//					cy_println ("stop belt motor 0");
-//				}
-//			}
-//		}
 		if (para_set_value.data.belt_runtime > 0){
 			OS_ENTER_CRITICAL();
 			para_set_value.data.belt_runtime--;

@@ -272,16 +272,21 @@ void read_coin_value(void) 	 // read  COIN  0--8
 		*pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_set = para_set_value.data.precoin_set_num[pre_value.country[COUNTRY_ID].coin[i].data.coin_type];//预置计数设置值初始化
 		*pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_full_flag = 0;//预置计数到达标志清零
 	}
-	pre_value.country[COUNTRY_ID].coin[0].data.p_cycle_count_cur = &para_set_value.data.coin_cycle_box[0];//
-	pre_value.country[COUNTRY_ID].coin[1].data.p_cycle_count_cur = &para_set_value.data.coin_cycle_box[1];//
-	pre_value.country[COUNTRY_ID].coin[2].data.p_cycle_count_cur = &para_set_value.data.coin_cycle_box[1];//
-	pre_value.country[COUNTRY_ID].coin[4].data.p_cycle_count_cur = &para_set_value.data.coin_cycle_box[2];//
-	pre_value.country[COUNTRY_ID].coin[5].data.p_cycle_count_cur = &para_set_value.data.coin_cycle_box[2];//
+	pre_value.country[COUNTRY_ID].coin[0].data.p_count_cur = &para_set_value.data.coin_total_num[0];//
+	pre_value.country[COUNTRY_ID].coin[1].data.p_count_cur = &para_set_value.data.coin_total_num[1];//
+	pre_value.country[COUNTRY_ID].coin[2].data.p_count_cur = &para_set_value.data.coin_total_num[1];//
+	pre_value.country[COUNTRY_ID].coin[4].data.p_count_cur = &para_set_value.data.coin_total_num[2];//
+	pre_value.country[COUNTRY_ID].coin[5].data.p_count_cur = &para_set_value.data.coin_total_num[2];//
 	pre_value.country[COUNTRY_ID].coin[0].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[0];//
 	pre_value.country[COUNTRY_ID].coin[1].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[1];//
 	pre_value.country[COUNTRY_ID].coin[2].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[1];//
 	pre_value.country[COUNTRY_ID].coin[4].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[2];//
 	pre_value.country[COUNTRY_ID].coin[5].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[2];//
+	pre_value.country[COUNTRY_ID].coin[0].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[0];//
+	pre_value.country[COUNTRY_ID].coin[1].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[1];//
+	pre_value.country[COUNTRY_ID].coin[2].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[1];//
+	pre_value.country[COUNTRY_ID].coin[4].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[2];//
+	pre_value.country[COUNTRY_ID].coin[5].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[2];//
 }
 
 

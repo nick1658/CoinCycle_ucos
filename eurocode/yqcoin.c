@@ -151,7 +151,8 @@ void cy_precoincount(void)
 				dbg ("kick1 error alertflag = %d %s, %d", KICK1COINERROR,  __FILE__, __LINE__);
 			}
 		}else{//真币
-			(*(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_cycle_count_cur))++;
+			(*(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_count_cur))++;
+			(*(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_coin_current_receive))++;
 			processed_coin_info.total_money += pre_value.country[coinchoose].coin[good_coin].data.money;
 			processed_coin_info.total_good++;
 			if (*pre_value.country[COUNTRY_ID].coin[good_coin].data.p_pre_count_full_flag == 0){//只使用清分功能

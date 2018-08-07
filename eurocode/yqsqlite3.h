@@ -140,7 +140,8 @@ typedef struct
 	volatile uint32_t hopper_dispense_num[HOPPER_NUM];
 	volatile uint32_t hopper_balance[HOPPER_NUM];
 	volatile uint32_t hopper_dispense_cnt[HOPPER_NUM];
-	volatile uint32_t coin_cycle_box[HOPPER_NUM];
+	volatile uint32_t coin_total_num[HOPPER_NUM];
+	volatile uint32_t coin_current_receive[HOPPER_NUM];
 	volatile uint16_t hopper_output_timeout[HOPPER_NUM];
 	volatile uint16_t belt_runtime;
 }s_coin_parameter_value;
@@ -172,8 +173,9 @@ typedef struct
 	int16_t offsetmax2;
 	int16_t offsetmin2;
 	volatile uint32_t * p_pre_count_set;
-	volatile uint32_t * p_cycle_count_cur;
+	volatile uint32_t * p_count_cur;
 	volatile uint32_t * p_hopper_balance_cur;
+	volatile uint32_t * p_coin_current_receive;
 	uint32_t * p_pre_count_full_flag;
 	uint32_t * p_coinval;
 	uint32_t coin_type;

@@ -420,6 +420,7 @@ void coin_dispense (void)
 //			para_set_value.data.hopper_output_timeout[i] = 20;//10s
 		}
 	}
+//#define DISPENSE_METHED_0
 #ifdef DISPENSE_METHED_0
 	pulse_temp = hopper_dispense_num_tmp[0];
 	for (i = 0; i < pulse_temp; i++){
@@ -449,7 +450,7 @@ void coin_dispense (void)
 		pulse_time = para_set_value.data.hopper_pulse; 
 		while(pulse_time != 0){;}
 	}
-#else
+	#else
 	for (i = 0; i < pulse_temp; i++){
 		if (hopper_dispense_num_tmp[0] > 0){
 			PAYOUT0(STARTRUN);	  //
@@ -482,8 +483,8 @@ void fin_coin_dispense (void)
 	reset_active_resister (ACT_L_R_DISPENSING_COIN, 0);
 
 	for (i = 0; i < HOPPER_NUM; i++){
-		if (para_set_value.data.coin_cycle_box[i] >= para_set_value.data.hopper_dispense_cnt[i]){
-			para_set_value.data.coin_cycle_box[i] -= para_set_value.data.hopper_dispense_cnt[i];
+		if (para_set_value.data.coin_total_num[i] >= para_set_value.data.hopper_dispense_cnt[i]){
+			para_set_value.data.coin_total_num[i] -= para_set_value.data.hopper_dispense_cnt[i];
 			para_set_value.data.hopper_balance[i] -= para_set_value.data.hopper_dispense_cnt[i];
 		}
 	}
@@ -1947,7 +1948,7 @@ void print_pre_count_current (void)
 	cy_println("--------------------print pre_count_current value--------------------", coinchoose);
 	for (i = 0; i < 9; i++)
 	{
-		cy_println ("   %d      %6d", i, *(pre_value.country[coinchoose].coin[i].data.p_cycle_count_cur));
+		cy_println ("   %d      %6d", i, *(pre_value.country[coinchoose].coin[i].data.p_count_cur));
 	}
 	cy_println("---------------------------------------------------------------------");
 }

@@ -18,6 +18,7 @@ void deviceinit(void)	//开机先把通道上的币挡下去
 		}else{
 			*pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_full_flag = 0;
 		}
+		*pre_value.country[COUNTRY_ID].coin[i].data.p_coin_current_receive = 0;
 	}
 	disp_allcount();
 	coin_env.full_stack_num = 0;
