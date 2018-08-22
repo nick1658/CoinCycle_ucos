@@ -155,7 +155,7 @@ void cy_precoincount(void)
 			(*(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_coin_current_receive))++;
 			processed_coin_info.total_money += pre_value.country[coinchoose].coin[good_coin].data.money;
 			processed_coin_info.total_good++;
-			if (*pre_value.country[COUNTRY_ID].coin[good_coin].data.p_pre_count_full_flag == 0){//只使用清分功能
+			if (*pre_value.country[COUNTRY_ID].coin[good_coin].data.p_pre_count_full_flag == 0){//
 				(*(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_hopper_balance_cur))++;
 				if( *(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_hopper_balance_cur) >= *(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_pre_count_set)){// 当前的币种  数量 达到其预置值
 					*pre_value.country[COUNTRY_ID].coin[good_coin].data.p_pre_count_full_flag = 1; //此类硬币预置数到，做个标记

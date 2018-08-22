@@ -14,8 +14,10 @@ void deviceinit(void)	//开机先把通道上的币挡下去
 	processed_coin_info.total_coin_old = processed_coin_info.total_coin;
 	for (i = 0; i < COIN_TYPE_NUM; i++){//预置计数模式时，当某种硬币的计数值达到预置值，就可以清零该硬币的计数
 		if (*(pre_value.country[COUNTRY_ID].coin[i].data.p_hopper_balance_cur) >= *(pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_set)){
+			//cy_println ("1 ->%d->%d", i, *(pre_value.country[COUNTRY_ID].coin[i].data.p_hopper_balance_cur));
 			*pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_full_flag = 1;
 		}else{
+			//cy_println ("2 ->%d->%d", i, *(pre_value.country[COUNTRY_ID].coin[i].data.p_hopper_balance_cur));
 			*pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_full_flag = 0;
 		}
 		*pre_value.country[COUNTRY_ID].coin[i].data.p_coin_current_receive = 0;

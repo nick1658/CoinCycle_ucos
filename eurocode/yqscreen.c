@@ -492,9 +492,7 @@ void counter_clear (void) //
 	int i;
 	for (i = 0; i < COIN_TYPE_NUM; i++){
 		*pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_full_flag = 0; //
-		*pre_value.country[COUNTRY_ID].coin[i].data.p_count_cur = 0; //
-		*pre_value.country[COUNTRY_ID].coin[i].data.p_hopper_balance_cur = 0; //
-		*pre_value.country[COUNTRY_ID].coin[i].data.p_coinval = 0;
+		*pre_value.country[COUNTRY_ID].coin[i].data.p_count_cur = 0; 
 		coin_env.full_stack_num = 0;
 	}
 	processed_coin_info.total_money =0;
@@ -511,6 +509,18 @@ void counter_clear (void) //
 volatile uint16_t prepic_num =0 ;   // 保存之前的图片
 volatile int32_t db_id = 0;   //历史数据 表格已经显示 数
 /*A5 5A 06 83 地址L,H + 长度字数据 + 数据*/
+
+void set_offset_value (uint16_t addr, uint16_t coin_index, int16 offset)
+{
+	pre_value.country[coinchoose].coin[coin_index].data.offsetmax0 = (offset);       //
+	pre_value.country[coinchoose].coin[coin_index].data.offsetmin0 = (offset)*(-1);       //
+	pre_value.country[coinchoose].coin[coin_index].data.offsetmax1 = (offset);       //
+	pre_value.country[coinchoose].coin[coin_index].data.offsetmin1 = (offset)*(-1);       //
+	pre_value.country[coinchoose].coin[coin_index].data.offsetmax2 = (offset);       //
+	pre_value.country[coinchoose].coin[coin_index].data.offsetmin2 = (offset)*(-1);       //
+	dgus_tf1word(addr, pre_value.country[coinchoose].coin[coin_index].data.offsetmax0);
+	write_para ();
+}
 void touchresult(void)      //根据接收到的  数 来决定 执行的任务
 {
 	uint16_t addr, value, i;
@@ -842,14 +852,30 @@ void touchresult(void)      //根据接收到的  数 来决定 执行的任务
 		Writekick_value();
 		//sys_env.workstep = 0;	//停止	所有动作  // 等待 触摸
 		break;
+	
 	case ADDR_LEVEL100:  //地址1元硬币的清分等级设置
- 		cn0copmaxc0[coinchoose]= ((int)touchnum[8]);	   //
-		cn0copmaxc1[coinchoose] = ((int)touchnum[8]);
-		cn0copmaxc2[coinchoose] = ((int)touchnum[8]);
-		dgus_tf1word(ADDR_LEVEL100,cn0copmaxc0[coinchoose]);	//make sure  the return one
-
-		write_para ();
-		sys_env.workstep = 0;	//停止	所有动作  // 等待 触摸
+		set_offset_value (ADDR_LEVEL100, 0, (int)(touchnum[7]*256 )+(int)touchnum[8]);
+		break;
+	case ADDR_LEVEL50:  //地址五角铜硬币的清分等级设置
+		set_offset_value (ADDR_LEVEL50, 1, (int)(touchnum[7]*256 )+(int)touchnum[8]);
+		break;
+	case ADDR_LEVEL51:  //地址5角钢硬币的清分等级设置
+		set_offset_value (ADDR_LEVEL51, 2, (int)(touchnum[7]*256 )+(int)touchnum[8]);
+		break;
+	case ADDR_LEVEL10:  //地址一角大铝硬币的清分等级设置
+		set_offset_value (ADDR_LEVEL10, 3, (int)(touchnum[7]*256 )+(int)touchnum[8]);
+		break;
+	case ADDR_LEVEL11:  //地址一角钢硬币的清分等级设置
+		set_offset_value (ADDR_LEVEL11, 4, (int)(touchnum[7]*256 )+(int)touchnum[8]);
+		break;
+	case ADDR_LEVEL12:  //地址一角小铝硬币的清分等级设置
+		set_offset_value (ADDR_LEVEL12, 5, (int)(touchnum[7]*256 )+(int)touchnum[8]);
+		break;
+	case ADDR_LEVEL1000:  //地址纪念币十元硬币的清分等级设置
+		set_offset_value (ADDR_LEVEL1000, 9, (int)(touchnum[7]*256 )+(int)touchnum[8]);
+		break;
+	case ADDR_LEVEL500:  //地址纪念币五元硬币的清分等级设置
+		set_offset_value (ADDR_LEVEL500, 10, (int)(touchnum[7]*256 )+(int)touchnum[8]);
 		break;
 	case ADDR_YZS0:
 	case ADDR_YZS1:

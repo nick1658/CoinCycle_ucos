@@ -187,7 +187,7 @@ void write_para (void)	//写入 当前币种 历史数据 总
 	write_coin_value ();
 }
 
-
+uint32_t null_value;
 void read_coin_value(void) 	 // read  COIN  0--8
 {
 	uint32_t i;
@@ -265,6 +265,10 @@ void read_coin_value(void) 	 // read  COIN  0--8
 	{
 		//count_coin_temp[pre_value.country[COUNTRY_ID].coin[i].data.coin_type].pre_count_set = 50;
 		//para_set_value.data.precoin_set_num[i] = 50;
+		pre_value.country[COUNTRY_ID].coin[i].data.p_count_cur = &null_value;
+		pre_value.country[COUNTRY_ID].coin[i].data.p_hopper_balance_cur = &null_value;
+		pre_value.country[COUNTRY_ID].coin[i].data.p_coin_current_receive = &null_value;
+		
 		pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_set 	= &count_coin_temp[pre_value.country[COUNTRY_ID].coin[i].data.coin_type].pre_count_set;//预置计数设置值
 		pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_full_flag = &count_coin_temp[pre_value.country[COUNTRY_ID].coin[i].data.coin_type].full_flag;//预置计数到达标志
 		pre_value.country[COUNTRY_ID].coin[i].data.p_coinval = &count_coin_temp[pre_value.country[COUNTRY_ID].coin[i].data.coin_type].coinval;//包装卷数

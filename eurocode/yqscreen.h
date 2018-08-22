@@ -130,13 +130,12 @@ void counter_clear (void); //
 #define ADDR_HOPPER1_NUM 0x7B
 #define ADDR_HOPPER2_NUM 0x7C
 
-
 #define ADDR_LEVEL100 	0x200   // 1元硬币的清分等级设置
-#define ADDR_LEVEL50 	0x201   // 0.5元硬币的清分等级设置
-#define ADDR_LEVEL10 	0x202   // 0.1元硬币的清分等级设置
-#define ADDR_LEVEL5 	0x203   // 0.05元硬币的清分等级设置
-#define ADDR_LEVEL2 	0x204   // 0.02元硬币的清分等级设置
-#define ADDR_LEVEL1 	0x205   // 0.01元硬币的清分等级设置
+#define ADDR_LEVEL50 	0x201   // 0.5元铜硬币的清分等级设置
+#define ADDR_LEVEL51 	0x202   // 0.5元钢硬币的清分等级设置
+#define ADDR_LEVEL10 	0x203   // 0.1元大铝硬币的清分等级设置
+#define ADDR_LEVEL11 	0x204   // 0.1元钢硬币的清分等级设置
+#define ADDR_LEVEL12 	0x205   // 0.1元小铝硬币的清分等级设置
 #define ADDR_LEVEL1000 	0x206   // 10元硬币的清分等级设置
 #define ADDR_LEVEL500 	0x207   // 5元硬币的清分等级设置
 
