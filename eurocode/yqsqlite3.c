@@ -320,7 +320,15 @@ void ini_screen (void)
 	dgus_tf1word(ADDR_KICK_KEEP_T3, para_set_value.data.kick_keep_t[4]);	//第四个踢币保持时间
 	dgus_tf1word(ADDR_MOTOR_IDLE_T, para_set_value.data.motor_idle_t);	//无币空转等待时间
 	dgus_tf1word(ADDR_PRE_COUNT_STOP_N, para_set_value.data.pre_count_stop_n);	//满币停机数，设置为1则任意一种硬币达到预置数就停机
-	dgus_tf1word(ADDR_LEVEL100,cn0copmaxc0[coinchoose]);	//清分等级，暂时没有设置
+	dgus_tf1word(ADDR_LEVEL100, pre_value.country[coinchoose].coin[0].data.offsetmax0);	//清分等级
+	dgus_tf1word(ADDR_LEVEL50, pre_value.country[coinchoose].coin[1].data.offsetmax0);	//清分等级
+	dgus_tf1word(ADDR_LEVEL51, pre_value.country[coinchoose].coin[2].data.offsetmax0);	//清分等级
+	dgus_tf1word(ADDR_LEVEL10, pre_value.country[coinchoose].coin[3].data.offsetmax0);	//清分等级
+	dgus_tf1word(ADDR_LEVEL11, pre_value.country[coinchoose].coin[4].data.offsetmax0);	//清分等级
+	dgus_tf1word(ADDR_LEVEL12, pre_value.country[coinchoose].coin[5].data.offsetmax0);	//清分等级
+	dgus_tf1word(ADDR_LEVEL1000, pre_value.country[coinchoose].coin[9].data.offsetmax0);	//清分等级
+	dgus_tf1word(ADDR_LEVEL500, pre_value.country[coinchoose].coin[10].data.offsetmax0);	//清分等级
+
 	dgus_tf1word(ADDR_HOPPER0_NUM, para_set_value.data.hopper_dispense_num[0]);
 	dgus_tf1word(ADDR_HOPPER1_NUM, para_set_value.data.hopper_dispense_num[1]);
 	dgus_tf1word(ADDR_HOPPER2_NUM, para_set_value.data.hopper_dispense_num[2]);

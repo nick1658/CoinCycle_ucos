@@ -656,7 +656,7 @@ void touchresult(void)      //根据接收到的  数 来决定 执行的任务
 				para_set_value.data.total_money += processed_coin_info.total_money;
 				para_set_value.data.total_good += processed_coin_info.total_good;
 				para_set_value.data.total_ng += processed_coin_info.total_ng;
-			//if (processed_coin_info.total_coin > 0)
+			if (processed_coin_info.total_coin > 0)
 				{
 				yqsql_exec(DBINSERT);
 			}
@@ -780,7 +780,7 @@ void touchresult(void)      //根据接收到的  数 来决定 执行的任务
 		break;
 	case ADDR_KICK_DELAY_T0:  //地址
 		para_set_value.data.kick_start_delay_t0 = (int)(touchnum[7]*256 )+(int)touchnum[8];       //delay time
-		dgus_tf1word(ADDR_KICK_DELAY_T1, para_set_value.data.kick_start_delay_t0);	//make sure the return one
+		dgus_tf1word(ADDR_KICK_DELAY_T0, para_set_value.data.kick_start_delay_t0);	//make sure the return one
 		Writekick_value();
 		break;
 	case ADDR_KICK_KEEP_T0:  //地址

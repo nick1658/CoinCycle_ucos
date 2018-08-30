@@ -185,6 +185,7 @@ void main_task(void)
 			cy_ad2_valueget();    //check coin wave and get ADSAMPNUM of ad  values
 			//////////////////////////////////////////////////////////////////////
 			cy_coinlearn();   //特征学习
+			IR_detect_func();   //第二个踢币程序
 			break;
 		}
 		case 103:{

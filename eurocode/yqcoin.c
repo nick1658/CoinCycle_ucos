@@ -187,6 +187,14 @@ void cy_coinlearn(void)
 		processed_coin_info.coinnumber++;
 		coinlearnnumber++;
 		prepare_coin_cmp_value ();
+		if (coin_env.kick_Q[coin_env.kick_Q_index] == 0){
+				coin_env.kick_Q[coin_env.kick_Q_index] = para_set_value.data.kick_start_delay_t0;
+				coin_env.kick_Q_index++;
+				coin_env.kick_Q_index %= KICK_Q_LEN;
+		}else{//剔除工位1队列追尾错误
+				SEND_ERROR(KICK1COINERROR);
+				dbg ("kick1 error alertflag = %d %s, %d", KICK1COINERROR,  __FILE__, __LINE__);
+		}
 		if( ( coin_value0 > coin_maxvalue0)){     //0
 			coin_maxvalue0 = coin_value0;
 		}
