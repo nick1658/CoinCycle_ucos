@@ -482,9 +482,14 @@ void fin_coin_dispense (void)
 	uint16_t i;
 	reset_active_resister (ACT_L_R_DISPENSING_COIN, 0);
 
+	//for (i = 0; i < HOPPER_NUM; i++){	
+	//	cy_println ("%d		%d", para_set_value.data.hopper_balance[i]
+	//}
 	for (i = 0; i < HOPPER_NUM; i++){
 		if (para_set_value.data.coin_total_num[i] >= para_set_value.data.hopper_dispense_cnt[i]){
 			para_set_value.data.coin_total_num[i] -= para_set_value.data.hopper_dispense_cnt[i];
+		}
+		if (para_set_value.data.hopper_balance[i] >= para_set_value.data.hopper_dispense_cnt[i]){
 			para_set_value.data.hopper_balance[i] -= para_set_value.data.hopper_dispense_cnt[i];
 		}
 	}
@@ -503,6 +508,7 @@ void fin_coin_dispense (void)
 	cctalk_env.unpayed_money_out = para_set_value.data.hopper_dispense_num[0] * 100 + 
 																para_set_value.data.hopper_dispense_num[1] * 50 + 
 																para_set_value.data.hopper_dispense_num[2] * 10;
+	save_coin_number ();
 }
 
 int get_hex_data (char * buf)
