@@ -65,6 +65,7 @@ typedef struct
 
 	uint16_t inhibit_coin[COIN_TYPE_NUM]; //拒收硬币设置位
 	uint16_t cycle_box_full;
+	uint16_t coin_speed_time;
 }s_coin_env;
 
 //各函数申明    步骤号  参数变量定义

@@ -99,7 +99,7 @@ static int16_t hopper_coin_in[HOPPER_NUM] = {0, 0, 0};
 
 extern void main_task(void);
 void Timer3_IRQ(void)
-{   
+{ 
 	main_task ();
 	
 	HOPPER_COUNTER(0);

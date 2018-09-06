@@ -201,13 +201,13 @@ void cy_coinlearn(void)
 		if( ( coin_value0 < coin_minvalue0)){
 			coin_minvalue0 = coin_value0;
 		}
-		if( ( coin_value1 > coin_maxvalue1)) {  //  1
+		if( ( coin_value1 > coin_maxvalue1)){  //  1
 			coin_maxvalue1 = coin_value1;
 		}
 		if( ( coin_value1 < coin_minvalue1)){
 			coin_minvalue1 = coin_value1;
 		}
-		if( ( coin_value2 > coin_maxvalue2)) {  //  2
+		if( ( coin_value2 > coin_maxvalue2)){  //  2
 			coin_maxvalue2 = coin_value2;
 		}
 		if( ( coin_value2 < coin_minvalue2)){

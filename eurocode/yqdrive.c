@@ -50,8 +50,11 @@ void IR_detect_func(void)
 	}else{
 		coin_in_flag = 1;
 	}
+	coin_env.coin_speed_time++;  
 ////////////////////////////////////////////////////////////////////////////////////////////
 	if((coin_in_flag == 1) && (coin_in_flag_old == 0)){//∂‘…‰µÁ—€œ¬Ωµ—ÿºÏ≤‚µΩ”≤±“
+		sys_env.coin_speed = (20000 / coin_env.coin_speed_time) * 10;
+		coin_env.coin_speed_time = 0;
 		
 		KICK_Q_SCAN(0);
 		KICK_Q_SCAN(1);
