@@ -202,6 +202,7 @@ int res_modify_inhibit_status (char *recv_buf)
 		coin_env.inhibit_coin[0] = cctalk_env.coin_inhibit_status & 0x0001;//1Ôª
 		coin_env.inhibit_coin[1] = cctalk_env.coin_inhibit_status & 0x0002;//5½ÇÍ­
 		coin_env.inhibit_coin[2] = cctalk_env.coin_inhibit_status & 0x0002;//5½Ç¸Ö
+		coin_env.inhibit_coin[3] = cctalk_env.coin_inhibit_status & 0x0004;//1½ÇÐ¡ÂÁ
 		coin_env.inhibit_coin[4] = cctalk_env.coin_inhibit_status & 0x0004;//1½Ç¸Ö
 		coin_env.inhibit_coin[5] = cctalk_env.coin_inhibit_status & 0x0004;//1½ÇÐ¡ÂÁ
 		//OS_EXIT_CRITICAL();

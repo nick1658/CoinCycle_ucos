@@ -222,13 +222,17 @@ void read_coin_value(void) 	 // read  COIN  0--8
 	pre_value.country[COUNTRY_ID].coin[9].data.coin_type = 9;
 	pre_value.country[COUNTRY_ID].coin[10].data.coin_type = 10;
 	
+	for (i = 0; i < COIN_TYPE_NUM; i++){	
+		coin_env.p_coin_recv_func[i] = coin_null_func;
+		coin_env.p_coin_kick_keep_func[i] = coin_null_func;
+	}
 	//Ó³ÉäÊÕ±Òº¯Êý
 	coin_env.p_coin_recv_func[0] = coin_recv1_out_func;
 	coin_env.p_coin_recv_func[1] = coin_recv2_out_func;
 	coin_env.p_coin_recv_func[2] = coin_recv2_out_func;
 	coin_env.p_coin_recv_func[3] = coin_null_func;
 	coin_env.p_coin_recv_func[4] = coin_recv3_out_func;
-	coin_env.p_coin_recv_func[5] = coin_recv3_out_func;
+	//coin_env.p_coin_recv_func[5] = coin_recv3_out_func;
 	coin_env.p_coin_recv_func[6] = coin_null_func;
 	coin_env.p_coin_recv_func[7] = coin_null_func;
 	coin_env.p_coin_recv_func[8] = coin_null_func;
@@ -240,7 +244,7 @@ void read_coin_value(void) 	 // read  COIN  0--8
 	coin_env.p_coin_kick_keep_func[2] = coin_recv2_in_func;
 	coin_env.p_coin_kick_keep_func[3] = coin_null_func;
 	coin_env.p_coin_kick_keep_func[4] = coin_recv3_in_func;
-	coin_env.p_coin_kick_keep_func[5] = coin_recv3_in_func;
+	//coin_env.p_coin_kick_keep_func[5] = coin_recv3_in_func;
 	coin_env.p_coin_kick_keep_func[6] = coin_null_func;
 	coin_env.p_coin_kick_keep_func[7] = coin_null_func;
 	coin_env.p_coin_kick_keep_func[8] = coin_null_func;
@@ -279,16 +283,18 @@ void read_coin_value(void) 	 // read  COIN  0--8
 	pre_value.country[COUNTRY_ID].coin[0].data.p_count_cur = &para_set_value.data.coin_total_num[0];//
 	pre_value.country[COUNTRY_ID].coin[1].data.p_count_cur = &para_set_value.data.coin_total_num[1];//
 	pre_value.country[COUNTRY_ID].coin[2].data.p_count_cur = &para_set_value.data.coin_total_num[1];//
+	pre_value.country[COUNTRY_ID].coin[3].data.p_count_cur = &para_set_value.data.coin_total_num[2];//
 	pre_value.country[COUNTRY_ID].coin[4].data.p_count_cur = &para_set_value.data.coin_total_num[2];//
 	pre_value.country[COUNTRY_ID].coin[5].data.p_count_cur = &para_set_value.data.coin_total_num[2];//
 	pre_value.country[COUNTRY_ID].coin[0].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[0];//
 	pre_value.country[COUNTRY_ID].coin[1].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[1];//
 	pre_value.country[COUNTRY_ID].coin[2].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[1];//
 	pre_value.country[COUNTRY_ID].coin[4].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[2];//
-	pre_value.country[COUNTRY_ID].coin[5].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[2];//
+	//pre_value.country[COUNTRY_ID].coin[5].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[2];//
 	pre_value.country[COUNTRY_ID].coin[0].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[0];//
 	pre_value.country[COUNTRY_ID].coin[1].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[1];//
 	pre_value.country[COUNTRY_ID].coin[2].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[1];//
+	pre_value.country[COUNTRY_ID].coin[3].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[2];//
 	pre_value.country[COUNTRY_ID].coin[4].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[2];//
 	pre_value.country[COUNTRY_ID].coin[5].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[2];//
 }

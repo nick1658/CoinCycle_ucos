@@ -588,12 +588,31 @@ uint16_t adstd_offset()    //  检测 基准值   有不大偏差进行补偿
 	}
 
 
+#define UP_POW (0.3)
+#define DOWN_POW (0.8)
 	/////////////
 	dbg ("real     std0 = %4d          std1 = %4d     std2 = %4d", std_ad0, std_ad1, std_ad2);
 	for (is = 0; is < COIN_TYPE_NUM; is++){ //补偿值
 		std0_offset = std_ad0 - pre_value.country[coinchoose].coin[is].data.std0;
 		std1_offset = std_ad1 - pre_value.country[coinchoose].coin[is].data.std1;
 		std2_offset = std_ad2 - pre_value.country[coinchoose].coin[is].data.std2;
+/////////////////////////////////////////////////////////////////////////////////
+		if (std0_offset > 0){
+			std0_offset *= UP_POW;
+		}else{
+			std0_offset *= DOWN_POW;
+		}
+		if (std1_offset > 0){
+			std1_offset *= UP_POW;
+		}else{
+			std1_offset *= DOWN_POW;
+		}
+		if (std2_offset > 0){
+			std2_offset *= UP_POW;
+		}else{
+			std2_offset *= DOWN_POW;
+		}
+/////////////////////////////////////////////////////////////////////////////////
 	#ifdef SAMPLE_METHOD_0
 		coin_cmp_value[is].compare_max0 = (pre_value.country[coinchoose].coin[is].data.max0 + pre_value.country[coinchoose].coin[is].data.offsetmax0 +
 										  std0_offset);
