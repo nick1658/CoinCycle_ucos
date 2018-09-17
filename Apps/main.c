@@ -394,7 +394,9 @@ void TaskStart(void *pdata)
 				break;
 			}
 			case 20:{
-				if( adstd_offset() == 1){//检测 基准值    不调试到正常值  不能进行 自学习
+				//if( adstd_offset() == 1)
+				if(1)
+				{//检测 基准值    不调试到正常值  不能进行 自学习
 					sys_env.workstep =22;
 				}else{
 					SEND_ERROR(ADSTDEEROR);   //  请调整基准值
@@ -407,13 +409,18 @@ void TaskStart(void *pdata)
 				if (sys_env.coin_over == 1){
 					sys_env.coin_over = 0;
 					dgus_tf1word(ADDR_A0MA,coin_maxvalue0);	//	 real time ,pre AD0  max
-					dgus_tf1word(ADDR_A0MI,coin_minvalue0);	//	 real time ,pre AD0  min
+					dgus_tf1word(ADDR_A0MI,coin_minvalue0);	//	 real time ,pre AD0  min                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 					dgus_tf1word(ADDR_A1MA,coin_maxvalue1);	//	 real time ,pre AD1  max
 					dgus_tf1word(ADDR_A1MI,coin_minvalue1);	//	 real time ,pre AD1  min
 					dgus_tf1word(ADDR_A2MA,coin_maxvalue2);	//	 real time ,pre AD2  max
 					dgus_tf1word(ADDR_A2MI,coin_minvalue2);	//	 real time ,pre AD2  min
+					pc_print("%d,%d;",52, coin_maxvalue0);
+					pc_print("%d,%d;",53, coin_minvalue0);
+					pc_print("%d,%d;",54, coin_maxvalue1);
+					pc_print("%d,%d;",55, coin_minvalue1);
+					pc_print("%d,%d;",56, coin_maxvalue2);
+					pc_print("%d,%d;",57, coin_minvalue2);
 				}
-
 				if(blockflag == 0){//堵币
 					SEND_ERROR(PRESSMLOCKED);
 				}

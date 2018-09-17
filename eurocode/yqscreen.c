@@ -524,7 +524,6 @@ void set_offset_value (uint16_t addr, uint16_t coin_index, int16 offset)
 void touchresult(void)      //根据接收到的  数 来决定 执行的任务
 {
 	uint16_t addr, value, i;
-	char str_buf[256];
 	addr = (touchnum[4] << 8) | (touchnum[5]);
 	value = (touchnum[7] << 8) | (touchnum[8]);
 	///////////////A5 5A 06 83 00 06 01 00 0x:1 2/////////////////////////
@@ -541,27 +540,11 @@ void touchresult(void)      //根据接收到的  数 来决定 执行的任务
 	////////////////A5 5A 06 83 00 3C 01 00 0x:1.2//////////////////////////
 	case ADDR_LRUN:  //地址ADDR_LRUN 0X3C  按键返回值判断 特征学习 start
 		if( (value == 0x01)){//A5 5A 06 83 00 3C 01 00 01	特征学习 start
-			if (sys_env.system_delay == 0){
-				prepic_num = TZJM;
-				coin_maxvalue0 = 0;
-				coin_minvalue0 = 1023;
-				coin_maxvalue1 = 0;
-				coin_minvalue1 = 1023;
-				coin_maxvalue2 = 0;
-				coin_minvalue2 = 1023;
-				coinlearnnumber = 0;
-				disp_preselflearn(coin_maxvalue0,coin_minvalue0,coin_maxvalue1,coin_minvalue1,coin_maxvalue2,coin_minvalue2) ;				   //显示当前  通道   各个值
-				comscreen(Disp_Indexpic[TZYX],Number_IndexpicB);  // back to the  picture before alert
-
-				sys_env.workstep =13;
-				cy_print("start learning %s %d\n", __FILE__, __LINE__);
-			}
+			coin_learn_start ();
+			cy_print("start learning %s %d\n", __FILE__, __LINE__);
 		}else if( (value == 0x02)){
 			 //A5 5A 06 83 00 3C 01 00 02	特征学习 stop
-			disp_preselflearn(coin_maxvalue0,coin_minvalue0,coin_maxvalue1,coin_minvalue1,coin_maxvalue2,coin_minvalue2); //pre coin admax admin when self learning
-			STORAGE_MOTOR_STOPRUN();   //斗送入电机
-			comscreen(Disp_Indexpic[TZBC],Number_IndexpicB);  // back to the  picture before alert
-			sys_env.workstep = 0;
+			coin_learn_stop ();
 			cy_println("end working %s %d", __FILE__, __LINE__);
 		}
 		break;
@@ -662,67 +645,9 @@ void touchresult(void)      //根据接收到的  数 来决定 执行的任务
 			}
 			counter_clear ();
 		}else if( (value == 0x0B)){	//back value  特征学习 save or not
-			if (coinlearnnumber == 0){
-				cy_println ("coin learnnumber = 0, data will be clear");
-				run_command ("set save-f");
-			}else{
-				prepic_num = TZJM;
-				adstd_offset ();
-				i = is_repeate (sys_env.coin_index);
-				if (i == 0){
-					sprintf (str_buf, "特征值保存完毕！本次学习硬币数量:%d枚", coinlearnnumber);
-					run_command ("set save");
-				}else{
-					switch (i){
-						case 1:
-							sprintf (str_buf, "特征值与1元硬币有冲突！请确认是否混有1元的硬币，请清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
-							break;
-						case 2:
-							sprintf (str_buf, "特征值与五角铜硬币有冲突！请确认是否混有五角铜的硬币，请清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
-							break;
-						case 3:
-							sprintf (str_buf, "特征值与五角钢硬币有冲突！请确认是否混有五角钢的硬币，请清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
-							break;
-						case 4:
-							sprintf (str_buf, "特征值与一角大铝硬币有冲突！请确认是否混有一角大铝的硬币，请清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
-							break;
-						case 5:
-							sprintf (str_buf, "特征值与一角小钢硬币有冲突！请确认是否混有一角小钢的硬币，请清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
-							break;
-						case 6:
-							sprintf (str_buf, "特征值与一角小铝硬币有冲突！请确认是否混有一角小铝的硬币，请清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
-							break;
-						case 7:
-							sprintf (str_buf, "特征值与五分硬币有冲突！请确认是否混有五分的硬币，请清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
-							break;
-						case 8:
-							sprintf (str_buf, "特征值与两分硬币有冲突！请确认是否混有两分的硬币，请清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
-							break;
-						case 9:
-							sprintf (str_buf, "特征值与一分硬币有冲突！请确认是否混有一分的硬币，请清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
-							break;
-						case 10:
-							sprintf (str_buf, "特征值与10元纪念币有冲突！请确认是否混有10元纪念币，请清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
-							break;
-						case 11:
-							sprintf (str_buf, "特征值与5元纪念币有冲突！请确认是否混有5元纪念币，请清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
-							break;
-						case 1002:
-							sprintf (str_buf, "特征值范围太大，请确认是否混有其他种类的硬币，清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
-							break;
-						default:
-							sprintf (str_buf, "特征学习异常，本次数据不会保存，请重试");break;
-					}
-				}
-				ALERT_MSG ("提示", str_buf);
-				coinlearnnumber = 0;
-			}
+			coin_learn_data_save ();
 		}else if( (value == 0x0C)){	//back value  特征学习not save
-			disp_preselflearn(pre_value.country[coinchoose].coin[sys_env.coin_index].data.max0, pre_value.country[coinchoose].coin[sys_env.coin_index].data.min0,
-							  pre_value.country[coinchoose].coin[sys_env.coin_index].data.max1, pre_value.country[coinchoose].coin[sys_env.coin_index].data.min1,
-							  pre_value.country[coinchoose].coin[sys_env.coin_index].data.max2, pre_value.country[coinchoose].coin[sys_env.coin_index].data.min2);
-			prepic_num = TZJM;
-			comscreen(Disp_Indexpic[prepic_num],Number_IndexpicB);	 // back to the  picture before alert
+			coin_learn_data_not_save ();
 		}else if( (value == 0x0F)){	// back value OF, 报警界面   back to picture
 			coin_clear_alarm ();
 		}

@@ -10,8 +10,9 @@
       <TargetName>S3C2416</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pArmCC>5060422::V5.06 update 4 (build 422)::ARMCC</pArmCC>
-      <pCCUsed>5060422::V5.06 update 4 (build 422)::ARMCC</pCCUsed>
+      <pArmCC>5060750::V5.06 update 6 (build 750)::ARMCC</pArmCC>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
+      <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>S3C2416</Device>
@@ -47,7 +48,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Objects\</OutputDirectory>
-          <OutputName>S3C2416</OutputName>
+          <OutputName>CY_Recycle_Soft_V01</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -350,8 +351,8 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
-            <oTime>0</oTime>
+            <Optim>0</Optim>
+            <oTime>1</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>0</OneElfS>
             <Strict>0</Strict>
@@ -363,6 +364,7 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
+            <uGnu>0</uGnu>
             <useXO>0</useXO>
             <v6Lang>3</v6Lang>
             <v6LangP>3</v6LangP>
@@ -535,11 +537,6 @@
               <FilePath>..\eurocode\yqadc.c</FilePath>
             </File>
             <File>
-              <FileName>yqcoin.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\eurocode\yqcoin.c</FilePath>
-            </File>
-            <File>
               <FileName>yqfile.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\eurocode\yqfile.c</FilePath>
@@ -578,6 +575,11 @@
               <FileName>cctalk.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\eurocode\cctalk.c</FilePath>
+            </File>
+            <File>
+              <FileName>yqcoin.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\eurocode\yqcoin.c</FilePath>
             </File>
           </Files>
         </Group>

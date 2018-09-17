@@ -570,6 +570,18 @@ int get_hex_data (char * buf)
 					case 0x0008://导出数据
 						cy_println("EXPORT OK");
 						break;
+					case 0x0009://特征学习启动
+						coin_learn_start ();
+						break;
+					case 0x000A://特征学习停止
+						coin_learn_stop ();
+						break;
+					case 0x000B://特征学习保存
+						coin_learn_data_save ();
+						break;
+					case 0x000C://特征学习取消保存
+						coin_learn_data_not_save ();
+						break;
 					case 0xE001://清除报警
 						coin_clear_alarm ();
 						break;
@@ -1056,6 +1068,106 @@ int32_t get_coin_index (int32_t _coin_name)
 	}
 }
 
+void coin_learn_start (void)
+{
+	if (sys_env.system_delay == 0){
+		prepic_num = TZJM;
+		coin_maxvalue0 = 0;
+		coin_minvalue0 = 1023;
+		coin_maxvalue1 = 0;
+		coin_minvalue1 = 1023;
+		coin_maxvalue2 = 0;
+		coin_minvalue2 = 1023;
+		coinlearnnumber = 0;
+		disp_preselflearn(coin_maxvalue0,coin_minvalue0,coin_maxvalue1,coin_minvalue1,coin_maxvalue2,coin_minvalue2) ;				   //显示当前  通道   各个值
+		comscreen(Disp_Indexpic[TZYX],Number_IndexpicB);  // back to the  picture before alert
+		sys_env.workstep =13;
+	}
+}
+
+void coin_learn_stop (void)
+{
+	disp_preselflearn(coin_maxvalue0,coin_minvalue0,coin_maxvalue1,coin_minvalue1,coin_maxvalue2,coin_minvalue2); //pre coin admax admin when self learning
+	STORAGE_MOTOR_STOPRUN();   //斗送入电机
+	comscreen(Disp_Indexpic[TZBC],Number_IndexpicB);  // back to the  picture before alert
+	sys_env.workstep = 0;
+}
+void coin_learn_data_save (void)
+{
+	char str_buf[256];
+	uint16_t i;
+	if (coinlearnnumber == 0){
+		cy_println ("coin learnnumber = 0, data will be clear");
+		PC_ALERT_MSG ("coin learnnumber = 0, data will be clear !");
+		run_command ("set save-f");
+	}else{
+		prepic_num = TZJM;
+		adstd_offset ();
+		i = is_repeate (sys_env.coin_index);
+		if (i == 0){
+			sprintf (str_buf, "特征值保存完毕！本次学习硬币数量:%d枚", coinlearnnumber);
+			PC_ALERT_MSG ("Data Save Over !");
+			run_command ("set save");
+		}else{
+			sprintf (str_buf, "Save Error : %d", i-1);
+			PC_ALERT_MSG (str_buf);
+			switch (i){
+				case 1:
+					sprintf (str_buf, "特征值与1元硬币有冲突！请确认是否混有1元的硬币，请清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
+					break;
+				case 2:
+					sprintf (str_buf, "特征值与五角铜硬币有冲突！请确认是否混有五角铜的硬币，请清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
+					break;
+				case 3:
+					sprintf (str_buf, "特征值与五角钢硬币有冲突！请确认是否混有五角钢的硬币，请清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
+					break;
+				case 4:
+					sprintf (str_buf, "特征值与一角大铝硬币有冲突！请确认是否混有一角大铝的硬币，请清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
+					break;
+				case 5:
+					sprintf (str_buf, "特征值与一角小钢硬币有冲突！请确认是否混有一角小钢的硬币，请清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
+					break;
+				case 6:
+					sprintf (str_buf, "特征值与一角小铝硬币有冲突！请确认是否混有一角小铝的硬币，请清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
+					break;
+				case 7:
+					sprintf (str_buf, "特征值与五分硬币有冲突！请确认是否混有五分的硬币，请清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
+					break;
+				case 8:
+					sprintf (str_buf, "特征值与两分硬币有冲突！请确认是否混有两分的硬币，请清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
+					break;
+				case 9:
+					sprintf (str_buf, "特征值与一分硬币有冲突！请确认是否混有一分的硬币，请清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
+					break;
+				case 10:
+					sprintf (str_buf, "特征值与10元纪念币有冲突！请确认是否混有10元纪念币，请清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
+					break;
+				case 11:
+					sprintf (str_buf, "特征值与5元纪念币有冲突！请确认是否混有5元纪念币，请清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
+					break;
+				case 1002:
+					sprintf (str_buf, "特征值范围太大，请确认是否混有其他种类的硬币，清除后重新学习，此次数据不会保存。本次学习硬币数量:%d枚", coinlearnnumber);
+					break;
+				default:
+					sprintf (str_buf, "特征学习异常，本次数据不会保存，请重试");break;
+			}
+		}
+		ALERT_MSG ("提示", str_buf);
+		coinlearnnumber = 0;
+	}
+}
+
+//
+void coin_learn_data_not_save (void)
+{
+	refresh_data ();
+	disp_preselflearn(pre_value.country[coinchoose].coin[sys_env.coin_index].data.max0, pre_value.country[coinchoose].coin[sys_env.coin_index].data.min0,
+					  pre_value.country[coinchoose].coin[sys_env.coin_index].data.max1, pre_value.country[coinchoose].coin[sys_env.coin_index].data.min1,
+					  pre_value.country[coinchoose].coin[sys_env.coin_index].data.max2, pre_value.country[coinchoose].coin[sys_env.coin_index].data.min2);
+	prepic_num = TZJM;
+	comscreen(Disp_Indexpic[prepic_num],Number_IndexpicB);	 // back to the  picture before alert
+}
+//
 void coin_start (void)
 {
 	if (sys_env.system_delay == 0){
@@ -1093,8 +1205,6 @@ void refresh_data (void)
 {
 	pc_print("%d,%d;",1, para_set_value.data.kick_start_delay_t0);
 	pc_print("%d,%d;",2, para_set_value.data.kick_keep_t0);
-//	pc_print("%d,%d;",3, para_set_value.data.kick_start_delay_t1);
-//	pc_print("%d,%d;",4, para_set_value.data.kick_keep_t1);
 	pc_print("%d,%d;",3, para_set_value.data.kick_start_delay_t[0]);
 	pc_print("%d,%d;",4, para_set_value.data.kick_keep_t[0]);
 	pc_print("%d,%d;",5, *pre_value.country[COUNTRY_ID].coin[0].data.p_pre_count_set);

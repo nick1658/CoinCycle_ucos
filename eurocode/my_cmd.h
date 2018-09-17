@@ -152,6 +152,10 @@ void vTaskCmdAnalyze( void );
 void run_command (char * _cmd_str);
 int my_run_command (const char *cmd, int flag);
 
+void coin_learn_start (void);
+void coin_learn_stop (void);
+void coin_learn_data_save (void);
+void coin_learn_data_not_save (void);
 void coin_start (void);
 void coin_stop (void);
 void coin_print (void);
