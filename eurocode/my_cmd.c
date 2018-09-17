@@ -1080,6 +1080,13 @@ void coin_learn_start (void)
 		coin_minvalue2 = 1023;
 		coinlearnnumber = 0;
 		disp_preselflearn(coin_maxvalue0,coin_minvalue0,coin_maxvalue1,coin_minvalue1,coin_maxvalue2,coin_minvalue2) ;				   //显示当前  通道   各个值
+		
+		pc_print("%d,%d;",52, coin_maxvalue0);
+		pc_print("%d,%d;",53, coin_minvalue0);
+		pc_print("%d,%d;",54, coin_maxvalue1);
+		pc_print("%d,%d;",55, coin_minvalue1);
+		pc_print("%d,%d;",56, coin_maxvalue2);
+		pc_print("%d,%d;",57, coin_minvalue2);
 		comscreen(Disp_Indexpic[TZYX],Number_IndexpicB);  // back to the  picture before alert
 		sys_env.workstep =13;
 	}
