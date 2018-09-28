@@ -73,6 +73,11 @@ void IR_detect_func(void)
 		RECV_KICK_Q_SCAN(2, 2);
 		RECV_KICK_Q_SCAN(2, 3);
 		
+		RECV_KICK_Q_SCAN(3, 0);
+		RECV_KICK_Q_SCAN(3, 1);
+		RECV_KICK_Q_SCAN(3, 2);
+		RECV_KICK_Q_SCAN(3, 3);
+		
 		RECV_KICK_Q_SCAN(4, 0);
 		RECV_KICK_Q_SCAN(4, 1);
 		RECV_KICK_Q_SCAN(4, 2);

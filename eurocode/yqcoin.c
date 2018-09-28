@@ -143,6 +143,7 @@ void cy_precoincount(void)
 		sys_env.stop_time = STOP_TIME;//无币停机时间10秒
 		if ((good_coin < 0) || (coin_env.inhibit_coin[good_coin] == 0) || (coin_env.cycle_box_full == 1)){ //假币或者不接受此类硬币，剔除出来
 			if (coin_env.kick_Q[coin_env.kick_Q_index] == 0){
+				processed_coin_info.total_ng++;
 				coin_env.kick_Q[coin_env.kick_Q_index] = para_set_value.data.kick_start_delay_t0;
 				coin_env.kick_Q_index++;
 				coin_env.kick_Q_index %= KICK_Q_LEN;
@@ -156,7 +157,9 @@ void cy_precoincount(void)
 			processed_coin_info.total_money += pre_value.country[coinchoose].coin[good_coin].data.money;
 			processed_coin_info.total_good++;
 			if (*pre_value.country[COUNTRY_ID].coin[good_coin].data.p_pre_count_full_flag == 0){//
-				(*(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_hopper_balance_cur))++;
+				if((*(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_hopper_balance_cur)) < 5000){
+					(*(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_hopper_balance_cur))++;
+				}
 				if( *(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_hopper_balance_cur) >= *(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_pre_count_set)){// 当前的币种  数量 达到其预置值
 					*pre_value.country[COUNTRY_ID].coin[good_coin].data.p_pre_count_full_flag = 1; //此类硬币预置数到，做个标记
 				}

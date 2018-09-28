@@ -100,7 +100,6 @@
 	coin_env.kick_Q[N]--; \
 	if (coin_env.kick_Q[N] == 0){ \
 		EMKICK0(STARTRUN);	  \
-		processed_coin_info.total_ng++; \
 		coin_env.kick_keep_t0 = para_set_value.data.kick_keep_t0;\
 	}\
 }
