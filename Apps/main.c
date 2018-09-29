@@ -240,6 +240,9 @@ void Task2(void *pdata)
 		if (sys_env.uart0_cmd_flag == 1){
 			vTaskCmdAnalyze ();//串口命令处理函数
 			sys_env.uart0_cmd_flag = 0;
+			if (sys_env.tty_mode != DOWNLOAD_MODE){
+				sys_env.tty_mode = IDLE_MODE;
+			}
 		}
 		if (sys_env.tty_online_ms == 1){
 			sys_env.tty_online_ms = 0;

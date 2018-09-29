@@ -82,7 +82,8 @@ typedef enum {
   NET_UPDATE = 2,
   NET_UPDATEING = 3,
   UART_COMMAND = 4,
-  CCTALK_COMMAND = 5
+  CCTALK_COMMAND = 5,
+	NORMAL_COMMAND = 6
 } e_update_flag;
 
 

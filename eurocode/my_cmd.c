@@ -798,7 +798,7 @@ void update_finish (e_update_flag flag)
 					comscreen(Disp_Indexpic[27],Number_IndexpicB);	//触摸屏跳转到提示固件丢失界面
 				}
 				rec_count = 0;
-				sys_env.tty_mode = 0;
+				sys_env.tty_mode = IDLE_MODE;
 				memset (cmd_analyze.rec_buf, 0, sizeof(cmd_analyze.rec_buf));
 			}
 		break;
@@ -809,7 +809,7 @@ void update_finish (e_update_flag flag)
 			if (rec_count > 1){
 				get_hex_data (cmd_analyze.rec_buf);
 				rec_count = 0;
-				sys_env.tty_mode = 0;
+				sys_env.tty_mode = IDLE_MODE;
 				memset (cmd_analyze.rec_buf, 0, sizeof(cmd_analyze.rec_buf));
 			}
 			break;
@@ -828,6 +828,7 @@ void update_finish (e_update_flag flag)
 /*提供给串口中断服务程序，保存串口接收到的单个字符*/
 void fill_rec_buf(char data)
 {
+	
 	if ((data == CTRL_C ) && (sys_env.tty_mode == IDLE_MODE))
 	{
 		cy_println ("Op Cancel!");
@@ -884,17 +885,19 @@ void fill_rec_buf(char data)
 			}
 			return;
 		}else if (data == ':'){
+			Uart0_sendchar(data);
 			sys_env.tty_mode = UART_MODE;
 			sys_env.update_flag = UART_COMMAND;
 			cmd_analyze.rec_buf[rec_count++] = data;
 			sys_env.tty_online_ms = TTY_UART_ONLINE_TIME;
-		}else if (data == CCTALK_ADDR){//CCTALK 地址
+		}else if ((sys_env.tty_mode == IDLE_MODE) && (data == CCTALK_ADDR)){//CCTALK 地址
 			sys_env.tty_mode = CCTALK_MODE;
 			sys_env.update_flag = CCTALK_COMMAND;
 			cmd_analyze.rec_buf[rec_count++] = data;
 			sys_env.tty_online_ms = TTY_ONLINE_TIME;
 			//cy_println ("cctalk mode");
 		}else{
+			sys_env.tty_mode = NORMAL_COMMAND;
 			Uart0_sendchar(data);
 			if(0x0D == data){
 				if (rec_count > 0){
@@ -960,7 +963,7 @@ void do_go(int32_t argc, void *cmd_arg)
 			{
 				cy_println("goto JSJM menu");
 				comscreen(Disp_Indexpic[JSJM],Number_IndexpicB);
-				sys_env.workstep =60;
+				sys_env.workstep =0;
 				sys_env.sim_count_flag = 1;
 			}
 			else if (arg[argc - 1] == string_to_dec((uint8 *)("tzxx"))) // 进入特征学习
