@@ -110,20 +110,28 @@ void initial_nandflash(void)    //nandflash
 		para_set_value.data.db_total_item_num = 0;
 		para_set_value.data.op_id = 0;
 		para_set_value.data.rej_level = 0;
-		para_set_value.data.kick_start_delay_t0 = 1;
-		para_set_value.data.kick_keep_t0 = 80;
+		para_set_value.data.kick_start_delay_t0 = 3;
+		para_set_value.data.kick_keep_t0 = 200;
 		para_set_value.data.coin_full_rej_pos = 1;
-		para_set_value.data.motor_idle_t = 400;
+		para_set_value.data.motor_idle_t = 200;
 		para_set_value.data.adj_offset_position = 4096;
 		para_set_value.data.pre_count_stop_n = 1;
-		para_set_value.data.system_boot_delay = 0;
+		para_set_value.data.system_boot_delay = 1;
 		para_set_value.data.system_mode = 1;
 
 		for (i = 0; i < COIN_TYPE_NUM; i++){
-			para_set_value.data.precoin_set_num[i] = 50;
-			para_set_value.data.kick_start_delay_t[i] = 1;
-			para_set_value.data.kick_keep_t[i] = 80;
+			para_set_value.data.precoin_set_num[i] = 300;
+			para_set_value.data.kick_start_delay_t[i] = 0;
+			para_set_value.data.kick_keep_t[i] = 200;
 		}
+		para_set_value.data.kick_start_delay_t[0] = 6;
+		para_set_value.data.kick_keep_t[0] = 200;
+		para_set_value.data.kick_start_delay_t[1] = 9;
+		para_set_value.data.kick_keep_t[1] = 150;
+		para_set_value.data.kick_start_delay_t[2] = 9;
+		para_set_value.data.kick_keep_t[2] = 150;
+		para_set_value.data.kick_start_delay_t[4] = 12;
+		para_set_value.data.kick_keep_t[4] = 150;
 
 		test_erase_r_code (Nand_EraseBlock(PUBULIC_DATA_START_BLOCK_NUM ));
 		cy_println ("erase block %d completed", PUBULIC_DATA_START_BLOCK_NUM);
@@ -222,10 +230,22 @@ void read_coin_value(void) 	 // read  COIN  0--8
 	pre_value.country[COUNTRY_ID].coin[9].data.coin_type = 9;
 	pre_value.country[COUNTRY_ID].coin[10].data.coin_type = 10;
 	
+	//初始化剔除参数
 	for (i = 0; i < COIN_TYPE_NUM; i++){	
 		coin_env.p_coin_recv_func[i] = coin_null_func;
 		coin_env.p_coin_kick_keep_func[i] = coin_null_func;
+		para_set_value.data.precoin_set_num[i] = 300;
+		para_set_value.data.kick_start_delay_t[i] = 0;
+		para_set_value.data.kick_keep_t[i] = 200;
 	}
+	para_set_value.data.kick_start_delay_t[0] = 6;
+	para_set_value.data.kick_keep_t[0] = 200;
+	para_set_value.data.kick_start_delay_t[1] = 9;
+	para_set_value.data.kick_keep_t[1] = 150;
+	para_set_value.data.kick_start_delay_t[2] = 9;
+	para_set_value.data.kick_keep_t[2] = 150;
+	para_set_value.data.kick_start_delay_t[4] = 12;
+	para_set_value.data.kick_keep_t[4] = 150;
 	//映射收币函数
 	coin_env.p_coin_recv_func[0] = coin_recv1_out_func;
 	coin_env.p_coin_recv_func[1] = coin_recv2_out_func;
