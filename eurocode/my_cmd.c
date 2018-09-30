@@ -676,10 +676,12 @@ int get_hex_data (char * buf)
 						para_set_value.data.kick_keep_t[2] = para_value;
 						break;
 					case 62:
+						para_set_value.data.kick_start_delay_t[3] = para_value;
 						para_set_value.data.kick_start_delay_t[4] = para_value;
 						para_set_value.data.kick_start_delay_t[5] = para_value;
 						break;
 					case 63:
+						para_set_value.data.kick_keep_t[3] = para_value;
 						para_set_value.data.kick_keep_t[4] = para_value;
 						para_set_value.data.kick_keep_t[5] = para_value;
 						break;
@@ -1405,11 +1407,13 @@ void set_para_2  (int32_t arg[])
 		write_para ();
 	}else if (arg[0] == string_to_dec((uint8 *)("kick-start3"))){
 		cy_println("set kick_start_delay_time2 = %d", arg[1]);
+		para_set_value.data.kick_start_delay_t[3] = arg[1];
 		para_set_value.data.kick_start_delay_t[4] = arg[1];
 		para_set_value.data.kick_start_delay_t[5] = arg[1];
 		write_para ();
 	}else if (arg[0] == string_to_dec((uint8 *)("kick-keep3"))){
 		cy_println("set kick_keep_time3 = %d", arg[1]);
+		para_set_value.data.kick_keep_t[3] = arg[1];
 		para_set_value.data.kick_keep_t[4] = arg[1];
 		para_set_value.data.kick_keep_t[5] = arg[1];
 		write_para ();

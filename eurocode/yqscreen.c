@@ -736,12 +736,14 @@ void touchresult(void)      //根据接收到的  数 来决定 执行的任务
 		Writekick_value();
 		break;
 	case ADDR_KICK_DELAY_T3:  //地址
+		para_set_value.data.kick_start_delay_t[3] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //delay time
 		para_set_value.data.kick_start_delay_t[4] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //delay time
 		para_set_value.data.kick_start_delay_t[5] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //delay time
 		dgus_tf1word(ADDR_KICK_DELAY_T3, para_set_value.data.kick_start_delay_t[4]);	//make sure the return one
 		Writekick_value();
 		break;
 	case ADDR_KICK_KEEP_T3:  //地址
+		para_set_value.data.kick_keep_t[3] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //kick time
 		para_set_value.data.kick_keep_t[4] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //kick time
 		para_set_value.data.kick_keep_t[5] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //kick time
 		dgus_tf1word(ADDR_KICK_KEEP_T3, para_set_value.data.kick_keep_t[4]);	//make sure  the return one
