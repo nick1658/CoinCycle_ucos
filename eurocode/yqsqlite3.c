@@ -161,6 +161,18 @@ void initial_nandflash(void)    //nandflash
 						(COUNTRY0_COIN_PRE_VALUE_START_BLOCK_NUM ),
 						(COUNTRY0_COIN_PRE_VALUE_START_PAGE_NUM + i));
 		}
+		pre_value.country[0].coin[1].data.offsetmax0 = 5;
+		pre_value.country[0].coin[1].data.offsetmin0 = -5;
+		pre_value.country[0].coin[1].data.offsetmax1 = 5;
+		pre_value.country[0].coin[1].data.offsetmin1 = -5;
+		pre_value.country[0].coin[1].data.offsetmax2 = 5;
+		pre_value.country[0].coin[1].data.offsetmin2 = -5;
+		pre_value.country[0].coin[2].data.offsetmax0 = 5;
+		pre_value.country[0].coin[2].data.offsetmin0 = -5;
+		pre_value.country[0].coin[2].data.offsetmax1 = 5;
+		pre_value.country[0].coin[2].data.offsetmin1 = -5;
+		pre_value.country[0].coin[2].data.offsetmax2 = 5;
+		pre_value.country[0].coin[2].data.offsetmin2 = -5;
 	}else{
 		cy_println ("Check Data Completed!");
 	}
