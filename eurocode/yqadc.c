@@ -581,8 +581,8 @@ uint16_t adstd_offset()    //  检测 基准值   有不大偏差进行补偿
 //	std_ad3 = ReadAdc3();
 	get_ad_value ();
 	//如果偏差在200 可以进行补偿，否则可能传感器出问题了，给出报警提示
-	if( ( ((std_ad0-GETTEMPERCP) < (pre_value.country[coinchoose].coin[0].data.std0 + OFFSETMAX))) &&
-		  ((std_ad0-GETTEMPERCP) > (pre_value.country[coinchoose].coin[0].data.std0 - OFFSETMIN)) ){
+	if( ( ((std_ad0-GETTEMPERCP) < (pre_value.coin[0].data.std0 + OFFSETMAX))) &&
+		  ((std_ad0-GETTEMPERCP) > (pre_value.coin[0].data.std0 - OFFSETMIN)) ){
 	}else {
 		return 0;
 	}
@@ -593,9 +593,9 @@ uint16_t adstd_offset()    //  检测 基准值   有不大偏差进行补偿
 	/////////////
 	dbg ("real     std0 = %4d          std1 = %4d     std2 = %4d", std_ad0, std_ad1, std_ad2);
 	for (is = 0; is < COIN_TYPE_NUM; is++){ //补偿值
-		std0_offset = std_ad0 - pre_value.country[coinchoose].coin[is].data.std0;
-		std1_offset = std_ad1 - pre_value.country[coinchoose].coin[is].data.std1;
-		std2_offset = std_ad2 - pre_value.country[coinchoose].coin[is].data.std2;
+		std0_offset = std_ad0 - pre_value.coin[is].data.std0;
+		std1_offset = std_ad1 - pre_value.coin[is].data.std1;
+		std2_offset = std_ad2 - pre_value.coin[is].data.std2;
 /////////////////////////////////////////////////////////////////////////////////
 		if (std0_offset > 0){
 			std0_offset *= UP_POW;
@@ -614,43 +614,43 @@ uint16_t adstd_offset()    //  检测 基准值   有不大偏差进行补偿
 		}
 /////////////////////////////////////////////////////////////////////////////////
 	#ifdef SAMPLE_METHOD_0
-		coin_cmp_value[is].compare_max0 = (pre_value.country[coinchoose].coin[is].data.max0 + pre_value.country[coinchoose].coin[is].data.offsetmax0 +
+		coin_cmp_value[is].compare_max0 = (pre_value.coin[is].data.max0 + pre_value.coin[is].data.offsetmax0 +
 										  std0_offset);
-		if (pre_value.country[coinchoose].coin[is].data.min0 > 5){
-			coin_cmp_value[is].compare_min0 = (pre_value.country[coinchoose].coin[is].data.min0 + pre_value.country[coinchoose].coin[is].data.offsetmin0 +
+		if (pre_value.coin[is].data.min0 > 5){
+			coin_cmp_value[is].compare_min0 = (pre_value.coin[is].data.min0 + pre_value.coin[is].data.offsetmin0 +
 										  std0_offset);
 		}else{
-			coin_cmp_value[is].compare_min0 = pre_value.country[coinchoose].coin[is].data.min0;
+			coin_cmp_value[is].compare_min0 = pre_value.coin[is].data.min0;
 		}
 
-		coin_cmp_value[is].compare_max1 = (pre_value.country[coinchoose].coin[is].data.max1 + pre_value.country[coinchoose].coin[is].data.offsetmax1 +
+		coin_cmp_value[is].compare_max1 = (pre_value.coin[is].data.max1 + pre_value.coin[is].data.offsetmax1 +
 										  std1_offset - std0_offset);
-		coin_cmp_value[is].compare_min1 = (pre_value.country[coinchoose].coin[is].data.min1 + pre_value.country[coinchoose].coin[is].data.offsetmin1 +
+		coin_cmp_value[is].compare_min1 = (pre_value.coin[is].data.min1 + pre_value.coin[is].data.offsetmin1 +
 										  std1_offset - std0_offset);
 
-		coin_cmp_value[is].compare_max2 = (pre_value.country[coinchoose].coin[is].data.max2 + pre_value.country[coinchoose].coin[is].data.offsetmax2 +
+		coin_cmp_value[is].compare_max2 = (pre_value.coin[is].data.max2 + pre_value.coin[is].data.offsetmax2 +
 										  std2_offset - std1_offset);
-		coin_cmp_value[is].compare_min2 = (pre_value.country[coinchoose].coin[is].data.min2 + pre_value.country[coinchoose].coin[is].data.offsetmin2 +
+		coin_cmp_value[is].compare_min2 = (pre_value.coin[is].data.min2 + pre_value.coin[is].data.offsetmin2 +
 										  std2_offset - std1_offset);
 	#endif
 	#ifdef SAMPLE_METHOD_1
-		coin_cmp_value[is].compare_max0 = (pre_value.country[coinchoose].coin[is].data.max0 + pre_value.country[coinchoose].coin[is].data.offsetmax0 +
+		coin_cmp_value[is].compare_max0 = (pre_value.coin[is].data.max0 + pre_value.coin[is].data.offsetmax0 +
 										  std0_offset);
-		if (pre_value.country[coinchoose].coin[is].data.min0 > 5){
-			coin_cmp_value[is].compare_min0 = (pre_value.country[coinchoose].coin[is].data.min0 + pre_value.country[coinchoose].coin[is].data.offsetmin0 +
+		if (pre_value.coin[is].data.min0 > 5){
+			coin_cmp_value[is].compare_min0 = (pre_value.coin[is].data.min0 + pre_value.coin[is].data.offsetmin0 +
 										  std0_offset);
 		}else{
-			coin_cmp_value[is].compare_min0 = pre_value.country[coinchoose].coin[is].data.min0;
+			coin_cmp_value[is].compare_min0 = pre_value.coin[is].data.min0;
 		}
 
-		coin_cmp_value[is].compare_max1 = (pre_value.country[coinchoose].coin[is].data.max1 + pre_value.country[coinchoose].coin[is].data.offsetmax1 +
+		coin_cmp_value[is].compare_max1 = (pre_value.coin[is].data.max1 + pre_value.coin[is].data.offsetmax1 +
 										  std1_offset);
-		coin_cmp_value[is].compare_min1 = (pre_value.country[coinchoose].coin[is].data.min1 + pre_value.country[coinchoose].coin[is].data.offsetmin1 +
+		coin_cmp_value[is].compare_min1 = (pre_value.coin[is].data.min1 + pre_value.coin[is].data.offsetmin1 +
 										  std1_offset);
 
-		coin_cmp_value[is].compare_max2 = (pre_value.country[coinchoose].coin[is].data.max2 + pre_value.country[coinchoose].coin[is].data.offsetmax2 +
+		coin_cmp_value[is].compare_max2 = (pre_value.coin[is].data.max2 + pre_value.coin[is].data.offsetmax2 +
 										  std2_offset);
-		coin_cmp_value[is].compare_min2 = (pre_value.country[coinchoose].coin[is].data.min2 + pre_value.country[coinchoose].coin[is].data.offsetmin2 +
+		coin_cmp_value[is].compare_min2 = (pre_value.coin[is].data.min2 + pre_value.coin[is].data.offsetmin2 +
 										  std2_offset);
 
 		if (coin_cmp_value[is].compare_max0 < 10){

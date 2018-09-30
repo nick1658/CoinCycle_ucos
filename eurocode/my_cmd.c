@@ -650,22 +650,22 @@ int get_hex_data (char * buf)
 						sys_env.coin_index = para_value;
 						break;
 					case 52:
-						pre_value.country[coinchoose].coin[sys_env.coin_index].data.max0 = para_value;
+						pre_value.coin[sys_env.coin_index].data.max0 = para_value;
 						break;
 					case 53:
-						pre_value.country[coinchoose].coin[sys_env.coin_index].data.min0 = para_value;
+						pre_value.coin[sys_env.coin_index].data.min0 = para_value;
 						break;
 					case 54:
-						pre_value.country[coinchoose].coin[sys_env.coin_index].data.max1 = para_value;
+						pre_value.coin[sys_env.coin_index].data.max1 = para_value;
 						break;
 					case 55:
-						pre_value.country[coinchoose].coin[sys_env.coin_index].data.min1 = para_value;
+						pre_value.coin[sys_env.coin_index].data.min1 = para_value;
 						break;
 					case 56:
-						pre_value.country[coinchoose].coin[sys_env.coin_index].data.max2 = para_value;
+						pre_value.coin[sys_env.coin_index].data.max2 = para_value;
 						break;
 					case 57:
-						pre_value.country[coinchoose].coin[sys_env.coin_index].data.min2 = para_value;
+						pre_value.coin[sys_env.coin_index].data.min2 = para_value;
 						break;
 					case 60:
 						para_set_value.data.kick_start_delay_t[1] = para_value;
@@ -1173,9 +1173,9 @@ void coin_learn_data_save (void)
 void coin_learn_data_not_save (void)
 {
 	refresh_data ();
-	disp_preselflearn(pre_value.country[coinchoose].coin[sys_env.coin_index].data.max0, pre_value.country[coinchoose].coin[sys_env.coin_index].data.min0,
-					  pre_value.country[coinchoose].coin[sys_env.coin_index].data.max1, pre_value.country[coinchoose].coin[sys_env.coin_index].data.min1,
-					  pre_value.country[coinchoose].coin[sys_env.coin_index].data.max2, pre_value.country[coinchoose].coin[sys_env.coin_index].data.min2);
+	disp_preselflearn(pre_value.coin[sys_env.coin_index].data.max0, pre_value.coin[sys_env.coin_index].data.min0,
+					  pre_value.coin[sys_env.coin_index].data.max1, pre_value.coin[sys_env.coin_index].data.min1,
+					  pre_value.coin[sys_env.coin_index].data.max2, pre_value.coin[sys_env.coin_index].data.min2);
 	prepic_num = TZJM;
 	comscreen(Disp_Indexpic[prepic_num],Number_IndexpicB);	 // back to the  picture before alert
 }
@@ -1219,27 +1219,27 @@ void refresh_data (void)
 	pc_print("%d,%d;",2, para_set_value.data.kick_keep_t0);
 	pc_print("%d,%d;",3, para_set_value.data.kick_start_delay_t[0]);
 	pc_print("%d,%d;",4, para_set_value.data.kick_keep_t[0]);
-	pc_print("%d,%d;",5, *pre_value.country[COUNTRY_ID].coin[0].data.p_pre_count_set);
-	pc_print("%d,%d;",6, *pre_value.country[COUNTRY_ID].coin[1].data.p_pre_count_set);
-	pc_print("%d,%d;",7, *pre_value.country[COUNTRY_ID].coin[4].data.p_pre_count_set);
-	pc_print("%d,%d;",8, *pre_value.country[COUNTRY_ID].coin[6].data.p_pre_count_set);
-	pc_print("%d,%d;",9, *pre_value.country[COUNTRY_ID].coin[7].data.p_pre_count_set);
-	pc_print("%d,%d;",10, *pre_value.country[COUNTRY_ID].coin[8].data.p_pre_count_set);
-	pc_print("%d,%d;",11, *pre_value.country[COUNTRY_ID].coin[9].data.p_pre_count_set);
-	pc_print("%d,%d;",12, *pre_value.country[COUNTRY_ID].coin[10].data.p_pre_count_set);
+	pc_print("%d,%d;",5, *pre_value.coin[0].data.p_pre_count_set);
+	pc_print("%d,%d;",6, *pre_value.coin[1].data.p_pre_count_set);
+	pc_print("%d,%d;",7, *pre_value.coin[4].data.p_pre_count_set);
+	pc_print("%d,%d;",8, *pre_value.coin[6].data.p_pre_count_set);
+	pc_print("%d,%d;",9, *pre_value.coin[7].data.p_pre_count_set);
+	pc_print("%d,%d;",10, *pre_value.coin[8].data.p_pre_count_set);
+	pc_print("%d,%d;",11, *pre_value.coin[9].data.p_pre_count_set);
+	pc_print("%d,%d;",12, *pre_value.coin[10].data.p_pre_count_set);
 	pc_print("%d,%d;",22, para_set_value.data.motor_idle_t);
 	pc_print("%d,%d;",23, para_set_value.data.pre_count_stop_n);
 	pc_print("%d,%d;",24, para_set_value.data.coin_full_rej_pos);
 	pc_print("%d,%d;",25, para_set_value.data.system_boot_delay);
 	pc_print("%d,%d;",26, para_set_value.data.system_mode);
-	pc_print("%d,%d;",27, *pre_value.country[COUNTRY_ID].coin[3].data.p_pre_count_set);
+	pc_print("%d,%d;",27, *pre_value.coin[3].data.p_pre_count_set);
 	pc_print("%d,%d;",51, sys_env.coin_index);
-	pc_print("%d,%d;",52, pre_value.country[coinchoose].coin[sys_env.coin_index].data.max0);
-	pc_print("%d,%d;",53, pre_value.country[coinchoose].coin[sys_env.coin_index].data.min0);
-	pc_print("%d,%d;",54, pre_value.country[coinchoose].coin[sys_env.coin_index].data.max1);
-	pc_print("%d,%d;",55, pre_value.country[coinchoose].coin[sys_env.coin_index].data.min1);
-	pc_print("%d,%d;",56, pre_value.country[coinchoose].coin[sys_env.coin_index].data.max2);
-	pc_print("%d,%d;",57, pre_value.country[coinchoose].coin[sys_env.coin_index].data.min2);
+	pc_print("%d,%d;",52, pre_value.coin[sys_env.coin_index].data.max0);
+	pc_print("%d,%d;",53, pre_value.coin[sys_env.coin_index].data.min0);
+	pc_print("%d,%d;",54, pre_value.coin[sys_env.coin_index].data.max1);
+	pc_print("%d,%d;",55, pre_value.coin[sys_env.coin_index].data.min1);
+	pc_print("%d,%d;",56, pre_value.coin[sys_env.coin_index].data.max2);
+	pc_print("%d,%d;",57, pre_value.coin[sys_env.coin_index].data.min2);
 	pc_print("%d,%d;",60, para_set_value.data.kick_start_delay_t[1]);
 	pc_print("%d,%d;",61, para_set_value.data.kick_keep_t[1]);
 	pc_print("%d,%d;",62, para_set_value.data.kick_start_delay_t[4]);
@@ -1291,15 +1291,15 @@ void set_para_1  (int32_t arg[])
 		cy_println ("set_para_1 arg[0] Error arg");
 		return;
 	}
-	pre_value.country[coinchoose].coin[sys_env.coin_index].data.max0 = coin_maxvalue0;
-	pre_value.country[coinchoose].coin[sys_env.coin_index].data.min0 = coin_minvalue0;
-	pre_value.country[coinchoose].coin[sys_env.coin_index].data.max1 = coin_maxvalue1;
-	pre_value.country[coinchoose].coin[sys_env.coin_index].data.min1 = coin_minvalue1;
-	pre_value.country[coinchoose].coin[sys_env.coin_index].data.max2 = coin_maxvalue2;
-	pre_value.country[coinchoose].coin[sys_env.coin_index].data.min2 = coin_minvalue2;
-	pre_value.country[coinchoose].coin[sys_env.coin_index].data.std0 = std_ad0;
-	pre_value.country[coinchoose].coin[sys_env.coin_index].data.std1 = std_ad1;
-	pre_value.country[coinchoose].coin[sys_env.coin_index].data.std2 = std_ad2;
+	pre_value.coin[sys_env.coin_index].data.max0 = coin_maxvalue0;
+	pre_value.coin[sys_env.coin_index].data.min0 = coin_minvalue0;
+	pre_value.coin[sys_env.coin_index].data.max1 = coin_maxvalue1;
+	pre_value.coin[sys_env.coin_index].data.min1 = coin_minvalue1;
+	pre_value.coin[sys_env.coin_index].data.max2 = coin_maxvalue2;
+	pre_value.coin[sys_env.coin_index].data.min2 = coin_minvalue2;
+	pre_value.coin[sys_env.coin_index].data.std0 = std_ad0;
+	pre_value.coin[sys_env.coin_index].data.std1 = std_ad1;
+	pre_value.coin[sys_env.coin_index].data.std2 = std_ad2;
 	write_para ();
 	dbg ("Total learned coin number is %d", coinlearnnumber);
 	coinlearnnumber = 0;
@@ -1494,9 +1494,9 @@ void write_to_flash (int32_t _country_index, int32_t _coin_index)
 {
 	write_para ();
 	cy_println ("write_to_flash _country_index = %d _coin_index = %d", _country_index, _coin_index);
-	disp_preselflearn(pre_value.country[coinchoose].coin[_coin_index].data.max0,pre_value.country[coinchoose].coin[_coin_index].data.min0,
-					  pre_value.country[coinchoose].coin[_coin_index].data.max1,pre_value.country[coinchoose].coin[_coin_index].data.min1,
-					  pre_value.country[coinchoose].coin[_coin_index].data.max2,pre_value.country[coinchoose].coin[_coin_index].data.min2);
+	disp_preselflearn(pre_value.coin[_coin_index].data.max0,pre_value.coin[_coin_index].data.min0,
+					  pre_value.coin[_coin_index].data.max1,pre_value.coin[_coin_index].data.min1,
+					  pre_value.coin[_coin_index].data.max2,pre_value.coin[_coin_index].data.min2);
 	if (_country_index == coinchoose)
 	{
 		dgus_tf1word(ADDR_CNTB, _coin_index);	//initial addr on zixuexi jiemian coin name tubiao
@@ -1514,29 +1514,29 @@ void save_prevalue_coin (int32_t _country_index, int32_t _coin_index, int32_t _v
 	//read_coin_value (_coin_index);
 	switch (_value_index)
 	{
-		case 0 :pre_value.country[coinchoose].coin[_coin_index].data.max0 = _value; break;
-		case 1 :pre_value.country[coinchoose].coin[_coin_index].data.min0 = _value; break;
-		case 2 :pre_value.country[coinchoose].coin[_coin_index].data.max1 = _value; break;
-		case 3 :pre_value.country[coinchoose].coin[_coin_index].data.min1 = _value; break;
-		case 4 :pre_value.country[coinchoose].coin[_coin_index].data.max2 = _value; break;
-		case 5 :pre_value.country[coinchoose].coin[_coin_index].data.min2 = _value; break;
-		case 6 :pre_value.country[coinchoose].coin[_coin_index].data.std0 = _value; break;
-		case 8 :pre_value.country[coinchoose].coin[_coin_index].data.std1 = _value; break;
-		case 10:pre_value.country[coinchoose].coin[_coin_index].data.std2 = _value; break;
-		case 12:pre_value.country[coinchoose].coin[_coin_index].data.offsetmax0 = _value; break;
-		case 13:pre_value.country[coinchoose].coin[_coin_index].data.offsetmin0 = _value; break;
-		case 14:pre_value.country[coinchoose].coin[_coin_index].data.offsetmax1 = _value; break;
-		case 15:pre_value.country[coinchoose].coin[_coin_index].data.offsetmin1 = _value; break;
-		case 16:pre_value.country[coinchoose].coin[_coin_index].data.offsetmax2 = _value; break;
-		case 17:pre_value.country[coinchoose].coin[_coin_index].data.offsetmin2 = _value; break;
+		case 0 :pre_value.coin[_coin_index].data.max0 = _value; break;
+		case 1 :pre_value.coin[_coin_index].data.min0 = _value; break;
+		case 2 :pre_value.coin[_coin_index].data.max1 = _value; break;
+		case 3 :pre_value.coin[_coin_index].data.min1 = _value; break;
+		case 4 :pre_value.coin[_coin_index].data.max2 = _value; break;
+		case 5 :pre_value.coin[_coin_index].data.min2 = _value; break;
+		case 6 :pre_value.coin[_coin_index].data.std0 = _value; break;
+		case 8 :pre_value.coin[_coin_index].data.std1 = _value; break;
+		case 10:pre_value.coin[_coin_index].data.std2 = _value; break;
+		case 12:pre_value.coin[_coin_index].data.offsetmax0 = _value; break;
+		case 13:pre_value.coin[_coin_index].data.offsetmin0 = _value; break;
+		case 14:pre_value.coin[_coin_index].data.offsetmax1 = _value; break;
+		case 15:pre_value.coin[_coin_index].data.offsetmin1 = _value; break;
+		case 16:pre_value.coin[_coin_index].data.offsetmax2 = _value; break;
+		case 17:pre_value.coin[_coin_index].data.offsetmin2 = _value; break;
 		default:return;
 	}
 	write_para ();
 	//nick add end**************************************************************---------
 
-	disp_preselflearn(pre_value.country[coinchoose].coin[_coin_index].data.max0,pre_value.country[coinchoose].coin[_coin_index].data.min0,
-					  pre_value.country[coinchoose].coin[_coin_index].data.max1,pre_value.country[coinchoose].coin[_coin_index].data.min1,
-					  pre_value.country[coinchoose].coin[_coin_index].data.max2,pre_value.country[coinchoose].coin[_coin_index].data.min2);
+	disp_preselflearn(pre_value.coin[_coin_index].data.max0,pre_value.coin[_coin_index].data.min0,
+					  pre_value.coin[_coin_index].data.max1,pre_value.coin[_coin_index].data.min1,
+					  pre_value.coin[_coin_index].data.max2,pre_value.coin[_coin_index].data.min2);
 	if (_country_index == coinchoose)
 		comscreen(Disp_Indexpic[TZJM],Number_IndexpicB);	 // back to the  picture before alert
 	else
@@ -1549,12 +1549,12 @@ void save_all_prevalue_coin (int32_t _country_index, int32_t _coin_index, int32_
 {
 
 	//cy_println ("_country_index = %d _coin_index = %d _value_buf[0] = %d", _country_index, _coin_index,  _value_buf[0]);
-	pre_value.country[coinchoose].coin[_coin_index].data.max0 = _value_buf[0];
-	pre_value.country[coinchoose].coin[_coin_index].data.min0 = _value_buf[1];
-	pre_value.country[coinchoose].coin[_coin_index].data.max1 = _value_buf[2];
-	pre_value.country[coinchoose].coin[_coin_index].data.min1 = _value_buf[3];
-	pre_value.country[coinchoose].coin[_coin_index].data.max2 = _value_buf[4];
-	pre_value.country[coinchoose].coin[_coin_index].data.min2 = _value_buf[5];
+	pre_value.coin[_coin_index].data.max0 = _value_buf[0];
+	pre_value.coin[_coin_index].data.min0 = _value_buf[1];
+	pre_value.coin[_coin_index].data.max1 = _value_buf[2];
+	pre_value.coin[_coin_index].data.min1 = _value_buf[3];
+	pre_value.coin[_coin_index].data.max2 = _value_buf[4];
+	pre_value.coin[_coin_index].data.min2 = _value_buf[5];
 
 	write_to_flash (_country_index, _coin_index);
 }
@@ -1562,21 +1562,21 @@ void save_all_offsetvalue_coin (int32_t _country_index, int32_t _coin_index, int
 {
 
 	//cy_println ("_country_index = %d _coin_index = %d _value_buf[0] = %d", _country_index, _coin_index,  _value_buf[0]);
-	pre_value.country[coinchoose].coin[_coin_index].data.offsetmax0 = _value_buf[0];
-	pre_value.country[coinchoose].coin[_coin_index].data.offsetmin0 = _value_buf[1];
-	pre_value.country[coinchoose].coin[_coin_index].data.offsetmax1 = _value_buf[2];
-	pre_value.country[coinchoose].coin[_coin_index].data.offsetmin1 = _value_buf[3];
-	pre_value.country[coinchoose].coin[_coin_index].data.offsetmax2 = _value_buf[4];
-	pre_value.country[coinchoose].coin[_coin_index].data.offsetmin2 = _value_buf[5];
+	pre_value.coin[_coin_index].data.offsetmax0 = _value_buf[0];
+	pre_value.coin[_coin_index].data.offsetmin0 = _value_buf[1];
+	pre_value.coin[_coin_index].data.offsetmax1 = _value_buf[2];
+	pre_value.coin[_coin_index].data.offsetmin1 = _value_buf[3];
+	pre_value.coin[_coin_index].data.offsetmax2 = _value_buf[4];
+	pre_value.coin[_coin_index].data.offsetmin2 = _value_buf[5];
 
 	write_to_flash (_country_index, _coin_index);
 }
 void save_all_stdvalue_coin (int32_t _country_index, int32_t _coin_index, int32_t _value_buf[])
 {
 	//cy_println ("_country_index = %d _coin_index = %d _value_buf[0] = %d", _country_index, _coin_index,  _value_buf[0]);
-	pre_value.country[coinchoose].coin[_coin_index].data.std0 = _value_buf[0];
-	pre_value.country[coinchoose].coin[_coin_index].data.std1 = _value_buf[1];
-	pre_value.country[coinchoose].coin[_coin_index].data.std2 = _value_buf[2];
+	pre_value.coin[_coin_index].data.std0 = _value_buf[0];
+	pre_value.coin[_coin_index].data.std1 = _value_buf[1];
+	pre_value.coin[_coin_index].data.std2 = _value_buf[2];
 
 	write_to_flash (_country_index, _coin_index);
 }
@@ -1922,26 +1922,26 @@ void print_cmp_data (int16_t _coin_index)
 	cy_println ("real     std0 = %4d          std1 = %4d     std2 = %4d", std_ad0, std_ad1, std_ad2);
 	cy_println ("----------------------------------------------------------------------");
 	cy_println ("save     std0 = %4d          std1 = %4d     std2 = %4d",
-			pre_value.country[coinchoose].coin[_coin_index].data.std0,
-			pre_value.country[coinchoose].coin[_coin_index].data.std1,
-			pre_value.country[coinchoose].coin[_coin_index].data.std2);
+			pre_value.coin[_coin_index].data.std0,
+			pre_value.coin[_coin_index].data.std1,
+			pre_value.coin[_coin_index].data.std2);
 
 	cy_println ("offset   max0 = %4d          max1 = %4d     max2 = %4d",
-			pre_value.country[coinchoose].coin[_coin_index].data.offsetmax0,
-			pre_value.country[coinchoose].coin[_coin_index].data.offsetmax1,
-			pre_value.country[coinchoose].coin[_coin_index].data.offsetmax2);
+			pre_value.coin[_coin_index].data.offsetmax0,
+			pre_value.coin[_coin_index].data.offsetmax1,
+			pre_value.coin[_coin_index].data.offsetmax2);
 	cy_println ("original max0 = %4d          max1 = %4d     max2 = %4d",
-			pre_value.country[coinchoose].coin[_coin_index].data.max0,
-			pre_value.country[coinchoose].coin[_coin_index].data.max1,
-			pre_value.country[coinchoose].coin[_coin_index].data.max2);
+			pre_value.coin[_coin_index].data.max0,
+			pre_value.coin[_coin_index].data.max1,
+			pre_value.coin[_coin_index].data.max2);
 	cy_println ("offset   min0 = %4d          min1 = %4d     min2 = %4d",
-			pre_value.country[coinchoose].coin[_coin_index].data.offsetmin0,
-			pre_value.country[coinchoose].coin[_coin_index].data.offsetmin1,
-			pre_value.country[coinchoose].coin[_coin_index].data.offsetmin2);
+			pre_value.coin[_coin_index].data.offsetmin0,
+			pre_value.coin[_coin_index].data.offsetmin1,
+			pre_value.coin[_coin_index].data.offsetmin2);
 	cy_println ("original min0 = %4d          min1 = %4d     min2 = %4d",
-			pre_value.country[coinchoose].coin[_coin_index].data.min0,
-			pre_value.country[coinchoose].coin[_coin_index].data.min1,
-			pre_value.country[coinchoose].coin[_coin_index].data.min2);
+			pre_value.coin[_coin_index].data.min0,
+			pre_value.coin[_coin_index].data.min1,
+			pre_value.coin[_coin_index].data.min2);
 	cy_println("----------------------------------------------------------------------");
 #ifdef SAMPLE_METHOD_0
 	cy_println ("                  H                     M-H                    L-M");
@@ -1999,18 +1999,18 @@ void print_coin_pre_value (int16_t index)
 	cy_println (" coin  min0        max0        min1        max1        min2        max2 ");
 	cy_println ("   %2d (%4d %3d)  (%4d %3d)  (%4d %3d)  (%4d %3d)  (%4d %3d)  (%4d %3d)",
 								i,
-								pre_value.country[coinchoose].coin[i].data.min0,
-								pre_value.country[coinchoose].coin[i].data.offsetmin0,
-								pre_value.country[coinchoose].coin[i].data.max0,
-								pre_value.country[coinchoose].coin[i].data.offsetmax0,
-								pre_value.country[coinchoose].coin[i].data.min1,
-								pre_value.country[coinchoose].coin[i].data.offsetmin1,
-								pre_value.country[coinchoose].coin[i].data.max1,
-								pre_value.country[coinchoose].coin[i].data.offsetmax1,
-								pre_value.country[coinchoose].coin[i].data.min2,
-								pre_value.country[coinchoose].coin[i].data.offsetmin2,
-								pre_value.country[coinchoose].coin[i].data.max2,
-								pre_value.country[coinchoose].coin[i].data.offsetmax2
+								pre_value.coin[i].data.min0,
+								pre_value.coin[i].data.offsetmin0,
+								pre_value.coin[i].data.max0,
+								pre_value.coin[i].data.offsetmax0,
+								pre_value.coin[i].data.min1,
+								pre_value.coin[i].data.offsetmin1,
+								pre_value.coin[i].data.max1,
+								pre_value.coin[i].data.offsetmax1,
+								pre_value.coin[i].data.min2,
+								pre_value.coin[i].data.offsetmin2,
+								pre_value.coin[i].data.max2,
+								pre_value.coin[i].data.offsetmax2
 								);
 	cy_println("---------------------------------------------------------------------");
 }
@@ -2024,18 +2024,18 @@ void print_all_coin_pre_value (void)
 	{
 		cy_println ("   %2d (%4d %3d)  (%4d %3d)  (%4d %3d)  (%4d %3d)  (%4d %3d)  (%4d %3d)",
 								i,
-								pre_value.country[coinchoose].coin[i].data.min0,
-								pre_value.country[coinchoose].coin[i].data.offsetmin0,
-								pre_value.country[coinchoose].coin[i].data.max0,
-								pre_value.country[coinchoose].coin[i].data.offsetmax0,
-								pre_value.country[coinchoose].coin[i].data.min1,
-								pre_value.country[coinchoose].coin[i].data.offsetmin1,
-								pre_value.country[coinchoose].coin[i].data.max1,
-								pre_value.country[coinchoose].coin[i].data.offsetmax1,
-								pre_value.country[coinchoose].coin[i].data.min2,
-								pre_value.country[coinchoose].coin[i].data.offsetmin2,
-								pre_value.country[coinchoose].coin[i].data.max2,
-								pre_value.country[coinchoose].coin[i].data.offsetmax2
+								pre_value.coin[i].data.min0,
+								pre_value.coin[i].data.offsetmin0,
+								pre_value.coin[i].data.max0,
+								pre_value.coin[i].data.offsetmax0,
+								pre_value.coin[i].data.min1,
+								pre_value.coin[i].data.offsetmin1,
+								pre_value.coin[i].data.max1,
+								pre_value.coin[i].data.offsetmax1,
+								pre_value.coin[i].data.min2,
+								pre_value.coin[i].data.offsetmin2,
+								pre_value.coin[i].data.max2,
+								pre_value.coin[i].data.offsetmax2
 								);
 	}
 	cy_println("---------------------------------------------------------------------");
@@ -2068,7 +2068,7 @@ void print_pre_count_set_value (void)
 	cy_println("----------------------print pre_count_set value----------------------", coinchoose);
 	for (i = 0; i < 9; i++)
 	{
-		cy_println ("   %d      %6d", i, *(pre_value.country[coinchoose].coin[i].data.p_pre_count_set));
+		cy_println ("   %d      %6d", i, *(pre_value.coin[i].data.p_pre_count_set));
 	}
 	cy_println("---------------------------------------------------------------------");
 }
@@ -2078,7 +2078,7 @@ void print_pre_count_current (void)
 	cy_println("--------------------print pre_count_current value--------------------", coinchoose);
 	for (i = 0; i < 9; i++)
 	{
-		cy_println ("   %d      %6d", i, *(pre_value.country[coinchoose].coin[i].data.p_count_cur));
+		cy_println ("   %d      %6d", i, *(pre_value.coin[i].data.p_count_cur));
 	}
 	cy_println("---------------------------------------------------------------------");
 }
@@ -2332,23 +2332,23 @@ void write_sd_coin_coinfig (void)
 	cy_println("Write coin-config.txt:");
 	for (i = 0; i < COIN_TYPE_NUM; i++)
 	{
-		f_printf (&file, "set cnnm%d %d %d %d %d %d %d\n", i, pre_value.country[coinchoose].coin[i].data.max0,
-															  pre_value.country[coinchoose].coin[i].data.min0,
-															  pre_value.country[coinchoose].coin[i].data.max1,
-															  pre_value.country[coinchoose].coin[i].data.min1,
-															  pre_value.country[coinchoose].coin[i].data.max2,
-															  pre_value.country[coinchoose].coin[i].data.min2
+		f_printf (&file, "set cnnm%d %d %d %d %d %d %d\n", i, pre_value.coin[i].data.max0,
+															  pre_value.coin[i].data.min0,
+															  pre_value.coin[i].data.max1,
+															  pre_value.coin[i].data.min1,
+															  pre_value.coin[i].data.max2,
+															  pre_value.coin[i].data.min2
 		);
-		f_printf (&file, "set cnnm%d std %d %d %d\n", i, pre_value.country[coinchoose].coin[i].data.std0,
-														 pre_value.country[coinchoose].coin[i].data.std1,
-														 pre_value.country[coinchoose].coin[i].data.std2
+		f_printf (&file, "set cnnm%d std %d %d %d\n", i, pre_value.coin[i].data.std0,
+														 pre_value.coin[i].data.std1,
+														 pre_value.coin[i].data.std2
 		);
-		f_printf (&file, "set cnnm%d offset %d %d %d %d %d %d\n", i, pre_value.country[coinchoose].coin[i].data.offsetmax0,
-																	 pre_value.country[coinchoose].coin[i].data.offsetmin0,
-																	 pre_value.country[coinchoose].coin[i].data.offsetmax1,
-																	 pre_value.country[coinchoose].coin[i].data.offsetmin1,
-																	 pre_value.country[coinchoose].coin[i].data.offsetmax2,
-																	 pre_value.country[coinchoose].coin[i].data.offsetmin2
+		f_printf (&file, "set cnnm%d offset %d %d %d %d %d %d\n", i, pre_value.coin[i].data.offsetmax0,
+																	 pre_value.coin[i].data.offsetmin0,
+																	 pre_value.coin[i].data.offsetmax1,
+																	 pre_value.coin[i].data.offsetmin1,
+																	 pre_value.coin[i].data.offsetmax2,
+																	 pre_value.coin[i].data.offsetmin2
 		);
 	}
 	f_close(&file);
@@ -2574,12 +2574,12 @@ int16_t is_repeate (int16_t _coin_index)
 	int16_t temp_coin_maxvalue2;
 	int16_t temp_coin_minvalue2;
 
-	temp_coin_maxvalue0 = coin_maxvalue0 + pre_value.country[coinchoose].coin[_coin_index].data.offsetmax0;
-	temp_coin_minvalue0 = coin_minvalue0 + pre_value.country[coinchoose].coin[_coin_index].data.offsetmin0;
-	temp_coin_maxvalue1 = coin_maxvalue1 + pre_value.country[coinchoose].coin[_coin_index].data.offsetmax1;
-	temp_coin_minvalue1 = coin_minvalue1 + pre_value.country[coinchoose].coin[_coin_index].data.offsetmin1;
-	temp_coin_maxvalue2 = coin_maxvalue2 + pre_value.country[coinchoose].coin[_coin_index].data.offsetmax2;
-	temp_coin_minvalue2 = coin_minvalue2 + pre_value.country[coinchoose].coin[_coin_index].data.offsetmin2;
+	temp_coin_maxvalue0 = coin_maxvalue0 + pre_value.coin[_coin_index].data.offsetmax0;
+	temp_coin_minvalue0 = coin_minvalue0 + pre_value.coin[_coin_index].data.offsetmin0;
+	temp_coin_maxvalue1 = coin_maxvalue1 + pre_value.coin[_coin_index].data.offsetmax1;
+	temp_coin_minvalue1 = coin_minvalue1 + pre_value.coin[_coin_index].data.offsetmin1;
+	temp_coin_maxvalue2 = coin_maxvalue2 + pre_value.coin[_coin_index].data.offsetmax2;
+	temp_coin_minvalue2 = coin_minvalue2 + pre_value.coin[_coin_index].data.offsetmin2;
 
 	for (i = 0; i < COIN_TYPE_NUM; i++){
 		if ( _coin_index != i){
@@ -2590,17 +2590,17 @@ int16_t is_repeate (int16_t _coin_index)
 					((temp_coin_maxvalue0 >= coin_cmp_value[i].compare_max0) && (temp_coin_minvalue0 <= coin_cmp_value[i].compare_min0)) || //与1元   通道0比
 					((temp_coin_maxvalue0 <= coin_cmp_value[i].compare_max0) && (temp_coin_maxvalue0 >= coin_cmp_value[i].compare_min0)) ||
 					((temp_coin_minvalue0 <= coin_cmp_value[i].compare_max0) && (temp_coin_minvalue0 >= coin_cmp_value[i].compare_min0))
-				) && (pre_value.country[coinchoose].coin[i].data.max0 > pre_value.country[coinchoose].coin[i].data.min0) &&
+				) && (pre_value.coin[i].data.max0 > pre_value.coin[i].data.min0) &&
 				(
 					((temp_coin_maxvalue1 >= coin_cmp_value[i].compare_max1) && (temp_coin_minvalue1 <= coin_cmp_value[i].compare_min1)) || //与1元   通道0比
 					((temp_coin_maxvalue1 <= coin_cmp_value[i].compare_max1) && (temp_coin_maxvalue1 >= coin_cmp_value[i].compare_min1)) ||
 					((temp_coin_minvalue1 <= coin_cmp_value[i].compare_max1) && (temp_coin_minvalue1 >= coin_cmp_value[i].compare_min1))
-				) && (pre_value.country[coinchoose].coin[i].data.max1 > pre_value.country[coinchoose].coin[i].data.min1) &&
+				) && (pre_value.coin[i].data.max1 > pre_value.coin[i].data.min1) &&
 				(
 					((temp_coin_maxvalue2 >= coin_cmp_value[i].compare_max2) && (temp_coin_minvalue2 <= coin_cmp_value[i].compare_min2)) || //与1元   通道0比
 					((temp_coin_maxvalue2 <= coin_cmp_value[i].compare_max2) && (temp_coin_maxvalue2 >= coin_cmp_value[i].compare_min2)) ||
 					((temp_coin_minvalue2 <= coin_cmp_value[i].compare_max2) && (temp_coin_minvalue2 >= coin_cmp_value[i].compare_min2))
-				) && (pre_value.country[coinchoose].coin[i].data.max2 > pre_value.country[coinchoose].coin[i].data.min2)
+				) && (pre_value.coin[i].data.max2 > pre_value.coin[i].data.min2)
 			   ){
 				cy_println ("Note!!! value Repeat with Coin %d please comfirm !!!", i);
 				cy_println ("coin %d value is:", _coin_index);

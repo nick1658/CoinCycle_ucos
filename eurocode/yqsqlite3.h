@@ -102,7 +102,7 @@ typedef struct
 #define COUNTRY0_COIN_PRE_VALUE_START_PAGE_NUM (2 + PUBULIC_DATA_START_PAGE_NUM)
 #define COUNTRY0_COIN_PRE_VALUE_START_ADDR (DATA_START_BLOCK + COUNTRY0_COIN_PRE_VALUE_START_PAGE_NUM * 2048)
 #define COIN_TYPE_NUM 11
-#define COUNTRY_NUM 16
+#define COUNTRY_NUM 1
 #define COIN_NUM 8
 #define HOPPER_NUM 3
 
@@ -202,7 +202,7 @@ typedef struct
 	u_coin_pre_value country[COUNTRY_NUM];
 }s_country_coin;
 
-extern s_country_coin pre_value;
+extern u_coin_pre_value pre_value;
 
 extern volatile char dbsave[HISTORYSAVANUM];
 

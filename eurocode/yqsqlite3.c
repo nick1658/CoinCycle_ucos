@@ -19,7 +19,7 @@
 #define FLAG2NANDFLASH	0x5a
 
 u_coin_parameter_value para_set_value;
-s_country_coin pre_value;
+u_coin_pre_value pre_value;
 u_db_item_info db_item_info;
 
 int16_t test_read_r_code (int16_t r_code)
@@ -132,23 +132,23 @@ void initial_nandflash(void)    //nandflash
 
 		for (i = 0; i < COUNTRY_NUM; i++){
 			for (j = 0; j < COIN_TYPE_NUM; j++){
-				pre_value.country[i].coin[j].data.max0 = 1023;
-				pre_value.country[i].coin[j].data.min0 = 1023;
-				pre_value.country[i].coin[j].data.max1 = 1023;
-				pre_value.country[i].coin[j].data.min1 = 1023;
-				pre_value.country[i].coin[j].data.max2 = 1023;
-				pre_value.country[i].coin[j].data.min2 = 1023;
-				pre_value.country[i].coin[j].data.std0 = 900;
-				pre_value.country[i].coin[j].data.std1 = 900;
-				pre_value.country[i].coin[j].data.std2 = 900;
-				pre_value.country[i].coin[j].data.offsetmax0 = 10;
-				pre_value.country[i].coin[j].data.offsetmin0 = -10;
-				pre_value.country[i].coin[j].data.offsetmax1 = 10;
-				pre_value.country[i].coin[j].data.offsetmin1 = -10;
-				pre_value.country[i].coin[j].data.offsetmax2 = 10;
-				pre_value.country[i].coin[j].data.offsetmin2 = -10;
+				pre_value.coin[j].data.max0 = 1023;
+				pre_value.coin[j].data.min0 = 1023;
+				pre_value.coin[j].data.max1 = 1023;
+				pre_value.coin[j].data.min1 = 1023;
+				pre_value.coin[j].data.max2 = 1023;
+				pre_value.coin[j].data.min2 = 1023;
+				pre_value.coin[j].data.std0 = 900;
+				pre_value.coin[j].data.std1 = 900;
+				pre_value.coin[j].data.std2 = 900;
+				pre_value.coin[j].data.offsetmax0 = 10;
+				pre_value.coin[j].data.offsetmin0 = -10;
+				pre_value.coin[j].data.offsetmax1 = 10;
+				pre_value.coin[j].data.offsetmin1 = -10;
+				pre_value.coin[j].data.offsetmax2 = 10;
+				pre_value.coin[j].data.offsetmin2 = -10;
 			}
-			test_write_r_code (Nand_WritePage(COUNTRY0_COIN_PRE_VALUE_START_BLOCK_NUM, (COUNTRY0_COIN_PRE_VALUE_START_PAGE_NUM + i), (U8 *)(&(pre_value.country[i]))));
+			test_write_r_code (Nand_WritePage(COUNTRY0_COIN_PRE_VALUE_START_BLOCK_NUM, (COUNTRY0_COIN_PRE_VALUE_START_PAGE_NUM + i), (U8 *)(&(pre_value))));
 			cy_println ("write block %d page %d completed",
 						(COUNTRY0_COIN_PRE_VALUE_START_BLOCK_NUM ),
 						(COUNTRY0_COIN_PRE_VALUE_START_PAGE_NUM + i));
@@ -191,36 +191,35 @@ uint32_t null_value;
 void read_coin_value(void) 	 // read  COIN  0--8
 {
 	uint32_t i;
-	for (i = 0; i < COUNTRY_NUM; i++)
-	{
-		test_read_r_code (Nand_ReadPage(COUNTRY0_COIN_PRE_VALUE_START_BLOCK_NUM, COUNTRY0_COIN_PRE_VALUE_START_PAGE_NUM + i, (U8 *)(&(pre_value.country[i]))));
+	for (i = 0; i < COUNTRY_NUM; i++){
+		test_read_r_code (Nand_ReadPage(COUNTRY0_COIN_PRE_VALUE_START_BLOCK_NUM, COUNTRY0_COIN_PRE_VALUE_START_PAGE_NUM + i, (U8 *)(&(pre_value))));
 	}
 
 	//映射硬币金额
-	pre_value.country[COUNTRY_ID].coin[0].data.money = MONEY_1_00; //一元
-	pre_value.country[COUNTRY_ID].coin[1].data.money = MONEY_0_50; //五角铜
-	pre_value.country[COUNTRY_ID].coin[2].data.money = MONEY_0_50; //五角钢
-	pre_value.country[COUNTRY_ID].coin[3].data.money = MONEY_0_10; //一角大铝
-	pre_value.country[COUNTRY_ID].coin[4].data.money = MONEY_0_10; //一角小钢
-	pre_value.country[COUNTRY_ID].coin[5].data.money = MONEY_0_10; //一角小铝
-	pre_value.country[COUNTRY_ID].coin[6].data.money = MONEY_0_05; //五分
-	pre_value.country[COUNTRY_ID].coin[7].data.money = MONEY_0_02; //两分
-	pre_value.country[COUNTRY_ID].coin[8].data.money = MONEY_0_01; //一分
-	pre_value.country[COUNTRY_ID].coin[9].data.money = MONEY_10_00; //纪念币10元
-	pre_value.country[COUNTRY_ID].coin[10].data.money = MONEY_5_00; //纪念币5元
+	pre_value.coin[0].data.money = MONEY_1_00; //一元
+	pre_value.coin[1].data.money = MONEY_0_50; //五角铜
+	pre_value.coin[2].data.money = MONEY_0_50; //五角钢
+	pre_value.coin[3].data.money = MONEY_0_10; //一角大铝
+	pre_value.coin[4].data.money = MONEY_0_10; //一角小钢
+	pre_value.coin[5].data.money = MONEY_0_10; //一角小铝
+	pre_value.coin[6].data.money = MONEY_0_05; //五分
+	pre_value.coin[7].data.money = MONEY_0_02; //两分
+	pre_value.coin[8].data.money = MONEY_0_01; //一分
+	pre_value.coin[9].data.money = MONEY_10_00; //纪念币10元
+	pre_value.coin[10].data.money = MONEY_5_00; //纪念币5元
 
 	//映射预置计数值
-	pre_value.country[COUNTRY_ID].coin[0].data.coin_type = 0;
-	pre_value.country[COUNTRY_ID].coin[1].data.coin_type = 1;
-	pre_value.country[COUNTRY_ID].coin[2].data.coin_type = 1;
-	pre_value.country[COUNTRY_ID].coin[3].data.coin_type = 4;//大1角
-	pre_value.country[COUNTRY_ID].coin[4].data.coin_type = 4;
-	pre_value.country[COUNTRY_ID].coin[5].data.coin_type = 4;
-	pre_value.country[COUNTRY_ID].coin[6].data.coin_type = 6;
-	pre_value.country[COUNTRY_ID].coin[7].data.coin_type = 7;
-	pre_value.country[COUNTRY_ID].coin[8].data.coin_type = 8;
-	pre_value.country[COUNTRY_ID].coin[9].data.coin_type = 9;
-	pre_value.country[COUNTRY_ID].coin[10].data.coin_type = 10;
+	pre_value.coin[0].data.coin_type = 0;
+	pre_value.coin[1].data.coin_type = 1;
+	pre_value.coin[2].data.coin_type = 1;
+	pre_value.coin[3].data.coin_type = 4;//大1角
+	pre_value.coin[4].data.coin_type = 4;
+	pre_value.coin[5].data.coin_type = 4;
+	pre_value.coin[6].data.coin_type = 6;
+	pre_value.coin[7].data.coin_type = 7;
+	pre_value.coin[8].data.coin_type = 8;
+	pre_value.coin[9].data.coin_type = 9;
+	pre_value.coin[10].data.coin_type = 10;
 	
 	for (i = 0; i < COIN_TYPE_NUM; i++){	
 		coin_env.p_coin_recv_func[i] = coin_null_func;
@@ -252,51 +251,51 @@ void read_coin_value(void) 	 // read  COIN  0--8
 	coin_env.p_coin_kick_keep_func[10] = coin_null_func;
 
 	//映射触摸屏预置计数预置设置值显示地址
-	pre_value.country[COUNTRY_ID].coin[0].data.hmi_pre_count_set_addr = ADDR_YZS0; //一元
-	pre_value.country[COUNTRY_ID].coin[1].data.hmi_pre_count_set_addr = ADDR_YZS1; //五角铜
-	pre_value.country[COUNTRY_ID].coin[2].data.hmi_pre_count_set_addr = ADDR_YZS1; //五角钢
-	pre_value.country[COUNTRY_ID].coin[3].data.hmi_pre_count_set_addr = ADDR_YZS3; //一角大铝
-	pre_value.country[COUNTRY_ID].coin[4].data.hmi_pre_count_set_addr = ADDR_YZS4; //一角小钢
-	pre_value.country[COUNTRY_ID].coin[5].data.hmi_pre_count_set_addr = ADDR_YZS4; //一角小铝
-	pre_value.country[COUNTRY_ID].coin[6].data.hmi_pre_count_set_addr = ADDR_YZS6; //五分
-	pre_value.country[COUNTRY_ID].coin[7].data.hmi_pre_count_set_addr = ADDR_YZS7; //二分
-	pre_value.country[COUNTRY_ID].coin[8].data.hmi_pre_count_set_addr = ADDR_YZS8; //一分
-	pre_value.country[COUNTRY_ID].coin[9].data.hmi_pre_count_set_addr = ADDR_YZS9; //纪念币10元
-	pre_value.country[COUNTRY_ID].coin[10].data.hmi_pre_count_set_addr = ADDR_YZS10; //纪念币5元
+	pre_value.coin[0].data.hmi_pre_count_set_addr = ADDR_YZS0; //一元
+	pre_value.coin[1].data.hmi_pre_count_set_addr = ADDR_YZS1; //五角铜
+	pre_value.coin[2].data.hmi_pre_count_set_addr = ADDR_YZS1; //五角钢
+	pre_value.coin[3].data.hmi_pre_count_set_addr = ADDR_YZS3; //一角大铝
+	pre_value.coin[4].data.hmi_pre_count_set_addr = ADDR_YZS4; //一角小钢
+	pre_value.coin[5].data.hmi_pre_count_set_addr = ADDR_YZS4; //一角小铝
+	pre_value.coin[6].data.hmi_pre_count_set_addr = ADDR_YZS6; //五分
+	pre_value.coin[7].data.hmi_pre_count_set_addr = ADDR_YZS7; //二分
+	pre_value.coin[8].data.hmi_pre_count_set_addr = ADDR_YZS8; //一分
+	pre_value.coin[9].data.hmi_pre_count_set_addr = ADDR_YZS9; //纪念币10元
+	pre_value.coin[10].data.hmi_pre_count_set_addr = ADDR_YZS10; //纪念币5元
 
 
 	for (i = 0; i < COIN_TYPE_NUM; i++)
 	{
-		//count_coin_temp[pre_value.country[COUNTRY_ID].coin[i].data.coin_type].pre_count_set = 50;
+		//count_coin_temp[pre_value.coin[i].data.coin_type].pre_count_set = 50;
 		//para_set_value.data.precoin_set_num[i] = 50;
-		pre_value.country[COUNTRY_ID].coin[i].data.p_count_cur = &null_value;
-		pre_value.country[COUNTRY_ID].coin[i].data.p_hopper_balance_cur = &null_value;
-		pre_value.country[COUNTRY_ID].coin[i].data.p_coin_current_receive = &null_value;
+		pre_value.coin[i].data.p_count_cur = &null_value;
+		pre_value.coin[i].data.p_hopper_balance_cur = &null_value;
+		pre_value.coin[i].data.p_coin_current_receive = &null_value;
 		
-		pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_set 	= &count_coin_temp[pre_value.country[COUNTRY_ID].coin[i].data.coin_type].pre_count_set;//预置计数设置值
-		pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_full_flag = &count_coin_temp[pre_value.country[COUNTRY_ID].coin[i].data.coin_type].full_flag;//预置计数到达标志
-		pre_value.country[COUNTRY_ID].coin[i].data.p_coinval = &count_coin_temp[pre_value.country[COUNTRY_ID].coin[i].data.coin_type].coinval;//包装卷数
+		pre_value.coin[i].data.p_pre_count_set 	= &count_coin_temp[pre_value.coin[i].data.coin_type].pre_count_set;//预置计数设置值
+		pre_value.coin[i].data.p_pre_count_full_flag = &count_coin_temp[pre_value.coin[i].data.coin_type].full_flag;//预置计数到达标志
+		pre_value.coin[i].data.p_coinval = &count_coin_temp[pre_value.coin[i].data.coin_type].coinval;//包装卷数
 
-		*pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_set = para_set_value.data.precoin_set_num[pre_value.country[COUNTRY_ID].coin[i].data.coin_type];//预置计数设置值初始化
-		*pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_full_flag = 0;//预置计数到达标志清零
+		*pre_value.coin[i].data.p_pre_count_set = para_set_value.data.precoin_set_num[pre_value.coin[i].data.coin_type];//预置计数设置值初始化
+		*pre_value.coin[i].data.p_pre_count_full_flag = 0;//预置计数到达标志清零
 	}
-	pre_value.country[COUNTRY_ID].coin[0].data.p_count_cur = &para_set_value.data.coin_total_num[0];//
-	pre_value.country[COUNTRY_ID].coin[1].data.p_count_cur = &para_set_value.data.coin_total_num[1];//
-	pre_value.country[COUNTRY_ID].coin[2].data.p_count_cur = &para_set_value.data.coin_total_num[1];//
-	pre_value.country[COUNTRY_ID].coin[3].data.p_count_cur = &para_set_value.data.coin_total_num[2];//
-	pre_value.country[COUNTRY_ID].coin[4].data.p_count_cur = &para_set_value.data.coin_total_num[2];//
-	pre_value.country[COUNTRY_ID].coin[5].data.p_count_cur = &para_set_value.data.coin_total_num[2];//
-	pre_value.country[COUNTRY_ID].coin[0].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[0];//
-	pre_value.country[COUNTRY_ID].coin[1].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[1];//
-	pre_value.country[COUNTRY_ID].coin[2].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[1];//
-	pre_value.country[COUNTRY_ID].coin[4].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[2];//
-	//pre_value.country[COUNTRY_ID].coin[5].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[2];//
-	pre_value.country[COUNTRY_ID].coin[0].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[0];//
-	pre_value.country[COUNTRY_ID].coin[1].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[1];//
-	pre_value.country[COUNTRY_ID].coin[2].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[1];//
-	pre_value.country[COUNTRY_ID].coin[3].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[2];//
-	pre_value.country[COUNTRY_ID].coin[4].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[2];//
-	pre_value.country[COUNTRY_ID].coin[5].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[2];//
+	pre_value.coin[0].data.p_count_cur = &para_set_value.data.coin_total_num[0];//
+	pre_value.coin[1].data.p_count_cur = &para_set_value.data.coin_total_num[1];//
+	pre_value.coin[2].data.p_count_cur = &para_set_value.data.coin_total_num[1];//
+	pre_value.coin[3].data.p_count_cur = &para_set_value.data.coin_total_num[2];//
+	pre_value.coin[4].data.p_count_cur = &para_set_value.data.coin_total_num[2];//
+	pre_value.coin[5].data.p_count_cur = &para_set_value.data.coin_total_num[2];//
+	pre_value.coin[0].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[0];//
+	pre_value.coin[1].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[1];//
+	pre_value.coin[2].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[1];//
+	pre_value.coin[4].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[2];//
+	//pre_value.coin[5].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[2];//
+	pre_value.coin[0].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[0];//
+	pre_value.coin[1].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[1];//
+	pre_value.coin[2].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[1];//
+	pre_value.coin[3].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[2];//
+	pre_value.coin[4].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[2];//
+	pre_value.coin[5].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[2];//
 }
 
 
@@ -306,7 +305,7 @@ void write_coin_value (void)
 
 	for (i = 0; i < COUNTRY_NUM; i++)
 	{
-		test_write_r_code (Nand_WritePage(COUNTRY0_COIN_PRE_VALUE_START_BLOCK_NUM, (COUNTRY0_COIN_PRE_VALUE_START_PAGE_NUM + i), (U8 *)(&(pre_value.country[i]))));
+		test_write_r_code (Nand_WritePage(COUNTRY0_COIN_PRE_VALUE_START_BLOCK_NUM, (COUNTRY0_COIN_PRE_VALUE_START_PAGE_NUM + i), (U8 *)(&(pre_value))));
 	}
 }
 
@@ -326,14 +325,14 @@ void ini_screen (void)
 	dgus_tf1word(ADDR_KICK_KEEP_T3, para_set_value.data.kick_keep_t[4]);	//第四个踢币保持时间
 	dgus_tf1word(ADDR_MOTOR_IDLE_T, para_set_value.data.motor_idle_t);	//无币空转等待时间
 	dgus_tf1word(ADDR_PRE_COUNT_STOP_N, para_set_value.data.pre_count_stop_n);	//满币停机数，设置为1则任意一种硬币达到预置数就停机
-	dgus_tf1word(ADDR_LEVEL100, pre_value.country[coinchoose].coin[0].data.offsetmax0);	//清分等级
-	dgus_tf1word(ADDR_LEVEL50, pre_value.country[coinchoose].coin[1].data.offsetmax0);	//清分等级
-	dgus_tf1word(ADDR_LEVEL51, pre_value.country[coinchoose].coin[2].data.offsetmax0);	//清分等级
-	dgus_tf1word(ADDR_LEVEL10, pre_value.country[coinchoose].coin[3].data.offsetmax0);	//清分等级
-	dgus_tf1word(ADDR_LEVEL11, pre_value.country[coinchoose].coin[4].data.offsetmax0);	//清分等级
-	dgus_tf1word(ADDR_LEVEL12, pre_value.country[coinchoose].coin[5].data.offsetmax0);	//清分等级
-	dgus_tf1word(ADDR_LEVEL1000, pre_value.country[coinchoose].coin[9].data.offsetmax0);	//清分等级
-	dgus_tf1word(ADDR_LEVEL500, pre_value.country[coinchoose].coin[10].data.offsetmax0);	//清分等级
+	dgus_tf1word(ADDR_LEVEL100, pre_value.coin[0].data.offsetmax0);	//清分等级
+	dgus_tf1word(ADDR_LEVEL50, pre_value.coin[1].data.offsetmax0);	//清分等级
+	dgus_tf1word(ADDR_LEVEL51, pre_value.coin[2].data.offsetmax0);	//清分等级
+	dgus_tf1word(ADDR_LEVEL10, pre_value.coin[3].data.offsetmax0);	//清分等级
+	dgus_tf1word(ADDR_LEVEL11, pre_value.coin[4].data.offsetmax0);	//清分等级
+	dgus_tf1word(ADDR_LEVEL12, pre_value.coin[5].data.offsetmax0);	//清分等级
+	dgus_tf1word(ADDR_LEVEL1000, pre_value.coin[9].data.offsetmax0);	//清分等级
+	dgus_tf1word(ADDR_LEVEL500, pre_value.coin[10].data.offsetmax0);	//清分等级
 
 	dgus_tf1word(ADDR_HOPPER0_NUM, para_set_value.data.hopper_dispense_num[0]);
 	dgus_tf1word(ADDR_HOPPER1_NUM, para_set_value.data.hopper_dispense_num[1]);
@@ -354,20 +353,20 @@ void ini_screen (void)
 
 	//dgus_tf1word(ADDR_CNTB,sys_env.coin_index);	//initial addr on zixuexi jiemian coin name tubiao
 	DISPLAY_COIN_INDEX ("1元");
-	disp_preselflearn(pre_value.country[coinchoose].coin[sys_env.coin_index].data.max0,pre_value.country[coinchoose].coin[sys_env.coin_index].data.min0,
-					pre_value.country[coinchoose].coin[sys_env.coin_index].data.max1,pre_value.country[coinchoose].coin[sys_env.coin_index].data.min1,
-					pre_value.country[coinchoose].coin[sys_env.coin_index].data.max2,pre_value.country[coinchoose].coin[sys_env.coin_index].data.min2);	//initial addr on zixuexi jiemian value
+	disp_preselflearn(pre_value.coin[sys_env.coin_index].data.max0,pre_value.coin[sys_env.coin_index].data.min0,
+					pre_value.coin[sys_env.coin_index].data.max1,pre_value.coin[sys_env.coin_index].data.min1,
+					pre_value.coin[sys_env.coin_index].data.max2,pre_value.coin[sys_env.coin_index].data.min2);	//initial addr on zixuexi jiemian value
 
 
 	para_set_value.data.system_mode = 0;//清分模式
 	dgus_tf1word(ADDR_MODE, para_set_value.data.system_mode);
 	for (i = 0; i < COIN_TYPE_NUM; i++){
 		if (para_set_value.data.system_mode == 0){
-			*pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_set = para_set_value.data.precoin_set_num[pre_value.country[COUNTRY_ID].coin[i].data.coin_type];
+			*pre_value.coin[i].data.p_pre_count_set = para_set_value.data.precoin_set_num[pre_value.coin[i].data.coin_type];
 		}else{
-			*pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_set = 9999;
+			*pre_value.coin[i].data.p_pre_count_set = 9999;
 		}
-		dgus_tf1word(pre_value.country[COUNTRY_ID].coin[i].data.hmi_pre_count_set_addr, *pre_value.country[COUNTRY_ID].coin[i].data.p_pre_count_set);	//预置值
+		dgus_tf1word(pre_value.coin[i].data.hmi_pre_count_set_addr, *pre_value.coin[i].data.p_pre_count_set);	//预置值
 	}
 }
 

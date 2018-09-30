@@ -70,9 +70,9 @@ typedef struct
 
 //各函数申明    步骤号  参数变量定义
 
-//#define AD0STDVALUE  pre_value.country[coinchoose].coin[CNNM0].std0   //800   //3.25    用于测试波谷的程序
-//#define AD1STDVALUE  pre_value.country[coinchoose].coin[CNNM0].std1  //940   //3.25
-//#define AD2STDVALUE  pre_value.country[coinchoose].coin[CNNM0].std2  //940   //3.25
+//#define AD0STDVALUE  pre_value.coin[CNNM0].std0   //800   //3.25    用于测试波谷的程序
+//#define AD1STDVALUE  pre_value.coin[CNNM0].std1  //940   //3.25
+//#define AD2STDVALUE  pre_value.coin[CNNM0].std2  //940   //3.25
 #define ADOFFSET  40
 
 
