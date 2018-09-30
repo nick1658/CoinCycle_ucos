@@ -156,20 +156,22 @@ void cy_precoincount(void)
 			(*(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_coin_current_receive))++;
 			processed_coin_info.total_money += pre_value.country[coinchoose].coin[good_coin].data.money;
 			processed_coin_info.total_good++;
-			if (*pre_value.country[COUNTRY_ID].coin[good_coin].data.p_pre_count_full_flag == 0){//
-				if((*(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_hopper_balance_cur)) < 5000){
-					(*(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_hopper_balance_cur))++;
-				}
-				if( *(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_hopper_balance_cur) >= *(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_pre_count_set)){// 当前的币种  数量 达到其预置值
-					*pre_value.country[COUNTRY_ID].coin[good_coin].data.p_pre_count_full_flag = 1; //此类硬币预置数到，做个标记
-				}
-				if (coin_env.recv_kick_Q[good_coin][coin_env.recv_kick_Q_index[good_coin]] == 0){
-					coin_env.recv_kick_Q[good_coin][coin_env.recv_kick_Q_index[good_coin]] = para_set_value.data.kick_start_delay_t[good_coin];
-					coin_env.recv_kick_Q_index[good_coin]++;
-					coin_env.recv_kick_Q_index[good_coin] %= RECV_KICK_Q_LEN;
-				}else{//收币队列追尾错误
-					SEND_ERROR(KICK2COINERROR);
-					dbg ("recv kick coin %d error alertflag = %d %s, %d", good_coin, KICK2COINERROR,  __FILE__, __LINE__);
+			if (pre_value.country[COUNTRY_ID].coin[good_coin].data.can_payout == 1){
+				if (*pre_value.country[COUNTRY_ID].coin[good_coin].data.p_pre_count_full_flag == 0){//
+					if((*(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_hopper_balance_cur)) < 5000){
+						(*(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_hopper_balance_cur))++;
+					}
+					if( *(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_hopper_balance_cur) >= *(pre_value.country[COUNTRY_ID].coin[good_coin].data.p_pre_count_set)){// 当前的币种  数量 达到其预置值
+						*pre_value.country[COUNTRY_ID].coin[good_coin].data.p_pre_count_full_flag = 1; //此类硬币预置数到，做个标记
+					}
+					if (coin_env.recv_kick_Q[good_coin][coin_env.recv_kick_Q_index[good_coin]] == 0){
+						coin_env.recv_kick_Q[good_coin][coin_env.recv_kick_Q_index[good_coin]] = para_set_value.data.kick_start_delay_t[good_coin];
+						coin_env.recv_kick_Q_index[good_coin]++;
+						coin_env.recv_kick_Q_index[good_coin] %= RECV_KICK_Q_LEN;
+					}else{//收币队列追尾错误
+						SEND_ERROR(KICK2COINERROR);
+						dbg ("recv kick coin %d error alertflag = %d %s, %d", good_coin, KICK2COINERROR,  __FILE__, __LINE__);
+					}
 				}
 			}
 		}

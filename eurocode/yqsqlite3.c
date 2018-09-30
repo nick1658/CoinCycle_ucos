@@ -241,6 +241,18 @@ void read_coin_value(void) 	 // read  COIN  0--8
 	pre_value.country[COUNTRY_ID].coin[8].data.coin_type = 8;
 	pre_value.country[COUNTRY_ID].coin[9].data.coin_type = 9;
 	pre_value.country[COUNTRY_ID].coin[10].data.coin_type = 10;
+	//可找零使能
+	pre_value.country[COUNTRY_ID].coin[0].data.can_payout = 1; //一元
+	pre_value.country[COUNTRY_ID].coin[1].data.can_payout = 1; //五角铜
+	pre_value.country[COUNTRY_ID].coin[2].data.can_payout = 1; //五角钢
+	pre_value.country[COUNTRY_ID].coin[3].data.can_payout = 0; //一角大铝
+	pre_value.country[COUNTRY_ID].coin[4].data.can_payout = 1; //一角小钢
+	pre_value.country[COUNTRY_ID].coin[5].data.can_payout = 0; //一角小铝
+	pre_value.country[COUNTRY_ID].coin[6].data.can_payout = 0; //五分
+	pre_value.country[COUNTRY_ID].coin[7].data.can_payout = 0; //两分
+	pre_value.country[COUNTRY_ID].coin[8].data.can_payout = 0; //一分
+	pre_value.country[COUNTRY_ID].coin[9].data.can_payout = 0; //纪念币10元
+	pre_value.country[COUNTRY_ID].coin[10].data.can_payout = 0; //纪念币5元
 	
 	//初始化剔除参数
 	for (i = 0; i < COIN_TYPE_NUM; i++){	

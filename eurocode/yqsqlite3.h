@@ -179,6 +179,7 @@ typedef struct
 	uint32_t * p_pre_count_full_flag;
 	uint32_t * p_coinval;
 	uint32_t coin_type;
+	uint8_t can_payout;
 	uint32_t accept;
 	uint16_t hmi_pre_count_set_addr;
 	uint16_t money;
