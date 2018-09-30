@@ -704,49 +704,43 @@ void touchresult(void)      //根据接收到的  数 来决定 执行的任务
 		sys_env.workstep = 0;	//停止	所有动作  // 等待 触摸
 		break;
 	case ADDR_KICK_DELAY_T0:  //地址
-		para_set_value.data.kick_start_delay_t0 = (int)(touchnum[7]*256 )+(int)touchnum[8];       //delay time
-		dgus_tf1word(ADDR_KICK_DELAY_T0, para_set_value.data.kick_start_delay_t0);	//make sure the return one
+		para_set_value.data.ng_kick_start_delay_t = (int)(touchnum[7]*256 )+(int)touchnum[8];       //delay time
+		dgus_tf1word(ADDR_KICK_DELAY_T0, para_set_value.data.ng_kick_start_delay_t);	//make sure the return one
 		Writekick_value();
 		break;
 	case ADDR_KICK_KEEP_T0:  //地址
-		para_set_value.data.kick_keep_t0 = (int)(touchnum[7]*256 )+(int)touchnum[8];       //kick time
-		dgus_tf1word(ADDR_KICK_KEEP_T0, para_set_value.data.kick_keep_t0);	//make sure  the return one
+		para_set_value.data.ng_kick_keep_delay_t = (int)(touchnum[7]*256 )+(int)touchnum[8];       //kick time
+		dgus_tf1word(ADDR_KICK_KEEP_T0, para_set_value.data.ng_kick_keep_delay_t);	//make sure  the return one
 		Writekick_value();
 		break;
 	case ADDR_KICK_DELAY_T1:  //地址
-		para_set_value.data.kick_start_delay_t[0] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //delay time
-		dgus_tf1word(ADDR_KICK_DELAY_T1, para_set_value.data.kick_start_delay_t[0]);	//make sure the return one
+		para_set_value.data.recv_kick_start_delay_t[0] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //delay time
+		dgus_tf1word(ADDR_KICK_DELAY_T1, para_set_value.data.recv_kick_start_delay_t[0]);	//make sure the return one
 		Writekick_value();
 		break;
 	case ADDR_KICK_KEEP_T1:  //地址
-		para_set_value.data.kick_keep_t[0] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //kick time
-		dgus_tf1word(ADDR_KICK_KEEP_T1, para_set_value.data.kick_keep_t[0]);	//make sure  the return one
+		para_set_value.data.recv_kick_keep_delay_t[0] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //kick time
+		dgus_tf1word(ADDR_KICK_KEEP_T1, para_set_value.data.recv_kick_keep_delay_t[0]);	//make sure  the return one
 		Writekick_value();
 		break;
 	case ADDR_KICK_DELAY_T2:  //地址
-		para_set_value.data.kick_start_delay_t[1] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //delay time
-		para_set_value.data.kick_start_delay_t[2] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //delay time
-		dgus_tf1word(ADDR_KICK_DELAY_T2, para_set_value.data.kick_start_delay_t[2]);	//make sure the return one
+		para_set_value.data.recv_kick_start_delay_t[1] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //delay time
+		dgus_tf1word(ADDR_KICK_DELAY_T2, para_set_value.data.recv_kick_start_delay_t[1]);	//make sure the return one
 		Writekick_value();
 		break;
 	case ADDR_KICK_KEEP_T2:  //地址
-		para_set_value.data.kick_keep_t[1] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //kick time
-		para_set_value.data.kick_keep_t[2] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //kick time
-		dgus_tf1word(ADDR_KICK_KEEP_T2, para_set_value.data.kick_keep_t[2]);	//make sure  the return one
+		para_set_value.data.recv_kick_keep_delay_t[1] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //kick time
+		dgus_tf1word(ADDR_KICK_KEEP_T2, para_set_value.data.recv_kick_keep_delay_t[1]);	//make sure  the return one
 		Writekick_value();
 		break;
 	case ADDR_KICK_DELAY_T3:  //地址
-		para_set_value.data.kick_start_delay_t[3] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //delay time
-		para_set_value.data.kick_start_delay_t[4] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //delay time
-		para_set_value.data.kick_start_delay_t[5] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //delay time
-		dgus_tf1word(ADDR_KICK_DELAY_T3, para_set_value.data.kick_start_delay_t[4]);	//make sure the return one
+		para_set_value.data.recv_kick_start_delay_t[2] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //delay time
+		dgus_tf1word(ADDR_KICK_DELAY_T3, para_set_value.data.recv_kick_start_delay_t[2]);	//make sure the return one
 		Writekick_value();
 		break;
 	case ADDR_KICK_KEEP_T3:  //地址
-		para_set_value.data.kick_keep_t[3] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //kick time
-		para_set_value.data.kick_keep_t[4] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //kick time
-		para_set_value.data.kick_keep_t[5] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //kick time
-		dgus_tf1word(ADDR_KICK_KEEP_T3, para_set_value.data.kick_keep_t[4]);	//make sure  the return one
+		para_set_value.data.recv_kick_keep_delay_t[2] = (int)(touchnum[7]*256 )+(int)touchnum[8];       //kick time
+		dgus_tf1word(ADDR_KICK_KEEP_T3, para_set_value.data.recv_kick_keep_delay_t[2]);	//make sure  the return one
 		Writekick_value();
 		break;
 	case ADDR_MOTOR_IDLE_T:  //
@@ -818,7 +812,7 @@ void touchresult(void)      //根据接收到的  数 来决定 执行的任务
 			if (addr == pre_value.coin[i].data.hmi_pre_count_set_addr){
 				*pre_value.coin[i].data.p_pre_count_set =  (int)(touchnum[7]*256 )+(int)touchnum[8];
 				if (para_set_value.data.system_mode == 0){
-					para_set_value.data.precoin_set_num[pre_value.coin[i].data.coin_type_id] = *pre_value.coin[i].data.p_pre_count_set;
+					para_set_value.data.precoin_set_num[pre_value.coin[i].data.coin_kick_id] = *pre_value.coin[i].data.p_pre_count_set;
 					write_para (); //写入预置值
 				}
 
@@ -883,45 +877,45 @@ void touchresult(void)      //根据接收到的  数 来决定 执行的任务
 				}
 				break;
 			case 0x07://踢币电磁铁0
-				pulse_time = para_set_value.data.kick_start_delay_t0; //kick_start_delay_time*0.1ms
+				pulse_time = para_set_value.data.ng_kick_start_delay_t; //recv_kick_start_delay_time*0.1ms
 				dgus_tf1word(ADDR_KICK1_M,1);
 				while(pulse_time != 0){;}
 				EMKICK0(STARTRUN);	  // kick out
 				cy_println ("kick0 start");
-				pulse_time = para_set_value.data.kick_keep_t0;	  //kick_keep_time*0.1ms
+				pulse_time = para_set_value.data.ng_kick_keep_delay_t;	  //kick_keep_time*0.1ms
 				while(pulse_time != 0){;}
 				EMKICK0(STOPRUN);	  // kick in
 				cy_println ("kick0 stop");
 				dgus_tf1word(ADDR_KICK1_M,0);
 				break;
 			case 0x08://踢币电磁铁1
-				pulse_time = para_set_value.data.kick_start_delay_t[0]*10; //kick_start_delay_time*0.1ms
+				pulse_time = para_set_value.data.recv_kick_start_delay_t[0]*10; //recv_kick_start_delay_time*0.1ms
 				dgus_tf1word(ADDR_KICK2_M,1);
 				while(pulse_time != 0){;}
 				EMKICK1(STARTRUN);	  // kick out
 				cy_println ("kick1 start");
-				pulse_time = para_set_value.data.kick_keep_t[0];	  //kick_keep_time*0.1ms
+				pulse_time = para_set_value.data.recv_kick_keep_delay_t[0];	  //kick_keep_time*0.1ms
 				while(pulse_time != 0){;}
 				EMKICK1(STOPRUN);	  // kick in
 				cy_println ("kick1 stop");
 				dgus_tf1word(ADDR_KICK2_M,0);
 				break;
 			case 0x09://踢币电磁铁2
-				pulse_time = para_set_value.data.kick_start_delay_t[2]*10; //kick_start_delay_time*0.1ms
+				pulse_time = para_set_value.data.recv_kick_start_delay_t[1]*10; //recv_kick_start_delay_time*0.1ms
 				while(pulse_time != 0){;}
 				EMKICK2(STARTRUN);	  // kick out
 				cy_println ("kick2 start");
-				pulse_time = para_set_value.data.kick_keep_t[2];	  //kick_keep_time*0.1ms
+				pulse_time = para_set_value.data.recv_kick_keep_delay_t[1];	  //kick_keep_time*0.1ms
 				while(pulse_time != 0){;}
 				EMKICK2(STOPRUN);	  // kick in
 				cy_println ("kick2 stop");
 				break;
 			case 0x0a://踢币电磁铁3
-				pulse_time = para_set_value.data.kick_start_delay_t[4]*10; //kick_start_delay_time*0.1ms
+				pulse_time = para_set_value.data.recv_kick_start_delay_t[2]*10; //recv_kick_start_delay_time*0.1ms
 				while(pulse_time != 0){;}
 				EMKICK3(STARTRUN);	  // kick out
 				cy_println ("kick3 start");
-				pulse_time = para_set_value.data.kick_keep_t[4];	  //kick_keep_time*0.1ms
+				pulse_time = para_set_value.data.recv_kick_keep_delay_t[2];	  //kick_keep_time*0.1ms
 				while(pulse_time != 0){;}
 				EMKICK3(STOPRUN);	  // kick in
 				cy_println ("kick3 stop");
@@ -997,7 +991,7 @@ void change_coin_mode (uint16_t value)
 	para_set_value.data.system_mode = value;
 	for (i = 0; i < COIN_TYPE_NUM; i++){
 		if (value == 0x00){
-			set_data = para_set_value.data.precoin_set_num[pre_value.coin[i].data.coin_type_id];//预置计数设置值初始化
+			set_data = para_set_value.data.precoin_set_num[pre_value.coin[i].data.coin_kick_id];//预置计数设置值初始化
 		}else{
 			set_data = 9999;
 		}

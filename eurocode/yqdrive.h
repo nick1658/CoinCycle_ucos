@@ -100,7 +100,7 @@
 	coin_env.kick_Q[N]--; \
 	if (coin_env.kick_Q[N] == 0){ \
 		EMKICK0(STARTRUN);	  \
-		coin_env.kick_keep_t0 = para_set_value.data.kick_keep_t0;\
+		coin_env.ng_kick_keep_delay_t = para_set_value.data.ng_kick_keep_delay_t;\
 	}\
 }
 //
@@ -108,14 +108,14 @@
 	coin_env.recv_kick_Q[M][N]--; \
 	if (coin_env.recv_kick_Q[M][N] == 0){ \
 		(*coin_env.p_coin_recv_func[M])(); \
-		coin_env.recv_kick_keep_t[M] = para_set_value.data.kick_keep_t[M];\
+		coin_env.recv_kick_keep_t[M] = para_set_value.data.recv_kick_keep_delay_t[M];\
 	}\
 }
 //
 #define KICK_KEEP_SCAN() { \
-	if (coin_env.kick_keep_t0 > 0){ \
-		coin_env.kick_keep_t0--; \
-		if (coin_env.kick_keep_t0 == 0){ \
+	if (coin_env.ng_kick_keep_delay_t > 0){ \
+		coin_env.ng_kick_keep_delay_t--; \
+		if (coin_env.ng_kick_keep_delay_t == 0){ \
 			EMKICK0(STOPRUN); \
 		} \
 	} \

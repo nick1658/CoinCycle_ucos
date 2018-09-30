@@ -123,10 +123,8 @@ typedef struct
 	uint32_t total_money;
 	uint32_t total_good;
 	uint32_t total_ng;
-	uint16_t kick_start_delay_t0;
-	uint16_t kick_keep_t0;
-	uint16_t kick_start_delay_t1;
-	uint16_t kick_keep_t1;
+	uint16_t ng_kick_start_delay_t;
+	uint16_t ng_kick_keep_delay_t;
 	uint16_t motor_idle_t;
 	uint16_t pre_count_stop_n;
 	uint16_t coin_full_rej_pos;
@@ -136,8 +134,8 @@ typedef struct
 	uint32_t coin_size;
 	uint32_t coin_push_size;
 	uint32_t coin_h;
-	uint16_t kick_start_delay_t[COIN_TYPE_NUM];
-	uint16_t kick_keep_t[COIN_TYPE_NUM];
+	uint16_t recv_kick_start_delay_t[COIN_TYPE_NUM];
+	uint16_t recv_kick_keep_delay_t[COIN_TYPE_NUM];
 	uint16_t hopper_pulse;
 	volatile uint32_t hopper_dispense_num[HOPPER_NUM];
 	volatile uint32_t hopper_balance[HOPPER_NUM];
@@ -179,8 +177,8 @@ typedef struct
 	volatile uint32_t * p_hopper_balance_cur;
 	volatile uint32_t * p_coin_current_receive;
 	uint32_t * p_pre_count_full_flag;
-	uint32_t * p_coinval;
-	uint32_t coin_type_id;
+	uint8_t coin_kick_id;
+	uint8_t can_payout;
 	uint32_t accept;
 	uint16_t hmi_pre_count_set_addr;
 	uint16_t money;

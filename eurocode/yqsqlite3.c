@@ -110,20 +110,27 @@ void initial_nandflash(void)    //nandflash
 		para_set_value.data.db_total_item_num = 0;
 		para_set_value.data.op_id = 0;
 		para_set_value.data.rej_level = 0;
-		para_set_value.data.kick_start_delay_t0 = 1;
-		para_set_value.data.kick_keep_t0 = 80;
+		para_set_value.data.ng_kick_start_delay_t = 3;
+		para_set_value.data.ng_kick_keep_delay_t = 200;
 		para_set_value.data.coin_full_rej_pos = 1;
 		para_set_value.data.motor_idle_t = 400;
 		para_set_value.data.adj_offset_position = 4096;
 		para_set_value.data.pre_count_stop_n = 1;
-		para_set_value.data.system_boot_delay = 0;
+		para_set_value.data.system_boot_delay = 1;
 		para_set_value.data.system_mode = 1;
 
 		for (i = 0; i < COIN_TYPE_NUM; i++){
-			para_set_value.data.precoin_set_num[i] = 50;
-			para_set_value.data.kick_start_delay_t[i] = 1;
-			para_set_value.data.kick_keep_t[i] = 80;
+			para_set_value.data.precoin_set_num[i] = 300;
+			para_set_value.data.recv_kick_start_delay_t[i] = 0;
+			para_set_value.data.recv_kick_keep_delay_t[i] = 200;
 		}
+		
+		para_set_value.data.recv_kick_start_delay_t[0] = 6;
+		para_set_value.data.recv_kick_keep_delay_t[0] = 200;
+		para_set_value.data.recv_kick_start_delay_t[1] = 9;
+		para_set_value.data.recv_kick_keep_delay_t[1] = 150;
+		para_set_value.data.recv_kick_start_delay_t[2] = 12;
+		para_set_value.data.recv_kick_keep_delay_t[2] = 150;
 
 		test_erase_r_code (Nand_EraseBlock(PUBULIC_DATA_START_BLOCK_NUM ));
 		cy_println ("erase block %d completed", PUBULIC_DATA_START_BLOCK_NUM);
@@ -219,25 +226,44 @@ void read_coin_value(void) 	 // read  COIN  0--8
 	pre_value.coin[7].data.money = MONEY_0_02; //两分
 	pre_value.coin[8].data.money = MONEY_0_01; //一分
 	pre_value.coin[9].data.money = MONEY_10_00; //纪念币10元
-	pre_value.coin[10].data.money = MONEY_5_00; //纪念币5元
+	pre_value.coin[10].data.money = MONEY_5_00;
 
-	//映射预置计数值
-	pre_value.coin[0].data.coin_type_id = 0;
-	pre_value.coin[1].data.coin_type_id = 1;
-	pre_value.coin[2].data.coin_type_id = 1;
-	pre_value.coin[3].data.coin_type_id = 2;//大1角
-	pre_value.coin[4].data.coin_type_id = 2;
-	pre_value.coin[5].data.coin_type_id = 2;
-	pre_value.coin[6].data.coin_type_id = 3;
-	pre_value.coin[7].data.coin_type_id = 4;
-	pre_value.coin[8].data.coin_type_id = 5;
-	pre_value.coin[9].data.coin_type_id = 6;
-	pre_value.coin[10].data.coin_type_id = 7;
+	//设置硬币收币Hopper ID号
+	pre_value.coin[0].data.coin_kick_id = 0;
+	pre_value.coin[1].data.coin_kick_id = 1;
+	pre_value.coin[2].data.coin_kick_id = 1;
+	pre_value.coin[3].data.coin_kick_id = 2;//大1角
+	pre_value.coin[4].data.coin_kick_id = 2;
+	pre_value.coin[5].data.coin_kick_id = 2;
+	pre_value.coin[6].data.coin_kick_id = 6;
+	pre_value.coin[7].data.coin_kick_id = 7;
+	pre_value.coin[8].data.coin_kick_id = 8;
+	pre_value.coin[9].data.coin_kick_id = 9;
+	pre_value.coin[10].data.coin_kick_id = 10;
+	
+	//设置硬币可找零标志，0表示不可找零，进回收箱
+	pre_value.coin[0].data.can_payout = 1; //一元
+	pre_value.coin[1].data.can_payout = 1; //五角铜
+	pre_value.coin[2].data.can_payout = 1; //五角钢
+	pre_value.coin[3].data.can_payout = 0; //大1角
+	pre_value.coin[4].data.can_payout = 1; //一角小钢
+	pre_value.coin[5].data.can_payout = 0; //一角小铝
+	pre_value.coin[6].data.can_payout = 0; //五分
+	pre_value.coin[7].data.can_payout = 0; //两分
+	pre_value.coin[8].data.can_payout = 0; //一分
+	pre_value.coin[9].data.can_payout = 0; //纪念币10元
+	pre_value.coin[10].data.can_payout = 0; //纪念币5元
 	
 	for (i = 0; i < COIN_RECV_KICK_NUM; i++){	
 		coin_env.p_coin_recv_func[i] = coin_null_func;
 		coin_env.p_coin_kick_keep_func[i] = coin_null_func;
 	}
+	
+		
+	para_set_value.data.ng_kick_start_delay_t = 3;
+	para_set_value.data.recv_kick_start_delay_t[0] = 6;
+	para_set_value.data.recv_kick_start_delay_t[1] = 9;
+	para_set_value.data.recv_kick_start_delay_t[2] = 12;
 	//映射收币函数
 	coin_env.p_coin_recv_func[0] = coin_recv1_out_func;
 	coin_env.p_coin_recv_func[1] = coin_recv2_out_func;
@@ -263,17 +289,16 @@ void read_coin_value(void) 	 // read  COIN  0--8
 
 	for (i = 0; i < COIN_TYPE_NUM; i++)
 	{
-		//count_coin_temp[pre_value.coin[i].data.coin_type_id].pre_count_set = 50;
+		//count_coin_temp[pre_value.coin[i].data.coin_kick_id].pre_count_set = 50;
 		//para_set_value.data.precoin_set_num[i] = 50;
 		pre_value.coin[i].data.p_count_cur = &null_value;
 		pre_value.coin[i].data.p_hopper_balance_cur = &null_value;
 		pre_value.coin[i].data.p_coin_current_receive = &null_value;
 		
-		pre_value.coin[i].data.p_pre_count_set 	= &count_coin_temp[pre_value.coin[i].data.coin_type_id].pre_count_set;//预置计数设置值
-		pre_value.coin[i].data.p_pre_count_full_flag = &count_coin_temp[pre_value.coin[i].data.coin_type_id].full_flag;//预置计数到达标志
-		pre_value.coin[i].data.p_coinval = &count_coin_temp[pre_value.coin[i].data.coin_type_id].coinval;//包装卷数
+		pre_value.coin[i].data.p_pre_count_set 	= &count_coin_temp[pre_value.coin[i].data.coin_kick_id].pre_count_set;//预置计数设置值
+		pre_value.coin[i].data.p_pre_count_full_flag = &count_coin_temp[pre_value.coin[i].data.coin_kick_id].full_flag;//预置计数到达标志
 
-		*pre_value.coin[i].data.p_pre_count_set = para_set_value.data.precoin_set_num[pre_value.coin[i].data.coin_type_id];//预置计数设置值初始化
+		*pre_value.coin[i].data.p_pre_count_set = para_set_value.data.precoin_set_num[pre_value.coin[i].data.coin_kick_id];//预置计数设置值初始化
 		*pre_value.coin[i].data.p_pre_count_full_flag = 0;//预置计数到达标志清零
 	}
 	pre_value.coin[0].data.p_count_cur = &para_set_value.data.coin_total_num[0];//
@@ -286,7 +311,6 @@ void read_coin_value(void) 	 // read  COIN  0--8
 	pre_value.coin[1].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[1];//
 	pre_value.coin[2].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[1];//
 	pre_value.coin[4].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[2];//
-	//pre_value.coin[5].data.p_hopper_balance_cur = &para_set_value.data.hopper_balance[2];//
 	pre_value.coin[0].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[0];//
 	pre_value.coin[1].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[1];//
 	pre_value.coin[2].data.p_coin_current_receive = &para_set_value.data.coin_current_receive[1];//
@@ -312,14 +336,14 @@ void ini_screen (void)
 	//cy_println ("%s", __FUNCTION__);
 	dgus_tf1word(ADDR_CNCH,coinchoose);  //国家币种图标变量
 	dgus_tf1word(ADDR_PGH1,para_set_value.data.coin_full_rej_pos);   // 真币剔除工号
-	dgus_tf1word(ADDR_KICK_DELAY_T0, para_set_value.data.kick_start_delay_t0);	//第一个踢币延时时间
-	dgus_tf1word(ADDR_KICK_KEEP_T0, para_set_value.data.kick_keep_t0);	//第一个踢币保持时间
-	dgus_tf1word(ADDR_KICK_DELAY_T1, para_set_value.data.kick_start_delay_t[0]);	//第二个踢币延时时间
-	dgus_tf1word(ADDR_KICK_KEEP_T1, para_set_value.data.kick_keep_t[0]);	//第二个踢币保持时间
-	dgus_tf1word(ADDR_KICK_DELAY_T2, para_set_value.data.kick_start_delay_t[2]);	//第三个踢币延时时间
-	dgus_tf1word(ADDR_KICK_KEEP_T2, para_set_value.data.kick_keep_t[2]);	//第三个踢币保持时间
-	dgus_tf1word(ADDR_KICK_DELAY_T3, para_set_value.data.kick_start_delay_t[4]);	//第四个踢币延时时间
-	dgus_tf1word(ADDR_KICK_KEEP_T3, para_set_value.data.kick_keep_t[4]);	//第四个踢币保持时间
+	dgus_tf1word(ADDR_KICK_DELAY_T0, para_set_value.data.ng_kick_start_delay_t);	//第一个踢币延时时间
+	dgus_tf1word(ADDR_KICK_KEEP_T0, para_set_value.data.ng_kick_keep_delay_t);	//第一个踢币保持时间
+	dgus_tf1word(ADDR_KICK_DELAY_T1, para_set_value.data.recv_kick_start_delay_t[0]);	//第二个踢币延时时间
+	dgus_tf1word(ADDR_KICK_KEEP_T1, para_set_value.data.recv_kick_keep_delay_t[0]);	//第二个踢币保持时间
+	dgus_tf1word(ADDR_KICK_DELAY_T2, para_set_value.data.recv_kick_start_delay_t[1]);	//第三个踢币延时时间
+	dgus_tf1word(ADDR_KICK_KEEP_T2, para_set_value.data.recv_kick_keep_delay_t[1]);	//第三个踢币保持时间
+	dgus_tf1word(ADDR_KICK_DELAY_T3, para_set_value.data.recv_kick_start_delay_t[2]);	//第四个踢币延时时间
+	dgus_tf1word(ADDR_KICK_KEEP_T3, para_set_value.data.recv_kick_keep_delay_t[2]);	//第四个踢币保持时间
 	dgus_tf1word(ADDR_MOTOR_IDLE_T, para_set_value.data.motor_idle_t);	//无币空转等待时间
 	dgus_tf1word(ADDR_PRE_COUNT_STOP_N, para_set_value.data.pre_count_stop_n);	//满币停机数，设置为1则任意一种硬币达到预置数就停机
 	dgus_tf1word(ADDR_LEVEL100, pre_value.coin[0].data.offsetmax0);	//清分等级
@@ -355,11 +379,11 @@ void ini_screen (void)
 					pre_value.coin[sys_env.coin_index].data.max2,pre_value.coin[sys_env.coin_index].data.min2);	//initial addr on zixuexi jiemian value
 
 
-	para_set_value.data.system_mode = 0;//清分模式
+	para_set_value.data.system_mode = 0;//预置数模式
 	dgus_tf1word(ADDR_MODE, para_set_value.data.system_mode);
 	for (i = 0; i < COIN_TYPE_NUM; i++){
 		if (para_set_value.data.system_mode == 0){
-			*pre_value.coin[i].data.p_pre_count_set = para_set_value.data.precoin_set_num[pre_value.coin[i].data.coin_type_id];
+			*pre_value.coin[i].data.p_pre_count_set = para_set_value.data.precoin_set_num[pre_value.coin[i].data.coin_kick_id];
 		}else{
 			*pre_value.coin[i].data.p_pre_count_set = 9999;
 		}

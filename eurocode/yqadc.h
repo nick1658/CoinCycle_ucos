@@ -48,7 +48,7 @@ typedef struct
 	uint16_t full_coin_stack[COIN_TYPE_NUM]; //Âú±Ò¶ÑÕ»
 	uint16_t kick_remain;
 	uint16_t kick_total;
-	uint16_t kick_keep_t0;
+	uint16_t ng_kick_keep_delay_t;
 	uint16_t kick_Q[KICK_Q_LEN];//ÌÞ³ý¶ÓÁÐ
 	uint16_t kick_Q_index;
 	uint16_t full_kick_remain;

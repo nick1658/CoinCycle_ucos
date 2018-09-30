@@ -593,16 +593,16 @@ int get_hex_data (char * buf)
 				switch (p_hex.addr)
 				{
 					case 1:
-						para_set_value.data.kick_start_delay_t0 = para_value;
+						para_set_value.data.ng_kick_start_delay_t = para_value;
 						break;
 					case 2:
-						para_set_value.data.kick_keep_t0 = para_value;
+						para_set_value.data.ng_kick_keep_delay_t = para_value;
 						break;
 					case 3:
-						para_set_value.data.kick_start_delay_t[0] = para_value;
+						para_set_value.data.recv_kick_start_delay_t[0] = para_value;
 						break;
 					case 4:
-						para_set_value.data.kick_keep_t[0] = para_value;
+						para_set_value.data.recv_kick_keep_delay_t[0] = para_value;
 						break;
 					case 5:
 						para_set_value.data.precoin_set_num[0] = para_value;
@@ -611,22 +611,22 @@ int get_hex_data (char * buf)
 						para_set_value.data.precoin_set_num[1] = para_value;
 						break;
 					case 7:
-						para_set_value.data.precoin_set_num[4] = para_value;
+						para_set_value.data.precoin_set_num[2] = para_value;
 						break;
 					case 8:
-						para_set_value.data.precoin_set_num[6] = para_value;
+						para_set_value.data.precoin_set_num[3] = para_value;
 						break;
 					case 9:
-						para_set_value.data.precoin_set_num[7] = para_value;
+						para_set_value.data.precoin_set_num[4] = para_value;
 						break;
 					case 10:
-						para_set_value.data.precoin_set_num[8] = para_value;
+						para_set_value.data.precoin_set_num[5] = para_value;
 						break;
 					case 11:
-						para_set_value.data.precoin_set_num[9] = para_value;
+						para_set_value.data.precoin_set_num[6] = para_value;
 						break;
 					case 12:
-						para_set_value.data.precoin_set_num[10] = para_value;
+						para_set_value.data.precoin_set_num[7] = para_value;
 						break;
 					case 22:
 						para_set_value.data.motor_idle_t = para_value;
@@ -644,7 +644,7 @@ int get_hex_data (char * buf)
 						para_set_value.data.system_mode = para_value;
 						break;
 					case 27:
-						para_set_value.data.precoin_set_num[3] = para_value;
+						para_set_value.data.precoin_set_num[2] = para_value;
 						break;
 					case 51:
 						sys_env.coin_index = para_value;
@@ -668,22 +668,16 @@ int get_hex_data (char * buf)
 						pre_value.coin[sys_env.coin_index].data.min2 = para_value;
 						break;
 					case 60:
-						para_set_value.data.kick_start_delay_t[1] = para_value;
-						para_set_value.data.kick_start_delay_t[2] = para_value;
+						para_set_value.data.recv_kick_start_delay_t[1] = para_value;
 						break;
 					case 61:
-						para_set_value.data.kick_keep_t[1] = para_value;
-						para_set_value.data.kick_keep_t[2] = para_value;
+						para_set_value.data.recv_kick_keep_delay_t[1] = para_value;
 						break;
 					case 62:
-						para_set_value.data.kick_start_delay_t[3] = para_value;
-						para_set_value.data.kick_start_delay_t[4] = para_value;
-						para_set_value.data.kick_start_delay_t[5] = para_value;
+						para_set_value.data.recv_kick_start_delay_t[2] = para_value;
 						break;
 					case 63:
-						para_set_value.data.kick_keep_t[3] = para_value;
-						para_set_value.data.kick_keep_t[4] = para_value;
-						para_set_value.data.kick_keep_t[5] = para_value;
+						para_set_value.data.recv_kick_keep_delay_t[2] = para_value;
 						break;
 					case 64://æ‹ ’…Ë÷√
 						break;
@@ -1215,10 +1209,10 @@ void coin_print (void)
 
 void refresh_data (void)
 {
-	pc_print("%d,%d;",1, para_set_value.data.kick_start_delay_t0);
-	pc_print("%d,%d;",2, para_set_value.data.kick_keep_t0);
-	pc_print("%d,%d;",3, para_set_value.data.kick_start_delay_t[0]);
-	pc_print("%d,%d;",4, para_set_value.data.kick_keep_t[0]);
+	pc_print("%d,%d;",1, para_set_value.data.ng_kick_start_delay_t);
+	pc_print("%d,%d;",2, para_set_value.data.ng_kick_keep_delay_t);
+	pc_print("%d,%d;",3, para_set_value.data.recv_kick_start_delay_t[0]);
+	pc_print("%d,%d;",4, para_set_value.data.recv_kick_keep_delay_t[0]);
 	pc_print("%d,%d;",5, *pre_value.coin[0].data.p_pre_count_set);
 	pc_print("%d,%d;",6, *pre_value.coin[1].data.p_pre_count_set);
 	pc_print("%d,%d;",7, *pre_value.coin[4].data.p_pre_count_set);
@@ -1240,10 +1234,10 @@ void refresh_data (void)
 	pc_print("%d,%d;",55, pre_value.coin[sys_env.coin_index].data.min1);
 	pc_print("%d,%d;",56, pre_value.coin[sys_env.coin_index].data.max2);
 	pc_print("%d,%d;",57, pre_value.coin[sys_env.coin_index].data.min2);
-	pc_print("%d,%d;",60, para_set_value.data.kick_start_delay_t[1]);
-	pc_print("%d,%d;",61, para_set_value.data.kick_keep_t[1]);
-	pc_print("%d,%d;",62, para_set_value.data.kick_start_delay_t[4]);
-	pc_print("%d,%d;",63, para_set_value.data.kick_keep_t[4]);
+	pc_print("%d,%d;",60, para_set_value.data.recv_kick_start_delay_t[1]);
+	pc_print("%d,%d;",61, para_set_value.data.recv_kick_keep_delay_t[1]);
+	pc_print("%d,%d;",62, para_set_value.data.recv_kick_start_delay_t[2]);
+	pc_print("%d,%d;",63, para_set_value.data.recv_kick_keep_delay_t[2]);
 	disp_allcount_to_pc ();
 }
 
@@ -1380,42 +1374,36 @@ void set_para_2  (int32_t arg[])
 		cy_println("set sys_env.workstep = %d", arg[1]);
 		sys_env.workstep = arg[1];
 	}else if (arg[0] == string_to_dec((uint8 *)("kick-start0"))){
-		cy_println("set kick_start_delay_time0 = %d", arg[1]);
-		para_set_value.data.kick_start_delay_t0 = arg[1];
+		cy_println("set recv_kick_start_delay_time0 = %d", arg[1]);
+		para_set_value.data.ng_kick_start_delay_t = arg[1];
 		write_para ();
 	}else if (arg[0] == string_to_dec((uint8 *)("kick-keep0"))){
 		cy_println("set kick_keep_time0 = %d", arg[1]);
-		para_set_value.data.kick_keep_t0 = arg[1];
+		para_set_value.data.ng_kick_keep_delay_t = arg[1];
 		write_para ();
 	}else if (arg[0] == string_to_dec((uint8 *)("kick-start1"))){
-		cy_println("set kick_start_delay_time1 = %d", arg[1]);
-		para_set_value.data.kick_start_delay_t[0] = arg[1];
+		cy_println("set recv_kick_start_delay_time1 = %d", arg[1]);
+		para_set_value.data.recv_kick_start_delay_t[0] = arg[1];
 		write_para ();
 	}else if (arg[0] == string_to_dec((uint8 *)("kick-keep1"))){
 		cy_println("set kick_keep_time1 = %d", arg[1]);
-		para_set_value.data.kick_keep_t[0] = arg[1];
+		para_set_value.data.recv_kick_keep_delay_t[0] = arg[1];
 		write_para ();
 	}else if (arg[0] == string_to_dec((uint8 *)("kick-start2"))){
-		cy_println("set kick_start_delay_time2 = %d", arg[1]);
-		para_set_value.data.kick_start_delay_t[1] = arg[1];
-		para_set_value.data.kick_start_delay_t[2] = arg[1];
+		cy_println("set recv_kick_start_delay_time2 = %d", arg[1]);
+		para_set_value.data.recv_kick_start_delay_t[1] = arg[1];
 		write_para ();
 	}else if (arg[0] == string_to_dec((uint8 *)("kick-keep2"))){
 		cy_println("set kick_keep_time2 = %d", arg[1]);
-		para_set_value.data.kick_keep_t[1] = arg[1];
-		para_set_value.data.kick_keep_t[2] = arg[1];
+		para_set_value.data.recv_kick_keep_delay_t[1] = arg[1];
 		write_para ();
 	}else if (arg[0] == string_to_dec((uint8 *)("kick-start3"))){
-		cy_println("set kick_start_delay_time2 = %d", arg[1]);
-		para_set_value.data.kick_start_delay_t[3] = arg[1];
-		para_set_value.data.kick_start_delay_t[4] = arg[1];
-		para_set_value.data.kick_start_delay_t[5] = arg[1];
+		cy_println("set recv_kick_start_delay_time2 = %d", arg[1]);
+		para_set_value.data.recv_kick_start_delay_t[2] = arg[1];
 		write_para ();
 	}else if (arg[0] == string_to_dec((uint8 *)("kick-keep3"))){
 		cy_println("set kick_keep_time3 = %d", arg[1]);
-		para_set_value.data.kick_keep_t[3] = arg[1];
-		para_set_value.data.kick_keep_t[4] = arg[1];
-		para_set_value.data.kick_keep_t[5] = arg[1];
+		para_set_value.data.recv_kick_keep_delay_t[2] = arg[1];
 		write_para ();
 	}else if (arg[0] == string_to_dec((uint8 *)("hopper-pulse"))){
 		cy_println("set hopper_pulse = %d", arg[1]);
@@ -1861,14 +1849,14 @@ void print_system_env_info (void)
 	cy_println ("system_mode            = %d", para_set_value.data.system_mode);
 	cy_println ("coin_cross_time        = %d", sys_env.coin_cross_time);
 	cy_println("----------------------------------------------------");
-	cy_println ("kick_start_delay_time0 = %d", para_set_value.data.kick_start_delay_t0);
-	cy_println ("kick_keep_time0        = %d", para_set_value.data.kick_keep_t0);
-	cy_println ("kick_start_delay_time1 = %d", para_set_value.data.kick_start_delay_t[0]);
-	cy_println ("kick_keep_time1        = %d", para_set_value.data.kick_keep_t[0]);
-	cy_println ("kick_start_delay_time2 = %d", para_set_value.data.kick_start_delay_t[2]);
-	cy_println ("kick_keep_time2        = %d", para_set_value.data.kick_keep_t[2]);
-	cy_println ("kick_start_delay_time3 = %d", para_set_value.data.kick_start_delay_t[4]);
-	cy_println ("kick_keep_time3        = %d", para_set_value.data.kick_keep_t[4]);
+	cy_println ("ng_kick_start_delay_time       = %d", para_set_value.data.ng_kick_start_delay_t);
+	cy_println ("ng_kick_keep_delay_time        = %d", para_set_value.data.ng_kick_keep_delay_t);
+	cy_println ("recv_kick_start_delay_time0    = %d", para_set_value.data.recv_kick_start_delay_t[0]);
+	cy_println ("recv_kick_keep_delay_time0     = %d", para_set_value.data.recv_kick_keep_delay_t[0]);
+	cy_println ("recv_kick_start_delay_time1    = %d", para_set_value.data.recv_kick_start_delay_t[1]);
+	cy_println ("recv_kick_keep_delay_time1     = %d", para_set_value.data.recv_kick_keep_delay_t[1]);
+	cy_println ("recv_kick_start_delay_time2    = %d", para_set_value.data.recv_kick_start_delay_t[2]);
+	cy_println ("recv_kick_keep_delay_time2     = %d", para_set_value.data.recv_kick_keep_delay_t[2]);
 	cy_println("----------------------------------------------------");
 	cy_println ("pre_count_stop_n       = %d", para_set_value.data.pre_count_stop_n);
 	cy_println ("coin_full_rej_pos      = %d", para_set_value.data.coin_full_rej_pos);

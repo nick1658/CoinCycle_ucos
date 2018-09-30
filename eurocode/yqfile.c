@@ -124,18 +124,18 @@ void print_func(void)     // 打印
 			Uart1_Printf("   本次清分:\r\n");
 //			Uart1_Printf("   广州畅阳电子科技有限公司\r\n\r\n");
 		}else{//包装模式
-			Uart1_Printf(" 大1角     %4d     %d\r\n",*pre_value.coin[3].data.p_coinval, *pre_value.coin[3].data.p_coinval * 5);
-			Uart1_Printf("   1角     %4d     %d\r\n",*pre_value.coin[4].data.p_coinval, *pre_value.coin[4].data.p_coinval * 5);
-			Uart1_Printf("   5角     %4d     %d\r\n",*pre_value.coin[1].data.p_coinval, *pre_value.coin[1].data.p_coinval * 25);
-			Uart1_Printf("   1元     %4d     %d\r\n",*pre_value.coin[0].data.p_coinval, *pre_value.coin[0].data.p_coinval * 50);
-			Uart1_Printf("   币种  数量(卷)  金额(元)\r\n");
-			Uart1_Printf("   详细信息:  \r\n");
-			Uart1_Printf("\r\n");
-			Uart1_Printf("   总金额:     %d.%d%d 元\n",(processed_coin_info.total_money/100),((processed_coin_info.total_money%100)/10),((processed_coin_info.total_money%100)%10));
-			Uart1_Printf("   总  数:     %d 枚\r\n",processed_coin_info.total_good);
+//			Uart1_Printf(" 大1角     %4d     %d\r\n",*pre_value.coin[3].data.p_coinval, *pre_value.coin[3].data.p_coinval * 5);
+//  		Uart1_Printf("   1角     %4d     %d\r\n",*pre_value.coin[4].data.p_coinval, *pre_value.coin[4].data.p_coinval * 5);
+//			Uart1_Printf("   5角     %4d     %d\r\n",*pre_value.coin[1].data.p_coinval, *pre_value.coin[1].data.p_coinval * 25);
+//			Uart1_Printf("   1元     %4d     %d\r\n",*pre_value.coin[0].data.p_coinval, *pre_value.coin[0].data.p_coinval * 50);
+//			Uart1_Printf("   币种  数量(卷)  金额(元)\r\n");
+//			Uart1_Printf("   详细信息:  \r\n");
+//			Uart1_Printf("\r\n");
+//			Uart1_Printf("   总金额:     %d.%d%d 元\n",(processed_coin_info.total_money/100),((processed_coin_info.total_money%100)/10),((processed_coin_info.total_money%100)%10));
+//			Uart1_Printf("   总  数:     %d 枚\r\n",processed_coin_info.total_good);
 			//Uart1_Printf("   结束时间:20%02d-%02d-%02d %02d:%02d:%02d\r\n",18,4,25,14,37,51);
 			//Uart1_Printf("   开始时间:20%02d-%02d-%02d %02d:%02d:%02d\r\n",18,4,25,14,36,46);
-			Uart1_Printf("   本次清分:\r\n");
+//			Uart1_Printf("   本次清分:\r\n");
 			//Uart1_Printf("   广州畅阳电子科技有限公司\r\n\r\n");
 		}
 	}

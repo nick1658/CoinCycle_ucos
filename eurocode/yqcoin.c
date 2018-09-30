@@ -135,6 +135,7 @@ void coin_null_func(void)
 void cy_precoincount(void)
 {
 	int16_t good_coin = -1;
+	uint8_t kick_id = 0;
 	if ( (ch0_pre_count != ch0_count) ){	//mean there is a coin come
 		ch0_pre_count = ch0_count;
 		processed_coin_info.coinnumber++;
@@ -144,7 +145,7 @@ void cy_precoincount(void)
 		if ((good_coin < 0) || (coin_env.inhibit_coin[good_coin] == 0) || (coin_env.cycle_box_full == 1)){ //假币或者不接受此类硬币，剔除出来
 			if (coin_env.kick_Q[coin_env.kick_Q_index] == 0){
 				processed_coin_info.total_ng++;
-				coin_env.kick_Q[coin_env.kick_Q_index] = para_set_value.data.kick_start_delay_t0;
+				coin_env.kick_Q[coin_env.kick_Q_index] = para_set_value.data.ng_kick_start_delay_t;
 				coin_env.kick_Q_index++;
 				coin_env.kick_Q_index %= KICK_Q_LEN;
 			}else{//剔除工位1队列追尾错误
@@ -156,20 +157,23 @@ void cy_precoincount(void)
 			(*(pre_value.coin[good_coin].data.p_coin_current_receive))++;
 			processed_coin_info.total_money += pre_value.coin[good_coin].data.money;
 			processed_coin_info.total_good++;
-			if (*pre_value.coin[good_coin].data.p_pre_count_full_flag == 0){//
-				if((*(pre_value.coin[good_coin].data.p_hopper_balance_cur)) < 5000){
-					(*(pre_value.coin[good_coin].data.p_hopper_balance_cur))++;
-				}
-				if( *(pre_value.coin[good_coin].data.p_hopper_balance_cur) >= *(pre_value.coin[good_coin].data.p_pre_count_set)){// 当前的币种  数量 达到其预置值
-					*pre_value.coin[good_coin].data.p_pre_count_full_flag = 1; //此类硬币预置数到，做个标记
-				}
-				if (coin_env.recv_kick_Q[good_coin][coin_env.recv_kick_Q_index[good_coin]] == 0){
-					coin_env.recv_kick_Q[good_coin][coin_env.recv_kick_Q_index[good_coin]] = para_set_value.data.kick_start_delay_t[good_coin];
-					coin_env.recv_kick_Q_index[good_coin]++;
-					coin_env.recv_kick_Q_index[good_coin] %= RECV_KICK_Q_LEN;
-				}else{//收币队列追尾错误
-					SEND_ERROR(KICK2COINERROR);
-					dbg ("recv kick coin %d error alertflag = %d %s, %d", good_coin, KICK2COINERROR,  __FILE__, __LINE__);
+			if (pre_value.coin[good_coin].data.can_payout == 1){//
+				if (*pre_value.coin[good_coin].data.p_pre_count_full_flag == 0){
+					if((*(pre_value.coin[good_coin].data.p_hopper_balance_cur)) < 5000){
+						(*(pre_value.coin[good_coin].data.p_hopper_balance_cur))++;
+					}
+					if( *(pre_value.coin[good_coin].data.p_hopper_balance_cur) >= *(pre_value.coin[good_coin].data.p_pre_count_set)){// 当前的币种  数量 达到其预置值
+						*pre_value.coin[good_coin].data.p_pre_count_full_flag = 1; //此类硬币预置数到，做个标记
+					}	
+					kick_id = pre_value.coin[good_coin].data.coin_kick_id;
+					if (coin_env.recv_kick_Q[kick_id][coin_env.recv_kick_Q_index[kick_id]] == 0){
+						coin_env.recv_kick_Q[kick_id][coin_env.recv_kick_Q_index[kick_id]] = para_set_value.data.recv_kick_start_delay_t[kick_id];
+						coin_env.recv_kick_Q_index[kick_id]++;
+						coin_env.recv_kick_Q_index[kick_id] %= RECV_KICK_Q_LEN;
+					}else{//收币队列追尾错误
+						SEND_ERROR(KICK2COINERROR);
+						dbg ("recv kick coin %d error alertflag = %d %s, %d", kick_id, KICK2COINERROR,  __FILE__, __LINE__);
+					}
 				}
 			}
 		}
@@ -191,7 +195,7 @@ void cy_coinlearn(void)
 		coinlearnnumber++;
 		prepare_coin_cmp_value ();
 		if (coin_env.kick_Q[coin_env.kick_Q_index] == 0){
-				coin_env.kick_Q[coin_env.kick_Q_index] = para_set_value.data.kick_start_delay_t0;
+				coin_env.kick_Q[coin_env.kick_Q_index] = para_set_value.data.ng_kick_start_delay_t;
 				coin_env.kick_Q_index++;
 				coin_env.kick_Q_index %= KICK_Q_LEN;
 		}else{//剔除工位1队列追尾错误
