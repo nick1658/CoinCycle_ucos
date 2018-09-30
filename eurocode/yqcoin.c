@@ -96,32 +96,65 @@ int16_t is_good_coin (void)
 	return -1;
 }
 
-void coin_recv1_out_func(void)
+void pan_motor_func (void)
+{
+	static int motor_status = 0;
+	if (motor_status == 0){
+		motor_status = 1;
+		STORAGE_MOTOR_STARTRUN();
+	}else{
+		motor_status = 0;
+		STORAGE_MOTOR_STOPRUN();
+	}
+}
+
+void belt_motor_func (void)
+{
+	static int motor_status = 0;
+	if (motor_status == 0){
+		motor_status = 1;
+		BELT_MOTOR_STARTRUN();
+	}else{
+		motor_status = 0;
+		BELT_MOTOR_STOPRUN();
+	}
+}
+
+void coin_kick_out_func (void)
+{
+		EMKICK0(STARTRUN);	 
+		coin_env.ng_kick_keep_delay_t = para_set_value.data.ng_kick_keep_delay_t;
+}
+
+void coin_recv0_out_func(void)
 {
 	//cy_println ("kick 1 out");
 	EMKICK1(STARTRUN);
+	coin_env.recv_kick_keep_t[0] = para_set_value.data.recv_kick_keep_delay_t[0];
 }
-void coin_recv2_out_func(void)
+void coin_recv1_out_func(void)
 {
 	//cy_println ("kick 2 out");
 	EMKICK2(STARTRUN);
+	coin_env.recv_kick_keep_t[1] = para_set_value.data.recv_kick_keep_delay_t[1];
 }
-void coin_recv3_out_func(void)
+void coin_recv2_out_func(void)
 {
 	//cy_println ("kick 3 out");
 	EMKICK3(STARTRUN);
+	coin_env.recv_kick_keep_t[2] = para_set_value.data.recv_kick_keep_delay_t[2];
 }
-void coin_recv1_in_func(void)
+void coin_recv0_in_func(void)
 {
 	//cy_println ("kick 1 in");
 	EMKICK1(STOPRUN);
 }
-void coin_recv2_in_func(void)
+void coin_recv1_in_func(void)
 {
 	//cy_println ("kick 2 in");
 	EMKICK2(STOPRUN);
 }
-void coin_recv3_in_func(void)
+void coin_recv2_in_func(void)
 {
 	//cy_println ("kick 3 in");
 	EMKICK3(STOPRUN);

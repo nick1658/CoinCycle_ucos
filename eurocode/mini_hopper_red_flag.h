@@ -1,0 +1,32 @@
+#ifndef MINI_HOPPER_RED_FLAG_H
+#define MINI_HOPPER_RED_FLAG_H
+
+#define FRAME_SIZE 6
+
+#define HEADER_BYTE 0x05
+#define MASTER 0x01
+
+//ÃüÁî
+#define PAYOUT_REQUEST_NO_MSG 0x10
+#define STATUS_REQUEST 0x11
+#define RESET_REQUEST 0x12
+#define REMAINING_COINS_REQUEST 0x13
+#define PAYOUT_REQUEST_LIVE_MSG 0x14
+#define EMPTY_HOPPER 0x15
+
+//ÏìÓ¦ËµÃ÷
+#define STATUS_MSG 0x04
+#define STATUS_MSG_MOTOR_ERROR 0x01
+#define STATUS_MSG_HOPPER_LOW 0x02
+#define STATUS_MSG_PRISM_FAILED 0x08
+#define STATUS_MSG_SHAFT_FAILED 0x10
+#define STATUS_MSG_BUSY        0x20
+
+
+#define ONE_COIN_MSG 0x07
+#define FINISH_MSG 0x08
+
+#define ACK_MSG 0xAA
+#define BUSY_MSG 0xBB
+
+#endif

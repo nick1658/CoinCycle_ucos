@@ -99,8 +99,7 @@
 #define KICK_Q_SCAN(N) if (coin_env.kick_Q[N] > 0) {\
 	coin_env.kick_Q[N]--; \
 	if (coin_env.kick_Q[N] == 0){ \
-		EMKICK0(STARTRUN);	  \
-		coin_env.ng_kick_keep_delay_t = para_set_value.data.ng_kick_keep_delay_t;\
+		coin_kick_out_func (); \
 	}\
 }
 //

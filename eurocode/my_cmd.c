@@ -582,6 +582,24 @@ int get_hex_data (char * buf)
 					case 0x000C://特征学习取消保存
 						coin_learn_data_not_save ();
 						break;
+					case 0x0010://kick 1
+						coin_kick_out_func ();
+						break;
+					case 0x0011://kick 2
+						coin_recv0_out_func ();
+						break;
+					case 0x0012://kick 3
+						coin_recv1_out_func ();
+						break;
+					case 0x0013://kick 4
+						coin_recv2_out_func ();
+						break;
+					case 0x0014://pan_motor
+						pan_motor_func ();
+						break;
+					case 0x0015://belt_motor
+						belt_motor_func ();
+						break;
 					case 0xE001://清除报警
 						coin_clear_alarm ();
 						break;

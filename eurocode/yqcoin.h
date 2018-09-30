@@ -70,12 +70,15 @@ void detect_read(void);
 extern  uint16_t prepic_prenum;      // 用于记录 报错前的界面 
 void alertfuc(uint16_t alertflag); //报错
 
+void pan_motor_func (void);
+void belt_motor_func (void);
+void coin_kick_out_func (void);
+void coin_recv0_out_func (void);
 void coin_recv1_out_func (void);
 void coin_recv2_out_func (void);
-void coin_recv3_out_func (void);
+void coin_recv0_in_func (void);
 void coin_recv1_in_func (void);
 void coin_recv2_in_func (void);
-void coin_recv3_in_func (void);
 void coin_null_func(void);
 
 

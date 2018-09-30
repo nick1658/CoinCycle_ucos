@@ -877,48 +877,16 @@ void touchresult(void)      //根据接收到的  数 来决定 执行的任务
 				}
 				break;
 			case 0x07://踢币电磁铁0
-				pulse_time = para_set_value.data.ng_kick_start_delay_t; //recv_kick_start_delay_time*0.1ms
-				dgus_tf1word(ADDR_KICK1_M,1);
-				while(pulse_time != 0){;}
-				EMKICK0(STARTRUN);	  // kick out
-				cy_println ("kick0 start");
-				pulse_time = para_set_value.data.ng_kick_keep_delay_t;	  //kick_keep_time*0.1ms
-				while(pulse_time != 0){;}
-				EMKICK0(STOPRUN);	  // kick in
-				cy_println ("kick0 stop");
-				dgus_tf1word(ADDR_KICK1_M,0);
+				coin_kick_out_func ();
 				break;
 			case 0x08://踢币电磁铁1
-				pulse_time = para_set_value.data.recv_kick_start_delay_t[0]*10; //recv_kick_start_delay_time*0.1ms
-				dgus_tf1word(ADDR_KICK2_M,1);
-				while(pulse_time != 0){;}
-				EMKICK1(STARTRUN);	  // kick out
-				cy_println ("kick1 start");
-				pulse_time = para_set_value.data.recv_kick_keep_delay_t[0];	  //kick_keep_time*0.1ms
-				while(pulse_time != 0){;}
-				EMKICK1(STOPRUN);	  // kick in
-				cy_println ("kick1 stop");
-				dgus_tf1word(ADDR_KICK2_M,0);
+				coin_recv0_out_func ();
 				break;
 			case 0x09://踢币电磁铁2
-				pulse_time = para_set_value.data.recv_kick_start_delay_t[1]*10; //recv_kick_start_delay_time*0.1ms
-				while(pulse_time != 0){;}
-				EMKICK2(STARTRUN);	  // kick out
-				cy_println ("kick2 start");
-				pulse_time = para_set_value.data.recv_kick_keep_delay_t[1];	  //kick_keep_time*0.1ms
-				while(pulse_time != 0){;}
-				EMKICK2(STOPRUN);	  // kick in
-				cy_println ("kick2 stop");
+				coin_recv1_out_func ();
 				break;
 			case 0x0a://踢币电磁铁3
-				pulse_time = para_set_value.data.recv_kick_start_delay_t[2]*10; //recv_kick_start_delay_time*0.1ms
-				while(pulse_time != 0){;}
-				EMKICK3(STARTRUN);	  // kick out
-				cy_println ("kick3 start");
-				pulse_time = para_set_value.data.recv_kick_keep_delay_t[2];	  //kick_keep_time*0.1ms
-				while(pulse_time != 0){;}
-				EMKICK3(STOPRUN);	  // kick in
-				cy_println ("kick3 stop");
+				coin_recv2_out_func ();
 				break;
 			case 0x0B://Hopper 0
 			case 0x0C://Hopper 1

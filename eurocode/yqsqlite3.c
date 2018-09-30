@@ -265,12 +265,12 @@ void read_coin_value(void) 	 // read  COIN  0--8
 	para_set_value.data.recv_kick_start_delay_t[1] = 9;
 	para_set_value.data.recv_kick_start_delay_t[2] = 12;
 	//映射收币函数
-	coin_env.p_coin_recv_func[0] = coin_recv1_out_func;
-	coin_env.p_coin_recv_func[1] = coin_recv2_out_func;
+	coin_env.p_coin_recv_func[0] = coin_recv0_out_func;
+	coin_env.p_coin_recv_func[1] = coin_recv1_out_func;
 	coin_env.p_coin_recv_func[2] = coin_recv2_out_func;
 	//映射收币完成函数
-	coin_env.p_coin_kick_keep_func[0] = coin_recv1_in_func;
-	coin_env.p_coin_kick_keep_func[1] = coin_recv2_in_func;
+	coin_env.p_coin_kick_keep_func[0] = coin_recv0_in_func;
+	coin_env.p_coin_kick_keep_func[1] = coin_recv1_in_func;
 	coin_env.p_coin_kick_keep_func[2] = coin_recv2_in_func;
 
 	//映射触摸屏预置计数预置设置值显示地址
