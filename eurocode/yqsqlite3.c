@@ -250,14 +250,11 @@ void read_coin_value(void) 	 // read  COIN  0--8
 		para_set_value.data.kick_start_delay_t[i] = 0;
 		para_set_value.data.kick_keep_t[i] = 200;
 	}
+	para_set_value.data.kick_start_delay_t0 = 3;
 	para_set_value.data.kick_start_delay_t[0] = 6;
-	para_set_value.data.kick_keep_t[0] = 200;
 	para_set_value.data.kick_start_delay_t[1] = 9;
-	para_set_value.data.kick_keep_t[1] = 150;
 	para_set_value.data.kick_start_delay_t[2] = 9;
-	para_set_value.data.kick_keep_t[2] = 150;
 	para_set_value.data.kick_start_delay_t[4] = 12;
-	para_set_value.data.kick_keep_t[4] = 150;
 	//Ó³ÉäÊÕ±Òº¯Êı
 	coin_env.p_coin_recv_func[0] = coin_recv1_out_func;
 	coin_env.p_coin_recv_func[1] = coin_recv2_out_func;
