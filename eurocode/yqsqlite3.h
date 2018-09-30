@@ -102,6 +102,8 @@ typedef struct
 #define COUNTRY0_COIN_PRE_VALUE_START_PAGE_NUM (2 + PUBULIC_DATA_START_PAGE_NUM)
 #define COUNTRY0_COIN_PRE_VALUE_START_ADDR (DATA_START_BLOCK + COUNTRY0_COIN_PRE_VALUE_START_PAGE_NUM * 2048)
 #define COIN_TYPE_NUM 11
+
+#define COIN_RECV_KICK_NUM 3
 #define COUNTRY_NUM 1
 #define COIN_NUM 8
 #define HOPPER_NUM 3
@@ -178,7 +180,7 @@ typedef struct
 	volatile uint32_t * p_coin_current_receive;
 	uint32_t * p_pre_count_full_flag;
 	uint32_t * p_coinval;
-	uint32_t coin_type;
+	uint32_t coin_type_id;
 	uint32_t accept;
 	uint16_t hmi_pre_count_set_addr;
 	uint16_t money;

@@ -818,7 +818,7 @@ void touchresult(void)      //根据接收到的  数 来决定 执行的任务
 			if (addr == pre_value.coin[i].data.hmi_pre_count_set_addr){
 				*pre_value.coin[i].data.p_pre_count_set =  (int)(touchnum[7]*256 )+(int)touchnum[8];
 				if (para_set_value.data.system_mode == 0){
-					para_set_value.data.precoin_set_num[pre_value.coin[i].data.coin_type] = *pre_value.coin[i].data.p_pre_count_set;
+					para_set_value.data.precoin_set_num[pre_value.coin[i].data.coin_type_id] = *pre_value.coin[i].data.p_pre_count_set;
 					write_para (); //写入预置值
 				}
 
@@ -997,7 +997,7 @@ void change_coin_mode (uint16_t value)
 	para_set_value.data.system_mode = value;
 	for (i = 0; i < COIN_TYPE_NUM; i++){
 		if (value == 0x00){
-			set_data = para_set_value.data.precoin_set_num[pre_value.coin[i].data.coin_type];//预置计数设置值初始化
+			set_data = para_set_value.data.precoin_set_num[pre_value.coin[i].data.coin_type_id];//预置计数设置值初始化
 		}else{
 			set_data = 9999;
 		}

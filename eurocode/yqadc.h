@@ -57,11 +57,11 @@ typedef struct
 	uint16_t full_kick_Q[KICK_Q_LEN];//满剔除队列
 	uint16_t full_kick_Q_index;
 
-	uint16_t recv_kick_keep_t[COIN_TYPE_NUM];
-	uint16_t recv_kick_Q[COIN_TYPE_NUM][RECV_KICK_Q_LEN];//收币剔除队列
-	uint16_t recv_kick_Q_index[COIN_TYPE_NUM];
-	void (*p_coin_recv_func[COIN_TYPE_NUM])(void);
-	void (*p_coin_kick_keep_func[COIN_TYPE_NUM])(void);
+	uint16_t recv_kick_keep_t[COIN_RECV_KICK_NUM];
+	uint16_t recv_kick_Q[COIN_RECV_KICK_NUM][RECV_KICK_Q_LEN];//收币剔除队列
+	uint16_t recv_kick_Q_index[COIN_RECV_KICK_NUM];
+	void (*p_coin_recv_func[COIN_RECV_KICK_NUM])(void);
+	void (*p_coin_kick_keep_func[COIN_RECV_KICK_NUM])(void);
 
 	uint16_t inhibit_coin[COIN_TYPE_NUM]; //拒收硬币设置位
 	uint16_t cycle_box_full;

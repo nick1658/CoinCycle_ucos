@@ -106,17 +106,10 @@ void Timer3_IRQ(void)
 	HOPPER_COUNTER(1);
 	HOPPER_COUNTER(2);
 	
-	if (coin_env.kick_keep_t0 > 0){
-		coin_env.kick_keep_t0--;
-		if (coin_env.kick_keep_t0 == 0){
-			EMKICK0(STOPRUN);
-		}
-	}
+	KICK_KEEP_SCAN ();
 	RECV_KICK_KEEP_SCAN(0);
 	RECV_KICK_KEEP_SCAN(1);
 	RECV_KICK_KEEP_SCAN(2);
-	RECV_KICK_KEEP_SCAN(4);
-	RECV_KICK_KEEP_SCAN(5);
 	
 	coin_cross_time++;
 	if(pulse_time > 0){pulse_time--;}

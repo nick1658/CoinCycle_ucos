@@ -103,14 +103,7 @@
 		coin_env.kick_keep_t0 = para_set_value.data.kick_keep_t0;\
 	}\
 }
-#define FULL_KICK_Q_SCAN(N) if (coin_env.full_kick_Q[N] > 0) {\
-	coin_env.full_kick_Q[N]--; \
-	if (coin_env.full_kick_Q[N] == 0){ \
-		EMKICK1(STARTRUN);	  \
-		coin_env.full_kick_keep_t1 = para_set_value.data.kick_keep_t1;\
-	}\
-}
-
+//
 #define RECV_KICK_Q_SCAN(M,N) if (coin_env.recv_kick_Q[M][N] > 0) {\
 	coin_env.recv_kick_Q[M][N]--; \
 	if (coin_env.recv_kick_Q[M][N] == 0){ \
@@ -118,12 +111,23 @@
 		coin_env.recv_kick_keep_t[M] = para_set_value.data.kick_keep_t[M];\
 	}\
 }
+//
+#define KICK_KEEP_SCAN() { \
+	if (coin_env.kick_keep_t0 > 0){ \
+		coin_env.kick_keep_t0--; \
+		if (coin_env.kick_keep_t0 == 0){ \
+			EMKICK0(STOPRUN); \
+		} \
+	} \
+}
+//
 #define RECV_KICK_KEEP_SCAN(M) if (coin_env.recv_kick_keep_t[M] > 0) {\
 	coin_env.recv_kick_keep_t[M]--; \
 	if (coin_env.recv_kick_keep_t[M] == 0){ \
 		(*coin_env.p_coin_kick_keep_func[M])(); \
 	}\
 }
+//
 
 ////////////////////////////
 void deviceinit(void);	//开机前初始化

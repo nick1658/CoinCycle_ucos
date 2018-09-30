@@ -63,7 +63,6 @@ void IR_detect_func(void)
 		RECV_KICK_Q_SCAN(0, 1);
 		RECV_KICK_Q_SCAN(0, 2);
 		RECV_KICK_Q_SCAN(0, 3);
-		
 		RECV_KICK_Q_SCAN(1, 0);
 		RECV_KICK_Q_SCAN(1, 1);
 		RECV_KICK_Q_SCAN(1, 2);
@@ -72,20 +71,6 @@ void IR_detect_func(void)
 		RECV_KICK_Q_SCAN(2, 1);
 		RECV_KICK_Q_SCAN(2, 2);
 		RECV_KICK_Q_SCAN(2, 3);
-		
-		RECV_KICK_Q_SCAN(3, 0);
-		RECV_KICK_Q_SCAN(3, 1);
-		RECV_KICK_Q_SCAN(3, 2);
-		RECV_KICK_Q_SCAN(3, 3);
-		
-		RECV_KICK_Q_SCAN(4, 0);
-		RECV_KICK_Q_SCAN(4, 1);
-		RECV_KICK_Q_SCAN(4, 2);
-		RECV_KICK_Q_SCAN(4, 3);
-		RECV_KICK_Q_SCAN(5, 0);
-		RECV_KICK_Q_SCAN(5, 1);
-		RECV_KICK_Q_SCAN(5, 2);
-		RECV_KICK_Q_SCAN(5, 3);
 		
 	}
 	coin_in_flag_old = coin_in_flag;
