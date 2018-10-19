@@ -7,7 +7,7 @@
 #include "yqsqlite3.h"
 
 #define KICK_Q_LEN 2
-#define RECV_KICK_Q_LEN 4
+#define RECV_KICK_Q_LEN 5
 #define COIN_Q_LEN 16
 #define SAMPLE_METHOD_1
 
@@ -100,7 +100,7 @@ extern  uint16_t ad0_min;     //贮存每枚硬币过去后的 最大值
 extern  uint16_t ad1_min;     //贮存每枚硬币过去后的 最大值
 extern  uint16_t ad2_min;     //贮存每枚硬币过去后的 最大值
 
-#define ADBLOCKT  100  //10  //30     //130 00---30     //时间 鉴伪传感器 鉴别 堵币时间
+#define ADBLOCKT  5000  //10  //30     //130 00---30     //时间 鉴伪传感器 鉴别 堵币时间
 extern volatile uint16_t blockflag;      //堵币标志变量
 extern volatile uint32_t adtime;
 

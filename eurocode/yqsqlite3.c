@@ -258,9 +258,9 @@ void read_coin_value(void) 	 // read  COIN  0--8
 	for (i = 0; i < COIN_TYPE_NUM; i++){	
 		coin_env.p_coin_recv_func[i] = coin_null_func;
 		coin_env.p_coin_kick_keep_func[i] = coin_null_func;
-		para_set_value.data.precoin_set_num[i] = 300;
+		//para_set_value.data.precoin_set_num[i] = 300;
 		para_set_value.data.kick_start_delay_t[i] = 0;
-		para_set_value.data.kick_keep_t[i] = 200;
+		//para_set_value.data.kick_keep_t[i] = 200;
 	}
 	para_set_value.data.kick_start_delay_t0 = 3;
 	para_set_value.data.kick_start_delay_t[0] = 6;
