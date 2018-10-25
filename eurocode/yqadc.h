@@ -7,7 +7,7 @@
 #include "yqsqlite3.h"
 
 #define KICK_Q_LEN 2
-#define RECV_KICK_Q_LEN 4
+#define RECV_KICK_Q_LEN 5
 #define COIN_Q_LEN 16
 #define SAMPLE_METHOD_1
 

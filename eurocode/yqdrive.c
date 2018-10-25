@@ -45,9 +45,20 @@ void deviceinit(void)	//开机先把通道上的币挡下去
 
 void IR_detect_func(void)
 {
+	#define IR_SENSOR_FILTER 50
+	static uint16_t ir_low_ctr, ir_high_ctr;
+	
 	if (COIN_DETECT == IR_DETECT_ON){
-		coin_in_flag = 0;
+		ir_low_ctr++;
+		ir_high_ctr = 0;
 	}else{
+		ir_low_ctr = 0;
+		ir_high_ctr++;
+	}
+	if (ir_low_ctr >= IR_SENSOR_FILTER){
+		coin_in_flag = 0;
+	}
+	if (ir_high_ctr >= IR_SENSOR_FILTER){
 		coin_in_flag = 1;
 	}
 	coin_env.coin_speed_time++;  
@@ -63,14 +74,17 @@ void IR_detect_func(void)
 		RECV_KICK_Q_SCAN(0, 1);
 		RECV_KICK_Q_SCAN(0, 2);
 		RECV_KICK_Q_SCAN(0, 3);
+		RECV_KICK_Q_SCAN(0, 4);
 		RECV_KICK_Q_SCAN(1, 0);
 		RECV_KICK_Q_SCAN(1, 1);
 		RECV_KICK_Q_SCAN(1, 2);
 		RECV_KICK_Q_SCAN(1, 3);
+		RECV_KICK_Q_SCAN(1, 4);
 		RECV_KICK_Q_SCAN(2, 0);
 		RECV_KICK_Q_SCAN(2, 1);
 		RECV_KICK_Q_SCAN(2, 2);
 		RECV_KICK_Q_SCAN(2, 3);
+		RECV_KICK_Q_SCAN(2, 4);
 		
 	}
 	coin_in_flag_old = coin_in_flag;

@@ -199,13 +199,15 @@ void cy_precoincount(void)
 						*pre_value.coin[good_coin].data.p_pre_count_full_flag = 1; //此类硬币预置数到，做个标记
 					}	
 					kick_id = pre_value.coin[good_coin].data.coin_kick_id;
-					if (coin_env.recv_kick_Q[kick_id][coin_env.recv_kick_Q_index[kick_id]] == 0){
-						coin_env.recv_kick_Q[kick_id][coin_env.recv_kick_Q_index[kick_id]] = para_set_value.data.recv_kick_start_delay_t[kick_id];
-						coin_env.recv_kick_Q_index[kick_id]++;
-						coin_env.recv_kick_Q_index[kick_id] %= RECV_KICK_Q_LEN;
-					}else{//收币队列追尾错误
-						SEND_ERROR(KICK2COINERROR);
-						dbg ("recv kick coin %d error alertflag = %d %s, %d", kick_id, KICK2COINERROR,  __FILE__, __LINE__);
+					if (kick_id < COIN_RECV_KICK_NUM){
+						if (coin_env.recv_kick_Q[kick_id][coin_env.recv_kick_Q_index[kick_id]] == 0){
+							coin_env.recv_kick_Q[kick_id][coin_env.recv_kick_Q_index[kick_id]] = para_set_value.data.recv_kick_start_delay_t[kick_id];
+							coin_env.recv_kick_Q_index[kick_id]++;
+							coin_env.recv_kick_Q_index[kick_id] %= RECV_KICK_Q_LEN;
+						}else{//收币队列追尾错误
+							SEND_ERROR(KICK2COINERROR);
+							dbg ("recv kick coin %d error alertflag = %d %s, %d", kick_id, KICK2COINERROR,  __FILE__, __LINE__);
+						}
 					}
 				}
 			}
