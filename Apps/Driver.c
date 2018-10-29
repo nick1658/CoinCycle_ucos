@@ -93,9 +93,9 @@ void port_Init(void)
 	//			 output	 output output
      //up		 00      00     00         00    00
     rGPHCON = 0x15AAAAAA;   //¥Æø⁄≈‰÷√ RXD3 TXD3 RXD2 TXD2 RXD1 TXD1 RXD0  TXD0
-    rGPHUDP  = 0x00000000;    // The pull up function is disabled 00 : pull-up/down disable
+    rGPHUDP  = (0x00000000);    // The pull up function is disabled 00 : pull-up/down disable
 							 //≈‰÷√GPH14 PGH13 GPH12
-	
+	 
 	LED1_OFF; LED2_OFF;	//LED3_OFF; LED4_OFF;
 	//LED1_ON; LED2_ON;	//LED3_OFF; LED4_OFF;
 	ALL_STOP();

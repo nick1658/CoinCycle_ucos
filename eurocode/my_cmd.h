@@ -147,6 +147,7 @@ void system_env_init (void);
 void print_ng_data (int16_t index);
 void print_system_env_info (void);
 void fill_rec_buf(char data);
+void fill_rec_buf3(char data);
 void update_finish (e_update_flag flag);
 u16 CRC16(char * _data_buf, int len);
 void vTaskCmdAnalyze( void );

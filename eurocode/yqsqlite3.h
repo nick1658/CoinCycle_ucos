@@ -138,8 +138,9 @@ typedef struct
 	uint16_t recv_kick_keep_delay_t[COIN_TYPE_NUM];
 	uint16_t hopper_pulse;
 	volatile uint32_t hopper_dispense_num[HOPPER_NUM];
+	volatile uint32_t hopper_unpayout_num[HOPPER_NUM];
 	volatile uint32_t hopper_balance[HOPPER_NUM];
-	volatile uint32_t hopper_dispense_cnt[HOPPER_NUM];
+	volatile uint32_t hopper_payout_num[HOPPER_NUM];
 	volatile uint32_t coin_total_num[HOPPER_NUM];
 	volatile uint32_t coin_current_receive[HOPPER_NUM];
 	volatile uint16_t hopper_output_timeout[HOPPER_NUM];

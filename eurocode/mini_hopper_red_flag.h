@@ -22,11 +22,49 @@
 #define STATUS_MSG_SHAFT_FAILED 0x10
 #define STATUS_MSG_BUSY        0x20
 
-
 #define ONE_COIN_MSG 0x07
 #define FINISH_MSG 0x08
 
 #define ACK_MSG 0xAA
 #define BUSY_MSG 0xBB
+
+#define RED_FLAG_MSG_BUF_LEN 60
+#define RED_FLAG_PAYOUT_BUF_LEN 6
+#define RED_FLAG_TIMEOUT 5000 //50ms
+
+typedef struct
+{
+	uint8_t header;
+	uint8_t dir;
+	uint8_t addr;
+	uint8_t cmd;
+	uint8_t data;
+	uint8_t checksum;
+}s_red_flag_frame;
+
+typedef union {
+	U8 fill[RED_FLAG_PAYOUT_BUF_LEN];
+	s_red_flag_frame data;
+}u_red_flag_frame;
+
+
+typedef struct
+{
+	uint16_t msg_received;
+	uint16_t msg_received_timeout;
+	//³ÉÔ±º¯Êý
+	int (*p_get_hopper_status_func)(uint8_t data);
+	int (*p_empty_hopper_func)(uint8_t data);
+	int (*p_reset_hopper_func)(uint8_t data);
+	void (*p_process_msg_func)(void);
+	void (*p_fill_red_flag_buf)(char data);
+	void (*p_red_flag_payout) (uint8_t addr, uint8_t payout_num);
+}s_red_flag_env;
+
+
+extern s_red_flag_env red_flag_env;
+
+void red_flag_env_init (void);
+
 
 #endif

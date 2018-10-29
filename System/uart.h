@@ -11,7 +11,7 @@
 
 #define PCLK	(800000000/3/2/2)
 
-void uart_init(void);
+void uart0_init(void);
 void Uart0_Printf(const char *fmt,...);  //发送
 void Uart0_sendchar(U8 data);
 void Uart0_SendString(const char *pt);
@@ -24,6 +24,8 @@ void uart2_init(void);   //发送
 void Uart2_sendchar(U8 data);    //接收
 
 
+void uart3_init(void);   //发送 
+void Uart3_sendchar(U8 data);    //接收
 
 
 //unsigned char uart_getc(void);

@@ -401,78 +401,22 @@ int get_hex_struct (s_hex_file *p_hex, char *_data_buf)
 
 void coin_dispense (void)
 {	
-	uint32_t i, pulse_temp = 0;
-	uint32_t hopper_dispense_num_tmp[HOPPER_NUM];
+	uint8_t i;
 	//开始找零-----------------------------------------------------
 	for (i = 0; i < HOPPER_NUM; i++){
-		para_set_value.data.hopper_dispense_cnt[i] = 0;
+		para_set_value.data.hopper_payout_num[i] = 0;
 		if (para_set_value.data.hopper_dispense_num[i] > para_set_value.data.hopper_balance[i]){
 			para_set_value.data.hopper_dispense_num[i] = para_set_value.data.hopper_balance[i];
 		}
-		if (pulse_temp < para_set_value.data.hopper_dispense_num[i]){
-			pulse_temp = para_set_value.data.hopper_dispense_num[i];
-		}
-		hopper_dispense_num_tmp[i] = para_set_value.data.hopper_dispense_num[i];
+		para_set_value.data.hopper_unpayout_num[i] = para_set_value.data.hopper_dispense_num[i];
 		if (para_set_value.data.hopper_dispense_num[i] > 0){
 			set_active_resister (ACT_L_R_DISPENSING_COIN, 0);
 			BELT_MOTOR_STARTRUN();   //斗送入电机
 			para_set_value.data.belt_runtime = BELT_RUN_TIME;
 //			para_set_value.data.hopper_output_timeout[i] = 20;//10s
+			red_flag_env.p_red_flag_payout (i, para_set_value.data.hopper_dispense_num[i]);
 		}
 	}
-//#define DISPENSE_METHED_0
-#ifdef DISPENSE_METHED_0
-	pulse_temp = hopper_dispense_num_tmp[0];
-	for (i = 0; i < pulse_temp; i++){
-		PAYOUT0(STARTRUN);	  //
-		pulse_time = para_set_value.data.hopper_pulse; 
-		while(pulse_time != 0){;}
-		PAYOUT0(STOPRUN);	  // 
-		pulse_time = para_set_value.data.hopper_pulse; 
-		while(pulse_time != 0){;}
-	}
-
-	pulse_temp = hopper_dispense_num_tmp1];
-	for (i = 0; i < pulse_temp; i++){
-		PAYOUT1(STARTRUN);	  //
-		pulse_time = para_set_value.data.hopper_pulse; 
-		while(pulse_time != 0){;}
-		PAYOUT1(STOPRUN);	  // 
-		pulse_time = para_set_value.data.hopper_pulse; 
-		while(pulse_time != 0){;}
-	}
-	pulse_temp = hopper_dispense_num_tmp[2];
-	for (i = 0; i < pulse_temp; i++){
-		PAYOUT2(STARTRUN);	  //
-		pulse_time = para_set_value.data.hopper_pulse; 
-		while(pulse_time != 0){;}
-		PAYOUT2(STOPRUN);	  // 
-		pulse_time = para_set_value.data.hopper_pulse; 
-		while(pulse_time != 0){;}
-	}
-	#else
-	for (i = 0; i < pulse_temp; i++){
-		if (hopper_dispense_num_tmp[0] > 0){
-			PAYOUT0(STARTRUN);	  //
-			hopper_dispense_num_tmp[0]--;
-		}
-		if (hopper_dispense_num_tmp[1] > 0){
-			PAYOUT1(STARTRUN);	  //
-			hopper_dispense_num_tmp[1]--;
-		}
-		if (hopper_dispense_num_tmp[2] > 0){
-			PAYOUT2(STARTRUN);	  //
-			hopper_dispense_num_tmp[2]--;
-		}
-		pulse_time = para_set_value.data.hopper_pulse; 
-		while(pulse_time != 0){;}
-		PAYOUT0(STOPRUN);	  // 
-		PAYOUT1(STOPRUN);	  // 
-		PAYOUT2(STOPRUN);	  // 
-		pulse_time = para_set_value.data.hopper_pulse; 
-		while(pulse_time != 0){;}
-	}
-#endif
 	//结束找零-----------------------------------------------------
 	write_para ();
 }
@@ -486,11 +430,12 @@ void fin_coin_dispense (void)
 	//	cy_println ("%d		%d", para_set_value.data.hopper_balance[i]
 	//}
 	for (i = 0; i < HOPPER_NUM; i++){
-		if (para_set_value.data.coin_total_num[i] >= para_set_value.data.hopper_dispense_cnt[i]){
-			para_set_value.data.coin_total_num[i] -= para_set_value.data.hopper_dispense_cnt[i];
+		para_set_value.data.hopper_payout_num[i] = para_set_value.data.hopper_dispense_num[i] - para_set_value.data.hopper_unpayout_num[i];
+		if (para_set_value.data.coin_total_num[i] >= para_set_value.data.hopper_payout_num[i]){
+			para_set_value.data.coin_total_num[i] -= para_set_value.data.hopper_payout_num[i];
 		}
-		if (para_set_value.data.hopper_balance[i] >= para_set_value.data.hopper_dispense_cnt[i]){
-			para_set_value.data.hopper_balance[i] -= para_set_value.data.hopper_dispense_cnt[i];
+		if (para_set_value.data.hopper_balance[i] >= para_set_value.data.hopper_payout_num[i]){
+			para_set_value.data.hopper_balance[i] -= para_set_value.data.hopper_payout_num[i];
 		}
 	}
 	for (i = 0; i < HOPPER_NUM; i++){
@@ -502,12 +447,12 @@ void fin_coin_dispense (void)
 			cctalk_env.hopper_status[i] = 0;
 		}
 	}
-	cctalk_env.payed_money_out =  para_set_value.data.hopper_dispense_cnt[0] * 100 + 
-																para_set_value.data.hopper_dispense_cnt[1] * 50 + 
-																para_set_value.data.hopper_dispense_cnt[2] * 10;
-	cctalk_env.unpayed_money_out = para_set_value.data.hopper_dispense_num[0] * 100 + 
-																para_set_value.data.hopper_dispense_num[1] * 50 + 
-																para_set_value.data.hopper_dispense_num[2] * 10;
+	cctalk_env.payed_money_out =  para_set_value.data.hopper_payout_num[0] * 100 + 
+																para_set_value.data.hopper_payout_num[1] * 50 + 
+																para_set_value.data.hopper_payout_num[2] * 10;
+	cctalk_env.unpayed_money_out = para_set_value.data.hopper_unpayout_num[0] * 100 + 
+																para_set_value.data.hopper_unpayout_num[1] * 50 + 
+																para_set_value.data.hopper_unpayout_num[2] * 10;
 	save_coin_number ();
 }
 
@@ -599,6 +544,15 @@ int get_hex_data (char * buf)
 						break;
 					case 0x0015://belt_motor
 						belt_motor_func ();
+						break;
+					case 0x0016://hopper status
+						red_flag_env.p_get_hopper_status_func (0xff);
+						break;
+					case 0x0017://empty hopper
+						red_flag_env.p_empty_hopper_func (0xff);
+						break;
+					case 0x0018://reset hopper
+						red_flag_env.p_reset_hopper_func (0xff);
 						break;
 					case 0xE001://清除报警
 						coin_clear_alarm ();
@@ -721,9 +675,9 @@ int get_hex_data (char * buf)
 								para_set_value.data.hopper_dispense_num[i] = p_hex.data[i];
 							}else{//错误
 							}
-							cy_print ("coin %d:%d ",i, para_set_value.data.hopper_dispense_num[i]);
+							//cy_print ("coin %d:%d ",i, para_set_value.data.hopper_dispense_num[i]);
 						}
-						cy_println ();
+						//cy_println ();
 						//开始找零-----------------------------------------------------
 						coin_dispense ();//找零操作
 						//结束找零-----------------------------------------------------
@@ -839,7 +793,6 @@ void update_finish (e_update_flag flag)
 	}
 	sys_env.update_flag = NULL_UPDATE;
 }
-/*提供给串口中断服务程序，保存串口接收到的单个字符*/
 void fill_rec_buf(char data)
 {
 	
@@ -899,7 +852,7 @@ void fill_rec_buf(char data)
 			}
 			return;
 		}else if (data == ':'){
-			Uart0_sendchar(data);
+			//Uart0_sendchar(data);
 			sys_env.tty_mode = UART_MODE;
 			sys_env.update_flag = UART_COMMAND;
 			cmd_analyze.rec_buf[rec_count++] = data;
@@ -1098,12 +1051,12 @@ void coin_learn_start (void)
 		coinlearnnumber = 0;
 		disp_preselflearn(coin_maxvalue0,coin_minvalue0,coin_maxvalue1,coin_minvalue1,coin_maxvalue2,coin_minvalue2) ;				   //显示当前  通道   各个值
 		
-		pc_print("%d,%d;",52, coin_maxvalue0);
-		pc_print("%d,%d;",53, coin_minvalue0);
-		pc_print("%d,%d;",54, coin_maxvalue1);
-		pc_print("%d,%d;",55, coin_minvalue1);
-		pc_print("%d,%d;",56, coin_maxvalue2);
-		pc_print("%d,%d;",57, coin_minvalue2);
+		pc_print("%d$%d;",52, coin_maxvalue0);
+		pc_print("%d$%d;",53, coin_minvalue0);
+		pc_print("%d$%d;",54, coin_maxvalue1);
+		pc_print("%d$%d;",55, coin_minvalue1);
+		pc_print("%d$%d;",56, coin_maxvalue2);
+		pc_print("%d$%d;",57, coin_minvalue2);
 		comscreen(Disp_Indexpic[TZYX],Number_IndexpicB);  // back to the  picture before alert
 		sys_env.workstep =13;
 	}
@@ -1227,35 +1180,35 @@ void coin_print (void)
 
 void refresh_data (void)
 {
-	pc_print("%d,%d;",1, para_set_value.data.ng_kick_start_delay_t);
-	pc_print("%d,%d;",2, para_set_value.data.ng_kick_keep_delay_t);
-	pc_print("%d,%d;",3, para_set_value.data.recv_kick_start_delay_t[0]);
-	pc_print("%d,%d;",4, para_set_value.data.recv_kick_keep_delay_t[0]);
-	pc_print("%d,%d;",5, *pre_value.coin[0].data.p_pre_count_set);
-	pc_print("%d,%d;",6, *pre_value.coin[1].data.p_pre_count_set);
-	pc_print("%d,%d;",7, *pre_value.coin[4].data.p_pre_count_set);
-	pc_print("%d,%d;",8, *pre_value.coin[6].data.p_pre_count_set);
-	pc_print("%d,%d;",9, *pre_value.coin[7].data.p_pre_count_set);
-	pc_print("%d,%d;",10, *pre_value.coin[8].data.p_pre_count_set);
-	pc_print("%d,%d;",11, *pre_value.coin[9].data.p_pre_count_set);
-	pc_print("%d,%d;",12, *pre_value.coin[10].data.p_pre_count_set);
-	pc_print("%d,%d;",22, para_set_value.data.motor_idle_t);
-	pc_print("%d,%d;",23, para_set_value.data.pre_count_stop_n);
-	pc_print("%d,%d;",24, para_set_value.data.coin_full_rej_pos);
-	pc_print("%d,%d;",25, para_set_value.data.system_boot_delay);
-	pc_print("%d,%d;",26, para_set_value.data.system_mode);
-	pc_print("%d,%d;",27, *pre_value.coin[3].data.p_pre_count_set);
-	pc_print("%d,%d;",51, sys_env.coin_index);
-	pc_print("%d,%d;",52, pre_value.coin[sys_env.coin_index].data.max0);
-	pc_print("%d,%d;",53, pre_value.coin[sys_env.coin_index].data.min0);
-	pc_print("%d,%d;",54, pre_value.coin[sys_env.coin_index].data.max1);
-	pc_print("%d,%d;",55, pre_value.coin[sys_env.coin_index].data.min1);
-	pc_print("%d,%d;",56, pre_value.coin[sys_env.coin_index].data.max2);
-	pc_print("%d,%d;",57, pre_value.coin[sys_env.coin_index].data.min2);
-	pc_print("%d,%d;",60, para_set_value.data.recv_kick_start_delay_t[1]);
-	pc_print("%d,%d;",61, para_set_value.data.recv_kick_keep_delay_t[1]);
-	pc_print("%d,%d;",62, para_set_value.data.recv_kick_start_delay_t[2]);
-	pc_print("%d,%d;",63, para_set_value.data.recv_kick_keep_delay_t[2]);
+	pc_print("%d$%d;",1, para_set_value.data.ng_kick_start_delay_t);
+	pc_print("%d$%d;",2, para_set_value.data.ng_kick_keep_delay_t);
+	pc_print("%d$%d;",3, para_set_value.data.recv_kick_start_delay_t[0]);
+	pc_print("%d$%d;",4, para_set_value.data.recv_kick_keep_delay_t[0]);
+	pc_print("%d$%d;",5, *pre_value.coin[0].data.p_pre_count_set);
+	pc_print("%d$%d;",6, *pre_value.coin[1].data.p_pre_count_set);
+	pc_print("%d$%d;",7, *pre_value.coin[4].data.p_pre_count_set);
+	pc_print("%d$%d;",8, *pre_value.coin[6].data.p_pre_count_set);
+	pc_print("%d$%d;",9, *pre_value.coin[7].data.p_pre_count_set);
+	pc_print("%d$%d;",10, *pre_value.coin[8].data.p_pre_count_set);
+	pc_print("%d$%d;",11, *pre_value.coin[9].data.p_pre_count_set);
+	pc_print("%d$%d;",12, *pre_value.coin[10].data.p_pre_count_set);
+	pc_print("%d$%d;",22, para_set_value.data.motor_idle_t);
+	pc_print("%d$%d;",23, para_set_value.data.pre_count_stop_n);
+	pc_print("%d$%d;",24, para_set_value.data.coin_full_rej_pos);
+	pc_print("%d$%d;",25, para_set_value.data.system_boot_delay);
+	pc_print("%d$%d;",26, para_set_value.data.system_mode);
+	pc_print("%d$%d;",27, *pre_value.coin[3].data.p_pre_count_set);
+	pc_print("%d$%d;",51, sys_env.coin_index);
+	pc_print("%d$%d;",52, pre_value.coin[sys_env.coin_index].data.max0);
+	pc_print("%d$%d;",53, pre_value.coin[sys_env.coin_index].data.min0);
+	pc_print("%d$%d;",54, pre_value.coin[sys_env.coin_index].data.max1);
+	pc_print("%d$%d;",55, pre_value.coin[sys_env.coin_index].data.min1);
+	pc_print("%d$%d;",56, pre_value.coin[sys_env.coin_index].data.max2);
+	pc_print("%d$%d;",57, pre_value.coin[sys_env.coin_index].data.min2);
+	pc_print("%d$%d;",60, para_set_value.data.recv_kick_start_delay_t[1]);
+	pc_print("%d$%d;",61, para_set_value.data.recv_kick_keep_delay_t[1]);
+	pc_print("%d$%d;",62, para_set_value.data.recv_kick_start_delay_t[2]);
+	pc_print("%d$%d;",63, para_set_value.data.recv_kick_keep_delay_t[2]);
 	disp_allcount_to_pc ();
 }
 

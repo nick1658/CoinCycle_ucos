@@ -87,7 +87,7 @@ static int16_t hopper_coin_in[HOPPER_NUM] = {0, 0, 0};
 #define HOPPER_COUNTER(X) if (HOPPER##X##_CNT_IN == 0){ \
 	if (hopper_coin_in[X] == 0){ \
 		hopper_coin_in[X] = 1; \
-		para_set_value.data.hopper_dispense_cnt[X]++; \
+		para_set_value.data.hopper_payout_num[X]++; \
 		para_set_value.data.hopper_dispense_num[X]--; \
 		if (para_set_value.data.belt_runtime > 0){ \
 			para_set_value.data.belt_runtime = BELT_RUN_TIME; \
@@ -102,9 +102,9 @@ void Timer3_IRQ(void)
 { 
 	main_task ();
 	
-	HOPPER_COUNTER(0);
-	HOPPER_COUNTER(1);
-	HOPPER_COUNTER(2);
+//	HOPPER_COUNTER(0);
+//	HOPPER_COUNTER(1);
+//	HOPPER_COUNTER(2);
 	
 	KICK_KEEP_SCAN ();
 	RECV_KICK_KEEP_SCAN(0);
@@ -113,6 +113,12 @@ void Timer3_IRQ(void)
 	
 	coin_cross_time++;
 	if(pulse_time > 0){pulse_time--;}
+	if (red_flag_env.msg_received_timeout > 0){
+		red_flag_env.msg_received_timeout--;
+		if (red_flag_env.msg_received_timeout == 0){
+			red_flag_env.msg_received = 2;
+		}
+	}
 }
 
 

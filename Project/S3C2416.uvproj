@@ -581,6 +581,11 @@
               <FileType>1</FileType>
               <FilePath>..\eurocode\yqcoin.c</FilePath>
             </File>
+            <File>
+              <FileName>mini_hopper_red_flag.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\eurocode\mini_hopper_red_flag.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

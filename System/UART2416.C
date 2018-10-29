@@ -5,7 +5,7 @@ void HandleUART0(void);
 void HandleUART2(void);
 
 //////////////////////////////////////串口0  现只用PC显示 以后如不用实时与PC通信可用智能屏通信/////////////////////////////////////////////
-void uart_init(void)
+void uart0_init(void)
 {
 	unsigned char i;
 	rUFCON0 = 0x0;       //UART channel 0 FIFO control register, FIFO disable
@@ -17,7 +17,7 @@ void uart_init(void)
 	rUBRDIV0=((unsigned int)(PCLK/16/115200)-1);//波特率设置57600  115200
 
 
-	rSUBSRCPND |= 0x3;   //清除中断标志  发送 接收都清除
+	rSUBSRCPND |= 0x3 << 0;   //清除中断标志  发送 接收都清除
 	rSRCPND1 |= 1<<28;	
 	rINTPND1 |= 1<<28;
 
@@ -90,14 +90,6 @@ void uart1_init(void)
 
 	rUBRDIV1=((unsigned int)(PCLK/16/9600)-1);//波特率设置   打印机 9600
 
-
-//	rSUBSRCPND |= 0x3;   //清除中断标志  发送 接收都清除
-//	rSRCPND1 |= 1<<28;	
-//	rINTPND1 |= 1<<28;
-
-//	rINTMSK1 &= ~(1<<28);
-//	rINTSUBMSK &= ~(1<<0);
-//	pISR_UART0 = (unsigned int) HandleUART0;   //中断处理函数  本程序里串口0不需要中断 只需要发送
 
 	for (i=0; i<100; i++)
 		;
@@ -179,12 +171,48 @@ void HandleUART0 (void)
 	rSUBSRCPND |= 0x3<<0;   //清除中断标志  发送 接收都清除
 	rSRCPND1 |= 1<<28;	//串口2 第15位
 	rINTPND1 |= 1<<28;
-	LED1_NOT;
+//	LED2_NOT;
 
 	fill_rec_buf((char)rURXH0);
 }
 
 #define CMD_DEBUG 0x02
 
+void HandleUART3 (void)
+{
+	rSUBSRCPND |= 0x3<<24;   //清除中断标志  发送 接收都清除
+	rSRCPND1 |= 1<<18;	//串口3 第18位
+	rINTPND1 |= 1<<18;
+	red_flag_env.p_fill_red_flag_buf((char)rURXH3);
+}
+void Uart3_sendchar(U8 data)
+{
+	while(!(rUTRSTAT3 & 0x2));   //Wait until THR is empty.
+	WrUTXH3(data);
+} 
 
+void uart3_init(void)
+{
+	unsigned char i;
+	rUFCON3 = 0x0;       //UART channel 0 FIFO control register, FIFO disable
+	rUMCON3 = 0x0;      // AFC disable
+
+	rULCON3 = 0x03;      // Normal,No parity,1 stop,8 bits
+	rUCON3  = 0x05;  //允许 发送 接收 PCLK作时钟 中断给脉冲
+
+	rUBRDIV3=((unsigned int)(PCLK/16/115200)-1);//波特率设置57600  115200
+
+
+	rSUBSRCPND |= 0x3<<24;   //清除中断标志  发送 接收都清除
+	rSRCPND1 |= 1<<18;	
+	rINTPND1 |= 1<<18;
+
+	rINTMSK1 &= ~(1<<18);
+	rINTSUBMSK &= ~(1<<24);
+	
+	IRQ_Register(INT_UART3,HandleUART3);
+
+	for (i=0; i<100; i++)
+		;
+}
 

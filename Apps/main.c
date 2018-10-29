@@ -39,6 +39,7 @@ void coin_init (void)
 	system_env_init ();
 	coin_env_init ();
 	cctalk_env_init ();
+	red_flag_env_init ();
 	//////////////
 	alertflag = 0; 		 //报错标志位
 
@@ -80,6 +81,7 @@ void coin_init (void)
 
 	uart1_init();//串口打印机
 	uart2_init();//屏幕
+	uart3_init();//Hopper
 	cy_println ("\n#####    Program For YQ ##### ");
 	i = 1;
 	watchdog_reset();/*初始化看门狗,T = WTCNT * t_watchdog*/
@@ -97,7 +99,7 @@ void coin_init (void)
     rNF_Init();
 	initial_nandflash();    //nandflash
 
-	Hsmmc_Init ();//SD卡
+	//Hsmmc_Init ();//SD卡
 	cy_println ("Hsmmc_init_flag is %d", Hsmmc_exist ());
 
 	ini_picaddr();	 //初始化触摸屏变量
@@ -237,6 +239,9 @@ void Task2(void *pdata)
 			touchresult();//判断触摸 状态的函数
 			touch_flag =0;
 		}
+		if (red_flag_env.msg_received > 0){
+			red_flag_env.p_process_msg_func ();
+		}
 		if (sys_env.uart0_cmd_flag == 1){
 			vTaskCmdAnalyze ();//串口命令处理函数
 			sys_env.uart0_cmd_flag = 0;
@@ -271,7 +276,7 @@ void Task1(void *pdata)
 			if (para_set_value.data.belt_runtime == 0){
 				BELT_MOTOR_STOPRUN();   //斗送入电机
 				fin_coin_dispense ();
-				cy_println ("stop belt motor 2");
+				//cy_println ("stop belt motor 2");
 			}
 		}
 	}
@@ -417,12 +422,12 @@ void TaskStart(void *pdata)
 					dgus_tf1word(ADDR_A1MI,coin_minvalue1);	//	 real time ,pre AD1  min
 					dgus_tf1word(ADDR_A2MA,coin_maxvalue2);	//	 real time ,pre AD2  max
 					dgus_tf1word(ADDR_A2MI,coin_minvalue2);	//	 real time ,pre AD2  min
-					pc_print("%d,%d;",52, coin_maxvalue0);
-					pc_print("%d,%d;",53, coin_minvalue0);
-					pc_print("%d,%d;",54, coin_maxvalue1);
-					pc_print("%d,%d;",55, coin_minvalue1);
-					pc_print("%d,%d;",56, coin_maxvalue2);
-					pc_print("%d,%d;",57, coin_minvalue2);
+					pc_print("%d$%d;",52, coin_maxvalue0);
+					pc_print("%d$%d;",53, coin_minvalue0);
+					pc_print("%d$%d;",54, coin_maxvalue1);
+					pc_print("%d$%d;",55, coin_minvalue1);
+					pc_print("%d$%d;",56, coin_maxvalue2);
+					pc_print("%d$%d;",57, coin_minvalue2);
 				}
 				if(blockflag == 0){//堵币
 					SEND_ERROR(PRESSMLOCKED);
@@ -465,7 +470,7 @@ int main (void)
 //	int re;
 	//main_task (0);
  	port_Init();
-	uart_init();//115200bps
+	uart0_init();//115200bps
 //	re = System_call (9);
 	Init_OS_ticks ();
 	OSInit(); // 初始化uCOS
