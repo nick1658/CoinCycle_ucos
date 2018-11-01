@@ -4,8 +4,9 @@
 #define FRAME_SIZE 6
 
 #define HEADER_BYTE 0x05
-#define MASTER 0x01
 
+#define RED_FLAG_SEND_TO_SLAVE 0x10
+#define RED_FLAG_SEND_TO_MASTER  0x01
 //√¸¡Ó
 #define PAYOUT_REQUEST_NO_MSG 0x10
 #define STATUS_REQUEST 0x11
@@ -30,7 +31,10 @@
 
 #define RED_FLAG_MSG_BUF_LEN 60
 #define RED_FLAG_PAYOUT_BUF_LEN 6
-#define RED_FLAG_TIMEOUT 5000 //50ms
+#define RED_FLAG_TIMEOUT 50 //5ms
+
+#define STOP_BELT_TIME (para_set_value.data.pre_count_stop_n)
+#define STOP_BELT_TIME_ADDR 0x80
 
 typedef struct
 {

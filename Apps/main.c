@@ -239,9 +239,7 @@ void Task2(void *pdata)
 			touchresult();//判断触摸 状态的函数
 			touch_flag =0;
 		}
-		if (red_flag_env.msg_received > 0){
-			red_flag_env.p_process_msg_func ();
-		}
+		red_flag_env.p_process_msg_func ();
 		if (sys_env.uart0_cmd_flag == 1){
 			vTaskCmdAnalyze ();//串口命令处理函数
 			sys_env.uart0_cmd_flag = 0;
@@ -269,16 +267,6 @@ void Task1(void *pdata)
 	while (1) {
 		LED2_NOT;
 		OSTimeDly(500); // LED3 1000ms闪烁void
-		if (para_set_value.data.belt_runtime > 0){
-			OS_ENTER_CRITICAL();
-			para_set_value.data.belt_runtime--;
-			OS_EXIT_CRITICAL();
-			if (para_set_value.data.belt_runtime == 0){
-				BELT_MOTOR_STOPRUN();   //斗送入电机
-				fin_coin_dispense ();
-				//cy_println ("stop belt motor 2");
-			}
-		}
 	}
 }
 

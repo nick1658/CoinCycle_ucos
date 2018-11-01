@@ -174,8 +174,8 @@ enum cctalk_crc_mode  {
 	CCTALK_CRC_CCITT = 1,
 }; 
 
-#define HOPPER_STATUS_LOW (0x01)
-#define HOPPER_STATUS_HIGH (0x02)
+#define HOPPER_STATUS_LOW (0x02)
+#define HOPPER_STATUS_HIGH (0x04)
 
 
 #define ACT_L_R_SINGULATOR_RUNNING 		(0x01)

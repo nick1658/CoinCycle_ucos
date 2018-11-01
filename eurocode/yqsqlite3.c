@@ -363,6 +363,7 @@ void ini_screen (void)
 	for (i = 0; i < HOPPER_NUM; i++){
 		para_set_value.data.hopper_payout_num[i] = 0;
 		para_set_value.data.hopper_output_timeout[i] = 0;
+		para_set_value.data.hopper_status[i] = 0;
 	}
 	para_set_value.data.hopper_pulse = 200;
 	para_set_value.data.belt_runtime = 0;

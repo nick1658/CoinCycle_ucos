@@ -139,6 +139,7 @@ typedef struct
 	uint16_t hopper_pulse;
 	volatile uint32_t hopper_dispense_num[HOPPER_NUM];
 	volatile uint32_t hopper_unpayout_num[HOPPER_NUM];
+	volatile uint32_t hopper_status[HOPPER_NUM];
 	volatile uint32_t hopper_balance[HOPPER_NUM];
 	volatile uint32_t hopper_payout_num[HOPPER_NUM];
 	volatile uint32_t coin_total_num[HOPPER_NUM];

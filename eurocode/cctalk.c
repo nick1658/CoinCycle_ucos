@@ -332,13 +332,17 @@ void update_hopper_status (void)
 {
 	uint8_t i;
 	for (i = 0; i < HOPPER_NUM; i++){
-		if (para_set_value.data.hopper_balance[i] < 10){
-			cctalk_env.hopper_status[i] = HOPPER_STATUS_LOW;
-		}else if (para_set_value.data.hopper_balance[i] > 300){
-			cctalk_env.hopper_status[i] = HOPPER_STATUS_HIGH;
-		}else{
-			cctalk_env.hopper_status[i] = 0;
-		}
+		if (para_set_value.data.hopper_balance[i] > 300){
+			para_set_value.data.hopper_status[i] |= HOPPER_STATUS_HIGH;
+			}
+		cctalk_env.hopper_status[i] = para_set_value.data.hopper_status[i];
+//		if (para_set_value.data.hopper_balance[i] < 10){
+//			cctalk_env.hopper_status[i] = HOPPER_STATUS_LOW;
+//		}else if (para_set_value.data.hopper_balance[i] > 300){
+//			cctalk_env.hopper_status[i] = HOPPER_STATUS_HIGH;
+//		}else{
+//			cctalk_env.hopper_status[i] = 0;
+//		}
 	}
 }
 int res_request_hopper_status (char *recv_buf)
@@ -357,6 +361,7 @@ int res_request_hopper_status (char *recv_buf)
 	}
 	///////////////////////////////////////////////////////////////////
 	cctalk_send (recv_buf[2], data_buf_tmp, sizeof(data_buf_tmp));
+	red_flag_env.p_get_hopper_status_func (0xFF);
 	return 0;
 }
 //

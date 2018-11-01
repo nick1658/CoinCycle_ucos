@@ -1,4 +1,4 @@
-#include "S3C2416.h"
+#include "s3c2416.h"
 
 
 
@@ -7,8 +7,8 @@ u_red_flag_frame *p_red_flag_frame;
 
 
 #define SEND_RED_FLAG_FRAME(ADDR, CMD, DATA) { \
-	red_flag_payout_buf[0] = 0x05; \
-	red_flag_payout_buf[1] = 0x10; \
+	red_flag_payout_buf[0] = HEADER_BYTE; \
+	red_flag_payout_buf[1] = RED_FLAG_SEND_TO_SLAVE; \
 	red_flag_payout_buf[2] = ADDR; \
 	red_flag_payout_buf[3] = CMD; \
 	red_flag_payout_buf[4] = DATA; \
@@ -50,10 +50,14 @@ int red_flag_get_hopper_status (uint8_t addr)
 //	PC_ALERT_MSG ("GET HOPPER STATUS");
 	init_red_flag_recv_buf ();
 	if (addr == 0xFF){
+		para_set_value.data.hopper_status[0] = 0x80;
+		para_set_value.data.hopper_status[1] = 0x80;
+		para_set_value.data.hopper_status[2] = 0x80;
 		SEND_RED_FLAG_FRAME (0x00, STATUS_REQUEST, 0);
 		SEND_RED_FLAG_FRAME (0x01, STATUS_REQUEST, 0);
 		SEND_RED_FLAG_FRAME (0x02, STATUS_REQUEST, 0);
 	}else{
+		para_set_value.data.hopper_status[addr] = 0x80;
 		SEND_RED_FLAG_FRAME (addr, STATUS_REQUEST, 0);
 	}
 	return 0;
@@ -88,6 +92,7 @@ int red_flag_reset_hopper (uint8_t addr)
 //
 
 #define DISP_RED_FLAG_FRAME() { \
+	if (p_frame->data.data > 0){ \
 		sprintf (str_buf, "%02x %02x %02x %02x %02x %02x --%02x", \
 		p_frame->fill[0], \
 		p_frame->fill[1], \
@@ -97,6 +102,7 @@ int red_flag_reset_hopper (uint8_t addr)
 		p_frame->fill[5], \
 		checksum); \
 		PC_ALERT_MSG (str_buf); \
+	} \
 }
 int red_flag_hopper_res (u_red_flag_frame *p_frame)
 {
@@ -109,21 +115,43 @@ int red_flag_hopper_res (u_red_flag_frame *p_frame)
 	}
 	//cy_println ("%02x--%02x", p_frame->fill[i], checksum);
 	
+	sprintf (str_buf, " ");
 	if (checksum == p_frame->data.checksum){
 		if (p_frame->data.cmd == FINISH_MSG){
-			para_set_value.data.hopper_unpayout_num[p_frame->data.addr] = p_frame->data.data;
-			sprintf (str_buf, "Payout finished,hopper 0(%d-%d),hopper 1(%d-%d),hopper 2(%d-%d)",
-				para_set_value.data.hopper_dispense_num[0], para_set_value.data.hopper_unpayout_num[0],
-				para_set_value.data.hopper_dispense_num[1], para_set_value.data.hopper_unpayout_num[1],
-				para_set_value.data.hopper_dispense_num[2], para_set_value.data.hopper_unpayout_num[2]
-			);
+			if (p_frame->data.addr < HOPPER_NUM){
+				para_set_value.data.hopper_unpayout_num[p_frame->data.addr] = p_frame->data.data;
+				sprintf (str_buf, "hopper 0(%d-%d),hopper 1(%d-%d),hopper 2(%d-%d)",
+					para_set_value.data.hopper_dispense_num[0], para_set_value.data.hopper_unpayout_num[0],
+					para_set_value.data.hopper_dispense_num[1], para_set_value.data.hopper_unpayout_num[1],
+					para_set_value.data.hopper_dispense_num[2], para_set_value.data.hopper_unpayout_num[2]
+				);
+			}else if (p_frame->data.addr == 0xFF){
+				BELT_MOTOR_STOPRUN();   //¶·ËÍÈëµç»ú
+				fin_coin_dispense ();
+				red_flag_get_hopper_status (0xFF);
+			}
 			PC_ALERT_MSG (str_buf);
 		}else if (p_frame->data.cmd == ONE_COIN_MSG){
 		}else if (p_frame->data.cmd == STATUS_MSG){
-			DISP_RED_FLAG_FRAME ();
+			if (p_frame->data.addr < HOPPER_NUM){
+				para_set_value.data.hopper_status[p_frame->data.addr] = p_frame->data.data;
+				if ((p_frame->data.data & STATUS_MSG_HOPPER_LOW) == 0){
+					update_hopper_status ();
+				}
+				sprintf (str_buf, "Payout Opration Finished,Hopper 0(0x%02x),Hopper 1(0x%02x),Hopper 2(0x%02x)",
+						para_set_value.data.hopper_status[0],
+						para_set_value.data.hopper_status[1],
+						para_set_value.data.hopper_status[2]);
+				PC_ALERT_MSG (str_buf);
+			}
+			//DISP_RED_FLAG_FRAME ();
 		}else if (p_frame->data.cmd == ACK_MSG){
-			sprintf (str_buf, "hopper %d had %d coin not payout",p_frame->data.addr, p_frame->data.data);
-			PC_ALERT_MSG (str_buf);
+			if (p_frame->data.addr < HOPPER_NUM){
+				sprintf (str_buf, "hopper %d ACK",p_frame->data.addr);
+				PC_ALERT_MSG (str_buf);
+			}else if (p_frame->data.addr == 0xFF){
+				sprintf (str_buf, "dispense ACK");
+			}
 		}else if (p_frame->data.cmd == BUSY_MSG){
 		}
 	}else{
@@ -137,7 +165,11 @@ void red_flag_msg_process (void)
 	uint8_t i;
 	uint8_t recv_msg_ctr_tmp = recv_msg_ctr;
 	
-//	cy_println ("\n msg_received = %d", red_flag_env.msg_received);
+	if (red_flag_env.msg_received == 0){
+		return;
+	}
+	
+//	cy_println ("\nmsg_received = %d", red_flag_env.msg_received);
 //	red_flag_env.msg_received = 0;
 //	for (i = 0; i < recv_msg_ctr; i++){
 //		cy_print ("%02x ", red_flag_msg_buf[i]);
@@ -164,10 +196,10 @@ void fill_red_flag_buf3 (char data)
 	LED2_NOT;
 	red_flag_msg_buf[recv_msg_ctr++] = data;
 //		red_flag_env.msg_received = 1;
-	if (recv_msg_ctr >= RED_FLAG_PAYOUT_BUF_LEN){
-		red_flag_env.msg_received = 1;
-	}
-	//red_flag_env.msg_received_timeout = RED_FLAG_TIMEOUT;
+//	if (recv_msg_ctr >= RED_FLAG_PAYOUT_BUF_LEN){
+//		red_flag_env.msg_received = 1;
+//	}
+	red_flag_env.msg_received_timeout = RED_FLAG_TIMEOUT;
 	if (recv_msg_ctr >= RED_FLAG_MSG_BUF_LEN){
 		recv_msg_ctr = 0;
 	}

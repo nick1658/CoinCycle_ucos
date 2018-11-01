@@ -401,8 +401,11 @@ int get_hex_struct (s_hex_file *p_hex, char *_data_buf)
 
 void coin_dispense (void)
 {	
+	char str_buf[256];
 	uint8_t i;
 	//开始找零-----------------------------------------------------
+	
+	red_flag_env.p_red_flag_payout (STOP_BELT_TIME_ADDR, STOP_BELT_TIME);//地址0x80设置停机延时单位秒；
 	for (i = 0; i < HOPPER_NUM; i++){
 		para_set_value.data.hopper_payout_num[i] = 0;
 		if (para_set_value.data.hopper_dispense_num[i] > para_set_value.data.hopper_balance[i]){
@@ -417,6 +420,12 @@ void coin_dispense (void)
 			red_flag_env.p_red_flag_payout (i, para_set_value.data.hopper_dispense_num[i]);
 		}
 	}
+	
+	sprintf (str_buf, "Hopper 0(%d),Hopper 1(%d),Hopper 2(%d)",
+		para_set_value.data.hopper_dispense_num[0],
+		para_set_value.data.hopper_dispense_num[1],
+		para_set_value.data.hopper_dispense_num[2]);
+	PC_ALERT_MSG (str_buf);
 	//结束找零-----------------------------------------------------
 	write_para ();
 }
