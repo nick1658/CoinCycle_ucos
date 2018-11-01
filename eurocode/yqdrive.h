@@ -107,7 +107,6 @@
 	coin_env.recv_kick_Q[M][N]--; \
 	if (coin_env.recv_kick_Q[M][N] == 0){ \
 		(*coin_env.p_coin_recv_func[M])(); \
-		coin_env.recv_kick_keep_t[M] = para_set_value.data.recv_kick_keep_delay_t[M];\
 	}\
 }
 //

@@ -229,9 +229,9 @@ void read_coin_value(void) 	 // read  COIN  0--8
 	pre_value.coin[10].data.money = MONEY_5_00;
 
 	//…Ë÷√”≤±“ ’±“Hopper ID∫≈
-	pre_value.coin[0].data.coin_kick_id = 0;
-	pre_value.coin[1].data.coin_kick_id = 1;
-	pre_value.coin[2].data.coin_kick_id = 1;
+	pre_value.coin[0].data.coin_kick_id = 0;//1‘™
+	pre_value.coin[1].data.coin_kick_id = 1;//5Ω«Õ≠
+	pre_value.coin[2].data.coin_kick_id = 1;//5Ω«∏÷
 	pre_value.coin[3].data.coin_kick_id = 2;//¥Û1Ω«
 	pre_value.coin[4].data.coin_kick_id = 2;
 	pre_value.coin[5].data.coin_kick_id = 2;
