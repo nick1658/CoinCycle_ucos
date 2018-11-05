@@ -414,7 +414,7 @@ void coin_dispense (void)
 		para_set_value.data.hopper_unpayout_num[i] = para_set_value.data.hopper_dispense_num[i];
 		if (para_set_value.data.hopper_dispense_num[i] > 0){
 			set_active_resister (ACT_L_R_DISPENSING_COIN, 0);
-			BELT_MOTOR_STARTRUN();   //斗送入电机
+			BELT_MOTOR_STARTRUN();   //
 			para_set_value.data.belt_runtime = BELT_RUN_TIME;
 //			para_set_value.data.hopper_output_timeout[i] = 20;//10s
 			red_flag_env.p_red_flag_payout (i, para_set_value.data.hopper_dispense_num[i]);
@@ -497,16 +497,21 @@ int get_hex_data (char * buf)
 				{
 					case 0x000E://复位指令
 						LOG ("Reset System...");
-						delay_ms (20);
-						rSWIRST = 0x533C2416;
+						reset_system ();
 						break;
 					case 0x0001://刷新数据
 						refresh_data ();
 						break;
-					case 0x0002://启动
+					case 0x0002://启动				
+						coin_env.inhibit_coin[0] = 1;//1元
+						coin_env.inhibit_coin[1] = 1;//5角铜
+						coin_env.inhibit_coin[2] = 1;//5角钢
+						coin_env.inhibit_coin[3] = 1;//1角小铝
+						coin_env.inhibit_coin[4] = 1;//1角钢
+						coin_env.inhibit_coin[5] = 1;//1角小铝
 						coin_start ();
 						break;
-					case 0x0003://停止
+					case 0x0003://停止						
 						coin_stop ();
 						break;
 					case 0x0004://打印
@@ -558,6 +563,7 @@ int get_hex_data (char * buf)
 						red_flag_env.p_get_hopper_status_func (0xff);
 						break;
 					case 0x0017://empty hopper
+						BELT_MOTOR_STARTRUN();
 						red_flag_env.p_empty_hopper_func (0xff);
 						break;
 					case 0x0018://reset hopper
@@ -1185,6 +1191,11 @@ void coin_print (void)
 {
 	print_func();	 //打印函数
 	sys_env.workstep = 0;	//停止	所有动作  // 等待 触摸
+}
+void reset_system (void)
+{
+	delay_ms (20);
+	rSWIRST = 0x533C2416;
 }
 
 void refresh_data (void)

@@ -261,7 +261,7 @@ void Task2(void *pdata)
 void Task1(void *pdata)
 {
 #if OS_CRITICAL_METHOD == 3u                     /* Allocate storage for CPU status register           */
-    OS_CPU_SR  cpu_sr = 0u;
+//    OS_CPU_SR  cpu_sr = 0u;
 #endif
 	(void)pdata;
 	while (1) {
@@ -330,6 +330,12 @@ void TaskStart(void *pdata)
 				reset_active_resister (ACT_L_R_ACCEPTING_COIN, 0);
 				disp_allcount ();
 				save_coin_number ();
+				coin_env.inhibit_coin[0] = 0;//1Ôª
+				coin_env.inhibit_coin[1] = 0;//5½ÇÍ­
+				coin_env.inhibit_coin[2] = 0;//5½Ç¸Ö
+				coin_env.inhibit_coin[3] = 0;//1½ÇÐ¡ÂÁ
+				coin_env.inhibit_coin[4] = 0;//1½Ç¸Ö
+				coin_env.inhibit_coin[5] = 0;//1½ÇÐ¡ÂÁ
 				sys_env.workstep = 1;
 				break;
 			}

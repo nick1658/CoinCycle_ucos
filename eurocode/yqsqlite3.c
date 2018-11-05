@@ -111,26 +111,26 @@ void initial_nandflash(void)    //nandflash
 		para_set_value.data.op_id = 0;
 		para_set_value.data.rej_level = 0;
 		para_set_value.data.ng_kick_start_delay_t = 3;
-		para_set_value.data.ng_kick_keep_delay_t = 200;
+		para_set_value.data.ng_kick_keep_delay_t = 80;
 		para_set_value.data.coin_full_rej_pos = 1;
-		para_set_value.data.motor_idle_t = 400;
+		para_set_value.data.motor_idle_t = 200;
 		para_set_value.data.adj_offset_position = 4096;
-		para_set_value.data.pre_count_stop_n = 1;
+		para_set_value.data.pre_count_stop_n = 3;
 		para_set_value.data.system_boot_delay = 1;
 		para_set_value.data.system_mode = 1;
 
 		for (i = 0; i < COIN_TYPE_NUM; i++){
 			para_set_value.data.precoin_set_num[i] = 300;
 			para_set_value.data.recv_kick_start_delay_t[i] = 0;
-			para_set_value.data.recv_kick_keep_delay_t[i] = 200;
+			para_set_value.data.recv_kick_keep_delay_t[i] = 80;
 		}
 		
 		para_set_value.data.recv_kick_start_delay_t[0] = 6;
-		para_set_value.data.recv_kick_keep_delay_t[0] = 200;
+		para_set_value.data.recv_kick_keep_delay_t[0] = 80;
 		para_set_value.data.recv_kick_start_delay_t[1] = 9;
-		para_set_value.data.recv_kick_keep_delay_t[1] = 150;
+		para_set_value.data.recv_kick_keep_delay_t[1] = 80;
 		para_set_value.data.recv_kick_start_delay_t[2] = 12;
-		para_set_value.data.recv_kick_keep_delay_t[2] = 150;
+		para_set_value.data.recv_kick_keep_delay_t[2] = 80;
 
 		test_erase_r_code (Nand_EraseBlock(PUBULIC_DATA_START_BLOCK_NUM ));
 		cy_println ("erase block %d completed", PUBULIC_DATA_START_BLOCK_NUM);
@@ -229,9 +229,9 @@ void read_coin_value(void) 	 // read  COIN  0--8
 	pre_value.coin[10].data.money = MONEY_5_00;
 
 	//ÉèÖÃÓ²±ÒÊÕ±ÒHopper IDºÅ
-	pre_value.coin[0].data.coin_kick_id = 0;//1Ôª
-	pre_value.coin[1].data.coin_kick_id = 1;//5½ÇÍ­
-	pre_value.coin[2].data.coin_kick_id = 1;//5½Ç¸Ö
+	pre_value.coin[0].data.coin_kick_id = 1;//1Ôª
+	pre_value.coin[1].data.coin_kick_id = 0;//5½ÇÍ­
+	pre_value.coin[2].data.coin_kick_id = 0;//5½Ç¸Ö
 	pre_value.coin[3].data.coin_kick_id = 2;//´ó1½Ç
 	pre_value.coin[4].data.coin_kick_id = 2;
 	pre_value.coin[5].data.coin_kick_id = 2;

@@ -161,6 +161,7 @@ void coin_learn_data_not_save (void);
 void coin_start (void);
 void coin_stop (void);
 void coin_print (void);
+void reset_system (void);
 void coin_clear (void);
 void coin_clear_alarm (void);
 void refresh_data (void);

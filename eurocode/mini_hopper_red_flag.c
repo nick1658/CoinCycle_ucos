@@ -25,6 +25,7 @@ u_red_flag_frame *p_red_flag_frame;
 
 uint8_t recv_msg_ctr;
 char red_flag_msg_buf[RED_FLAG_MSG_BUF_LEN];
+char red_flag_msg_process_buf[RED_FLAG_MSG_BUF_LEN];
 char red_flag_payout_buf[RED_FLAG_PAYOUT_BUF_LEN];
 
 void init_red_flag_recv_buf (void)
@@ -162,6 +163,9 @@ int red_flag_hopper_res (u_red_flag_frame *p_frame)
 
 void red_flag_msg_process (void)
 {
+#if OS_CRITICAL_METHOD == 3u                     /* Allocate storage for CPU status register           */
+    OS_CPU_SR  cpu_sr = 0u;
+#endif
 	uint8_t i;
 	uint8_t recv_msg_ctr_tmp = recv_msg_ctr;
 	
@@ -177,12 +181,17 @@ void red_flag_msg_process (void)
 //	//cy_println ("--%d", recv_msg_ctr);
 //	recv_msg_ctr = 0;
 	
+	for (i = 0; i < recv_msg_ctr_tmp; i++){//拷贝到处理缓冲区
+		red_flag_msg_process_buf[i] = red_flag_msg_buf[i];
+	}
+	OS_ENTER_CRITICAL ();
 	red_flag_env.msg_received = 0;
 	recv_msg_ctr = 0;
+	OS_EXIT_CRITICAL ();
 	i = 0;
 	//cy_println ("--%d", recv_msg_ctr_tmp);
 	while (i < recv_msg_ctr_tmp){
-		p_red_flag_frame = (u_red_flag_frame*)&(red_flag_msg_buf[i]);
+		p_red_flag_frame = (u_red_flag_frame*)&(red_flag_msg_process_buf[i]);
 		red_flag_hopper_res (p_red_flag_frame);
 		i += RED_FLAG_PAYOUT_BUF_LEN;
 	}

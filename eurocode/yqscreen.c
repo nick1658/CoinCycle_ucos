@@ -532,6 +532,12 @@ void touchresult(void)      //根据接收到的  数 来决定 执行的任务
 	case ADDR_CRUN:  //地址ADDR_CRUN 0X06  按键返回值判断
 		if( (value == 0x01)){
 			// A5 5A 06 83 00 06 01 00 01	混计数界面 start
+			coin_env.inhibit_coin[0] = 1;//1元
+			coin_env.inhibit_coin[1] = 1;//5角铜
+			coin_env.inhibit_coin[2] = 1;//5角钢
+			coin_env.inhibit_coin[3] = 1;//1角小铝
+			coin_env.inhibit_coin[4] = 1;//1角钢
+			coin_env.inhibit_coin[5] = 1;//1角小铝
 			coin_start ();
 		}else if( (value == 0x02)){
 		  //A5 5A 06 83 00 06 01 00 02	  混计数界面 stop

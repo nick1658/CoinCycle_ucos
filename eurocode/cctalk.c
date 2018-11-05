@@ -507,12 +507,33 @@ int res_pay_money_out (char *recv_buf)
 //
 int res_purge_hopper(char *recv_buf)
 {
-//	uint8_t hopper_index;
-//	uint8_t coin_num;
-//	hopper_index = recv_buf[4];//0xFF 表示清空所有Hopper，否则代表Hopper序号
-//	coin_num = recv_buf[5];//0x0 代表清空hopper_index对应的Hopper，否则代表出的硬币数，最多255
+	uint8_t hopper_index, i;
+	uint8_t coin_num;
+	hopper_index = recv_buf[4];//0xFF 表示清空所有Hopper，否则代表Hopper序号
+	coin_num = recv_buf[5];//0x0 代表清空hopper_index对应的Hopper，否则代表出的硬币数，最多255
 	//清空操作
-//	check_res_flag ();
+	if (check_res_flag (ACT_L_R_ACCEPTING_COIN | ACT_L_R_DISPENSING_COIN) == 1){
+		if (hopper_index > 0){
+			hopper_index--;
+		}
+		if (coin_num == 0){
+			set_active_resister (ACT_L_R_DISPENSING_COIN, 0);
+			BELT_MOTOR_STARTRUN();   //
+			para_set_value.data.hopper_balance[hopper_index] = 0;
+			save_coin_number ();
+			red_flag_env.p_empty_hopper_func (hopper_index);
+		}else{
+			for (i = 0; i < HOPPER_NUM; i++){
+				para_set_value.data.hopper_dispense_num[i] = 0;
+			}
+			para_set_value.data.hopper_dispense_num[hopper_index] = coin_num;
+			if (sys_env.coin_dispense == 0){
+				sys_env.coin_dispense = 1;
+			}
+		}
+	}else{
+		cctalk_set_NAK ();
+	}
 	return cctalk_simple_poll_respond (recv_buf);
 }
 //
@@ -610,6 +631,7 @@ int cctalk_protocol (char *buf, uint32_t len)
 			break;
 		case CCTALK_METHOD_RESET_DEVICE://复位
 			cctalk_simple_poll_respond (buf);
+			red_flag_env.p_reset_hopper_func (0xFF);
 			break;
 		case CCTALK_METHOD_PERFORM_SELF_CHECK://自检
 			res_Perform_self_check (buf);
