@@ -31,15 +31,17 @@
 #define PAYOUT2(x)		OUT9(!x)
 
 
-#define  STORAGE_MOTOR(x) 	 OUT0(x)			//P2^3; CLKOUT0/GPH13  //斗送入电机
+//#define  STORAGE_MOTOR(x) 	 OUT0(x)			//P2^3; CLKOUT0/GPH13  //斗送入电机
 #define  STORAGE_DIR(x) 		 OUT1(x)			//P2^3; CLKOUT0/GPH13  //斗送入电机转向
 #define  EMKICK0(x) 				 OUT4(x)			//P2^4; CLKOUT1/GPH14      // kick out
 #define  EMKICK1(x) 				 OUT5(x)			//P2^5; //EINT15/GPG7   //kick back
 #define  EMKICK2(x) 				 OUT2(x)			//P2^4; CLKOUT1/GPH14      // kick out
 #define  EMKICK3(x) 				 OUT3(x)			//P2^5; //EINT15/GPG7   //kick back
+#define  STORAGE_MOTOR(x) 	 OUT7(x)			
+#define  STORAGE_MOTOR_PWM(x) 	 OUT0(x)			
 
-#define STORAGE_MOTOR_STARTRUN() STORAGE_MOTOR(0)
-#define STORAGE_MOTOR_STOPRUN() STORAGE_MOTOR(1)
+#define STORAGE_MOTOR_STARTRUN() {STORAGE_MOTOR(0);STORAGE_MOTOR_PWM(0);}
+#define STORAGE_MOTOR_STOPRUN() {STORAGE_MOTOR(1);STORAGE_MOTOR_PWM(1);}
 #define STORAGE_DIR_P() STORAGE_DIR(0) //正转
 #define STORAGE_DIR_N() STORAGE_DIR(1) //反转
 

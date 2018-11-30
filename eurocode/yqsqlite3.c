@@ -232,15 +232,17 @@ void read_coin_value(void) 	 // read  COIN  0--8
 	pre_value.coin[0].data.coin_kick_id = 1;//1元
 	pre_value.coin[1].data.coin_kick_id = 0;//5角铜
 	pre_value.coin[2].data.coin_kick_id = 0;//5角钢
-	pre_value.coin[3].data.coin_kick_id = 2;//大1角
+	pre_value.coin[3].data.coin_kick_id = 3;//大1角
 	pre_value.coin[4].data.coin_kick_id = 2;
-	pre_value.coin[5].data.coin_kick_id = 2;
+	pre_value.coin[5].data.coin_kick_id = 5;
 	pre_value.coin[6].data.coin_kick_id = 6;
 	pre_value.coin[7].data.coin_kick_id = 7;
 	pre_value.coin[8].data.coin_kick_id = 8;
 	pre_value.coin[9].data.coin_kick_id = 9;
 	pre_value.coin[10].data.coin_kick_id = 10;
 	
+	para_set_value.data.motor_idle_t = 200;
+	para_set_value.data.system_boot_delay = 1;
 	//设置硬币可找零标志，0表示不可找零，进回收箱
 	pre_value.coin[0].data.can_payout = 1; //一元
 	pre_value.coin[1].data.can_payout = 1; //五角铜
@@ -260,10 +262,19 @@ void read_coin_value(void) 	 // read  COIN  0--8
 	}
 	
 		
+//	para_set_value.data.ng_kick_start_delay_t = 3;
+//	para_set_value.data.recv_kick_start_delay_t[0] = 6;
+//	para_set_value.data.recv_kick_start_delay_t[1] = 9;
+//	para_set_value.data.recv_kick_start_delay_t[2] = 12;
+	
 	para_set_value.data.ng_kick_start_delay_t = 3;
+	para_set_value.data.ng_kick_keep_delay_t = 80;
 	para_set_value.data.recv_kick_start_delay_t[0] = 6;
+	para_set_value.data.recv_kick_keep_delay_t[0] = 80;
 	para_set_value.data.recv_kick_start_delay_t[1] = 9;
+	para_set_value.data.recv_kick_keep_delay_t[1] = 80;
 	para_set_value.data.recv_kick_start_delay_t[2] = 12;
+	para_set_value.data.recv_kick_keep_delay_t[2] = 80;
 	//映射收币函数
 	coin_env.p_coin_recv_func[0] = coin_recv0_out_func;
 	coin_env.p_coin_recv_func[1] = coin_recv1_out_func;

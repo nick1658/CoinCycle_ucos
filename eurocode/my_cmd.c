@@ -668,11 +668,23 @@ int get_hex_data (char * buf)
 						break;
 					case 64://拒收设置
 						break;
-					case 80: //找零1元
+					case 80://平均值
+						para_set_value.data.coin_Vpp_A[0] = para_value;
 						break;
-					case 81: //找零5角
+					case 81://减法系数
+						para_set_value.data.coin_Sub_value[0] = para_value;
 						break;
-					case 82: //找零1角
+					case 82://平均值
+						para_set_value.data.coin_Vpp_A[1] = para_value;
+						break;
+					case 83://减法系数
+						para_set_value.data.coin_Sub_value[1] = para_value;
+						break;
+					case 84://平均值
+						para_set_value.data.coin_Vpp_A[2] = para_value;
+						break;
+					case 85://减法系数
+						para_set_value.data.coin_Sub_value[2] = para_value;
 						break;
 					default:
 						break;
@@ -1228,7 +1240,13 @@ void refresh_data (void)
 	pc_print("%d$%d;",60, para_set_value.data.recv_kick_start_delay_t[1]);
 	pc_print("%d$%d;",61, para_set_value.data.recv_kick_keep_delay_t[1]);
 	pc_print("%d$%d;",62, para_set_value.data.recv_kick_start_delay_t[2]);
-	pc_print("%d$%d;",63, para_set_value.data.recv_kick_keep_delay_t[2]);
+	pc_print("%d$%d;",63, para_set_value.data.recv_kick_keep_delay_t[2]);	
+	pc_print("%d$%d;",80, para_set_value.data.coin_Vpp_A[0]);
+	pc_print("%d$%d;",81, para_set_value.data.coin_Sub_value[0]);
+	pc_print("%d$%d;",82, para_set_value.data.coin_Vpp_A[1]);
+	pc_print("%d$%d;",83, para_set_value.data.coin_Sub_value[1]);
+	pc_print("%d$%d;",84, para_set_value.data.coin_Vpp_A[2]);
+	pc_print("%d$%d;",85, para_set_value.data.coin_Sub_value[2]);
 	disp_allcount_to_pc ();
 }
 
@@ -1899,6 +1917,11 @@ void print_cmp_data (int16_t _coin_index)
 //		return;
 //	}
 	cy_println ("real     std0 = %4d          std1 = %4d     std2 = %4d", std_ad0, std_ad1, std_ad2);
+	cy_println ("----------------------------------------------------------------------");
+	cy_println ("Av       std0 = %4d          std1 = %4d     std2 = %4d",
+													(pre_value.coin[_coin_index].data.std0 * 3230) / (para_set_value.data.coin_Vpp_A[0] - para_set_value.data.coin_Sub_value[0]),
+													(pre_value.coin[_coin_index].data.std1 * 3230) / (para_set_value.data.coin_Vpp_A[1] - para_set_value.data.coin_Sub_value[1]),
+													(pre_value.coin[_coin_index].data.std2 * 3230) / (para_set_value.data.coin_Vpp_A[2] - para_set_value.data.coin_Sub_value[2]));
 	cy_println ("----------------------------------------------------------------------");
 	cy_println ("save     std0 = %4d          std1 = %4d     std2 = %4d",
 			pre_value.coin[_coin_index].data.std0,

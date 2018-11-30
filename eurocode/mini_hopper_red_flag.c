@@ -130,6 +130,11 @@ int red_flag_hopper_res (u_red_flag_frame *p_frame)
 				BELT_MOTOR_STOPRUN();   //¶·ËÍÈëµç»ú
 				fin_coin_dispense ();
 				red_flag_get_hopper_status (0xFF);
+			}else if (p_frame->data.addr == 0x80){
+				sprintf (str_buf, "Payout Opration Finished,Hopper 0(0x%02x),Hopper 1(0x%02x),Hopper 2(0x%02x)",
+						para_set_value.data.hopper_status[0],
+						para_set_value.data.hopper_status[1],
+						para_set_value.data.hopper_status[2]);
 			}
 			PC_ALERT_MSG (str_buf);
 		}else if (p_frame->data.cmd == ONE_COIN_MSG){
@@ -151,7 +156,11 @@ int red_flag_hopper_res (u_red_flag_frame *p_frame)
 				sprintf (str_buf, "hopper %d ACK",p_frame->data.addr);
 				PC_ALERT_MSG (str_buf);
 			}else if (p_frame->data.addr == 0xFF){
-				sprintf (str_buf, "dispense ACK");
+				sprintf (str_buf, "Hopper ACK OK, Hopper 0(%d),Hopper 1(%d),Hopper 2(%d)",
+					para_set_value.data.hopper_dispense_num[0],
+					para_set_value.data.hopper_dispense_num[1],
+					para_set_value.data.hopper_dispense_num[2]);
+				PC_ALERT_MSG (str_buf);
 			}
 		}else if (p_frame->data.cmd == BUSY_MSG){
 		}
