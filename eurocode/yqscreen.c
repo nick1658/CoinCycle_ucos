@@ -77,7 +77,7 @@ void touchget_from_uart2(void)    //receive the touch from dgus at real time
 		}
 		else
 		{
-			cy_print("U %d ",uartcount);
+			cy_print("U-> %d ",uartcount);
 			uartcount = 0;
 		}
 	}
