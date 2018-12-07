@@ -427,7 +427,6 @@ void coin_dispense (void)
 		para_set_value.data.hopper_dispense_num[2]);
 	PC_ALERT_MSG (str_buf);
 	//结束找零-----------------------------------------------------
-	write_para ();
 }
 //
 void fin_coin_dispense (void)
@@ -559,6 +558,8 @@ int get_hex_data (char * buf)
 						break;
 					case 0x0005://清零
 						counter_clear ();
+						write_para (); //保存参数
+						refresh_data ();
 						break;
 					case 0x0006://poll
 						poll_data ();
@@ -632,28 +633,28 @@ int get_hex_data (char * buf)
 						para_set_value.data.recv_kick_keep_delay_t[0] = para_value;
 						break;
 					case 5:
-						para_set_value.data.precoin_set_num[0] = para_value;
+						*pre_value.coin[0].data.p_pre_count_set = para_value;
 						break;
 					case 6:
-						para_set_value.data.precoin_set_num[1] = para_value;
+						*pre_value.coin[1].data.p_pre_count_set = para_value;
 						break;
 					case 7:
-						para_set_value.data.precoin_set_num[2] = para_value;
+						*pre_value.coin[4].data.p_pre_count_set = para_value;
 						break;
 					case 8:
-						para_set_value.data.precoin_set_num[3] = para_value;
+						*pre_value.coin[6].data.p_pre_count_set = para_value;
 						break;
 					case 9:
-						para_set_value.data.precoin_set_num[4] = para_value;
+						*pre_value.coin[7].data.p_pre_count_set = para_value;
 						break;
 					case 10:
-						para_set_value.data.precoin_set_num[5] = para_value;
+						*pre_value.coin[8].data.p_pre_count_set = para_value;
 						break;
 					case 11:
-						para_set_value.data.precoin_set_num[6] = para_value;
+						*pre_value.coin[9].data.p_pre_count_set = para_value;
 						break;
 					case 12:
-						para_set_value.data.precoin_set_num[7] = para_value;
+						*pre_value.coin[10].data.p_pre_count_set = para_value;
 						break;
 					case 22:
 						para_set_value.data.motor_idle_t = para_value;
@@ -671,7 +672,7 @@ int get_hex_data (char * buf)
 						para_set_value.data.system_mode = para_value;
 						break;
 					case 27:
-						para_set_value.data.precoin_set_num[2] = para_value;
+						*pre_value.coin[3].data.p_pre_count_set = para_value;
 						break;
 					case 51:
 						sys_env.coin_index = para_value;
@@ -735,6 +736,15 @@ int get_hex_data (char * buf)
 					case 94:
 						save_offset_value (2, sys_env.coin_index, para_value);
 						break;
+					case 95:
+						*pre_value.coin[0].data.p_hopper_balance_cur = para_value;
+						break;
+					case 96:
+						*pre_value.coin[1].data.p_hopper_balance_cur = para_value;
+						break;
+					case 97:
+						*pre_value.coin[4].data.p_hopper_balance_cur = para_value;
+						break;
 					default:
 						break;
 				}
@@ -742,7 +752,6 @@ int get_hex_data (char * buf)
 				sprintf (str_buf, "Set %d to Addr %d complete", para_value, p_hex.addr);
 				PC_ALERT_MSG (str_buf);
 				write_para (); //保存参数
-				ini_screen ();
 				refresh_data ();
 				break;
 			case 0x0A:
@@ -832,6 +841,10 @@ void update_finish (e_update_flag flag)
 	u16 crc = 0;
 	switch (flag)
 	{
+		case NORMAL_COMMAND:
+			cy_println ("\nNORMAL_COMMAND Timeout!");
+			cy_print ("Nick-Cmd:");
+			break;
 		case UART_UPDATE:
 			if (rec_count > 1){
 				crc = CRC16 (iap_code_buf, rec_count - 2);//CRC 校验
@@ -844,9 +857,6 @@ void update_finish (e_update_flag flag)
 					cmd();
 					comscreen(Disp_Indexpic[27],Number_IndexpicB);	//触摸屏跳转到提示固件丢失界面
 				}
-				rec_count = 0;
-				sys_env.tty_mode = IDLE_MODE;
-				memset (cmd_analyze.rec_buf, 0, sizeof(cmd_analyze.rec_buf));
 			}
 		break;
 		case NET_UPDATE:
@@ -855,21 +865,22 @@ void update_finish (e_update_flag flag)
 		case UART_COMMAND:
 			if (rec_count > 1){
 				get_hex_data (cmd_analyze.rec_buf);
-				rec_count = 0;
-				sys_env.tty_mode = IDLE_MODE;
-				memset (cmd_analyze.rec_buf, 0, sizeof(cmd_analyze.rec_buf));
+			}else{
+				cy_println("UART_COMMAND ERROR, sys_env.uart0_cmd_flag = %d", sys_env.uart0_cmd_flag);
 			}
 			break;
 		case CCTALK_COMMAND:
 			if (rec_count > 4){
 				cctalk_protocol (cmd_analyze.rec_buf, rec_count);
+			}else{
+				cy_println("CCTALK_COMMAND ERROR %d", rec_count);
 			}
-			sys_env.tty_mode = IDLE_MODE;
-			rec_count = 0;
-			memset (cmd_analyze.rec_buf, 0, sizeof(cmd_analyze.rec_buf));
 			break;
 		default:break;
 	}
+	sys_env.tty_mode = IDLE_MODE;
+	rec_count = 0;
+	memset (cmd_analyze.rec_buf, 0, sizeof(cmd_analyze.rec_buf));
 	sys_env.update_flag = NULL_UPDATE;
 }
 void fill_rec_buf(char data)
@@ -912,7 +923,7 @@ void fill_rec_buf(char data)
 		sys_env.tty_online_ms = TTY_ONLINE_TIME;
 		cmd_analyze.rec_buf[rec_count++] = data;
 		if (rec_count == (cmd_analyze.rec_buf[1] + 5)){
-			sys_env.tty_online_ms = 1;//接受完毕
+			sys_env.tty_online_ms = 2;//接受完毕
 		}
 	}else if (sys_env.uart0_cmd_flag == 0){
 		if (data == '\b'){
@@ -943,15 +954,19 @@ void fill_rec_buf(char data)
 			sys_env.tty_online_ms = TTY_ONLINE_TIME;
 			//cy_println ("cctalk mode");
 		}else{
-			sys_env.tty_mode = NORMAL_COMMAND;
+			sys_env.update_flag = NORMAL_COMMAND;
+			sys_env.tty_online_ms = TTY_NORMAL_COMMAND_ONLINE_TIME;
 			Uart0_sendchar(data);
 			if(0x0D == data){
-				if (rec_count > 0){
-					cmd_analyze.rec_buf[rec_count] = '\0';
-					rec_count=0;
-				}
+//				if (rec_count > 0){
+//					cmd_analyze.rec_buf[rec_count] = '\0';
+//					rec_count=0;
+//				}
+				cmd_analyze.rec_buf[rec_count] = '\0';
+				rec_count=0;
 				Uart0_sendchar('\n');
 				sys_env.uart0_cmd_flag = 1;
+				sys_env.tty_online_ms = 0;
 			}else{
 				cmd_analyze.rec_buf[rec_count] = data;
 				rec_count++;
@@ -1308,11 +1323,15 @@ void refresh_data (void)
 	pc_print("%d$%d;",92, pre_value.coin[sys_env.coin_index].data.offsetmax0);
 	pc_print("%d$%d;",93, pre_value.coin[sys_env.coin_index].data.offsetmax1);
 	pc_print("%d$%d;",94, pre_value.coin[sys_env.coin_index].data.offsetmax2);
+	pc_print("%d$%d;",95, *pre_value.coin[0].data.p_hopper_balance_cur);
+	pc_print("%d$%d;",96, *pre_value.coin[1].data.p_hopper_balance_cur);
+	pc_print("%d$%d;",97, *pre_value.coin[4].data.p_hopper_balance_cur);
 	disp_allcount_to_pc ();
 }
 
 void poll_data (void)
 {
+	sys_env.re_run_time = 1;//持续运行
 	disp_allcount_to_pc ();
 }
 
@@ -3257,7 +3276,7 @@ int my_run_command (const char *cmd, int flag)
 	char *str = cmdbuf;
 	char *argv[CFG_MAXARGS + 1];	/* NULL terminated	*/
 	int argc, inquotes;
-	int repeatable = 1;
+	int repeatable = 1,i;
 	int rc = 0;
 
 #ifdef DEBUG_PARSER
@@ -3330,6 +3349,13 @@ int my_run_command (const char *cmd, int flag)
 		/* Look up command in command table */
 		if ((cmdtp = find_cmd(argv[0])) == NULL) {
 			cy_print ("Unknown my_cmd command '%s' - now try 'vTaskCmdAnalyze'\n", argv[0]);
+			i = 0;
+			cy_print ("cmd_buf is '");
+			while (argv[0][i] != 0){
+				cy_print("%02x ", argv[0][i]);
+				i++;
+			}
+			cy_print ("'\n");
 			rc = -1;	/* give up after bad command */
 			continue;
 		}

@@ -452,7 +452,9 @@ int res_request_coins_in_by_type (char *recv_buf)
 	int i;
 	uint8_t data_buf_tmp[32];//
 	///////////////////////////////////////////////////////////////////
-	sys_env.re_run_time = 1;//持续运行
+	if ((cctalk_env.coin_inhibit_status & 0x07) != 0){
+		sys_env.re_run_time = 1;//持续运行
+	}
 	///////////////////////////////////////////////////////////////////
 	for (i = 0; i < 16; i++){
 		if (i < HOPPER_NUM){
@@ -527,8 +529,8 @@ int res_purge_hopper(char *recv_buf)
 				para_set_value.data.hopper_dispense_num[i] = 0;
 			}
 			para_set_value.data.hopper_dispense_num[hopper_index] = coin_num;
-			if (sys_env.coin_dispense == 0){
-				sys_env.coin_dispense = 1;
+			if (sys_env.coin_dispense_flag == 0){
+				sys_env.coin_dispense_flag = 1;
 			}
 		}
 	}else{
@@ -581,8 +583,8 @@ int res_request_hopper_pattern(char *recv_buf)
 					para_set_value.data.hopper_dispense_num[hopper_index_tmp] = hopper_num_tmp;
 				}
 			}
-			if (sys_env.coin_dispense == 0){
-				sys_env.coin_dispense = 1;
+			if (sys_env.coin_dispense_flag == 0){
+				sys_env.coin_dispense_flag = 1;
 			}
 		}
 	}else{
@@ -596,6 +598,7 @@ int res_request_hopper_pattern(char *recv_buf)
 int cctalk_protocol (char *buf, uint32_t len)
 {
 	if (buf[len - 1] != cctalk_calc_checksum (buf, len - 1)){
+		cy_println("CCTALK_COMMAND ERROR %d", len);
 		return -1;
 	}
 	if (buf[0] != CCTALK_ADDR){

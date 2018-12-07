@@ -118,11 +118,15 @@ void initial_nandflash(void)    //nandflash
 		para_set_value.data.pre_count_stop_n = 3;
 		para_set_value.data.system_boot_delay = 1;
 		para_set_value.data.system_mode = 1;
+		para_set_value.data.hopper_balance[0] = 0;//
+		para_set_value.data.hopper_balance[1] = 0;//
+		para_set_value.data.hopper_balance[2] = 0;//
 
 		for (i = 0; i < COIN_TYPE_NUM; i++){
 			para_set_value.data.precoin_set_num[i] = 300;
 			para_set_value.data.recv_kick_start_delay_t[i] = 0;
 			para_set_value.data.recv_kick_keep_delay_t[i] = 80;
+			para_set_value.data.coin_total_num[i] = 0;
 		}
 		
 		para_set_value.data.recv_kick_start_delay_t[0] = 6;
@@ -205,6 +209,7 @@ void write_para (void)	//写入 当前币种 历史数据 总
 	test_erase_r_code (Nand_EraseBlock(PUBULIC_DATA_START_BLOCK_NUM ));
 	write_kick_value ();
 	write_coin_value ();
+	ini_screen ();
 }
 
 uint32_t null_value;
@@ -306,10 +311,10 @@ void read_coin_value(void) 	 // read  COIN  0--8
 		pre_value.coin[i].data.p_hopper_balance_cur = &null_value;
 		pre_value.coin[i].data.p_coin_current_receive = &null_value;
 		
-		pre_value.coin[i].data.p_pre_count_set 	= &count_coin_temp[pre_value.coin[i].data.coin_kick_id].pre_count_set;//预置计数设置值
+		//pre_value.coin[i].data.p_pre_count_set 	= &count_coin_temp[pre_value.coin[i].data.coin_kick_id].pre_count_set;//预置计数设置值
+		pre_value.coin[i].data.p_pre_count_set = &para_set_value.data.precoin_set_num[pre_value.coin[i].data.coin_kick_id];//预置计数设置值初始化
 		pre_value.coin[i].data.p_pre_count_full_flag = &count_coin_temp[pre_value.coin[i].data.coin_kick_id].full_flag;//预置计数到达标志
 
-		*pre_value.coin[i].data.p_pre_count_set = para_set_value.data.precoin_set_num[pre_value.coin[i].data.coin_kick_id];//预置计数设置值初始化
 		*pre_value.coin[i].data.p_pre_count_full_flag = 0;//预置计数到达标志清零
 	}
 	pre_value.coin[0].data.p_count_cur = &para_set_value.data.coin_total_num[0];//
@@ -394,11 +399,6 @@ void ini_screen (void)
 	para_set_value.data.system_mode = 0;//预置数模式
 	dgus_tf1word(ADDR_MODE, para_set_value.data.system_mode);
 	for (i = 0; i < COIN_TYPE_NUM; i++){
-		if (para_set_value.data.system_mode == 0){
-			*pre_value.coin[i].data.p_pre_count_set = para_set_value.data.precoin_set_num[pre_value.coin[i].data.coin_kick_id];
-		}else{
-			*pre_value.coin[i].data.p_pre_count_set = 9999;
-		}
 		dgus_tf1word(pre_value.coin[i].data.hmi_pre_count_set_addr, *pre_value.coin[i].data.p_pre_count_set);	//预置值
 	}
 }

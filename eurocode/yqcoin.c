@@ -32,6 +32,7 @@ uint16_t coine[COINCNUM][COIN_TYPE_NUM]=     // 由币种决定
 void save_coin_number (void)
 {
 	write_para ();
+	refresh_data ();
 }
 
 void prepare_coin_cmp_value (void)

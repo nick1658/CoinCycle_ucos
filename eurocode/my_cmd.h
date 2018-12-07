@@ -4,7 +4,7 @@
 #include "def.h"
 
 
-#define PROGRAM_VERSION "V1.0\n(Compile Time:", __DATE__, __TIME__, ")"
+#define PROGRAM_VERSION "V1.1\n(Compile Time:", __DATE__, __TIME__, ")"
 #define PRINT_VERSION() cy_println ("Software Version : %s %s %s%s", PROGRAM_VERSION);  
 
 
@@ -115,7 +115,7 @@ typedef struct
 	uint32_t stop_flag;
 	uint32_t coin_cross_time;
 	volatile uint32_t tty_online_ms;
-	volatile uint32_t coin_dispense;
+	volatile uint32_t coin_dispense_flag;
 	uint32_t coin_over;
 	uint32_t coin_leave;
 	uint32_t AD_data_len;
@@ -174,9 +174,10 @@ void fin_coin_dispense (void);
 
 int16_t is_repeate (int16_t _coin_index);//  判别 是不是重币的函数
 
-#define TTY_ONLINE_TIME 50
+#define TTY_ONLINE_TIME 3
 #define BELT_RUN_TIME 20
 #define TTY_UART_ONLINE_TIME 2
+#define TTY_NORMAL_COMMAND_ONLINE_TIME 100
 
 
 

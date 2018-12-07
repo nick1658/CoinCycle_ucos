@@ -227,6 +227,9 @@ void disp_allcount_to_pc (void)
 	pc_print("%d$%d;",21, disp_buf.total_ng);
 	pc_print("%d$%d;",28, OSCPUUsage);
 	pc_print("%d$%d;",30, disp_buf.m_1jiao_big);
+	pc_print("%d$%d;",95, *pre_value.coin[0].data.p_hopper_balance_cur);
+	pc_print("%d$%d;",96, *pre_value.coin[1].data.p_hopper_balance_cur);
+	pc_print("%d$%d;",97, *pre_value.coin[4].data.p_hopper_balance_cur);
 	if (sys_env.workstep == 1){//Í£»ú
 		pc_print("%d$%d;",50, 0);
 	}else if(sys_env.workstep == 10){//ÔËÐÐ
@@ -493,6 +496,7 @@ void counter_clear (void) //
 	for (i = 0; i < COIN_TYPE_NUM; i++){
 		*pre_value.coin[i].data.p_pre_count_full_flag = 0; //
 		*pre_value.coin[i].data.p_count_cur = 0; 
+		*(pre_value.coin[i].data.p_hopper_balance_cur) = 0;
 		coin_env.full_stack_num = 0;
 	}
 	processed_coin_info.total_money =0;

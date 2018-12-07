@@ -282,10 +282,10 @@ void Task4(void *pdata)
 {
 	(void)pdata;
 	while (1){
-		if (sys_env.coin_dispense == 1){
+		if (sys_env.coin_dispense_flag == 1){
 			coin_dispense ();
 			cctalk_env.dispense_event_ctr++;//找零事件加1
-			sys_env.coin_dispense = 0;
+			sys_env.coin_dispense_flag = 0;
 		}
 		OSTimeDly (200);
 	}
@@ -328,8 +328,6 @@ void TaskStart(void *pdata)
 					//refresh_data ();
 				}
 				reset_active_resister (ACT_L_R_ACCEPTING_COIN, 0);
-				disp_allcount ();
-				save_coin_number ();
 				coin_env.inhibit_coin[0] = 0;//1元
 				coin_env.inhibit_coin[1] = 0;//5角铜
 				coin_env.inhibit_coin[2] = 0;//5角钢
@@ -379,6 +377,8 @@ void TaskStart(void *pdata)
 						sys_env.stop_time = 100;//STOP_TIME;//	
 						comscreen(Disp_Indexpic[JSJM],Number_IndexpicB);	 // back to the  picture before alert
 						sys_env.workstep =0;
+						disp_allcount ();
+						save_coin_number ();
 					}
 				}
 				if (sys_env.print_wave_to_pc == 1){
