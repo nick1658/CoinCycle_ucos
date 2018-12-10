@@ -36,6 +36,7 @@ void deviceinit(void)	//开机先把通道上的币挡下去
 
 	processed_coin_info.coinnumber = 0;
 	blockflag = ADBLOCKT;
+	coin_env.motor_stuck = MOTOR_STUCK_TIME;//刷新转盘堵转时间
 	sys_env.stop_flag = 0;
 	STORAGE_DIR_P();//正转
 	runstep =0; //正常工作步骤号
@@ -61,11 +62,15 @@ void IR_detect_func(void)
 	if (ir_high_ctr >= IR_SENSOR_FILTER){
 		coin_in_flag = 1;
 	}
-	coin_env.coin_speed_time++;  
+	coin_env.coin_speed_time++;
+	if (coin_env.motor_stuck > 0){
+		coin_env.motor_stuck--;
+	}
 ////////////////////////////////////////////////////////////////////////////////////////////
-	if((coin_in_flag == 1) && (coin_in_flag_old == 0)){//对射电眼下降沿检测到硬币
+	if((coin_in_flag == 1) && (coin_in_flag_old == 0)){//对射电眼下降沿检测
 		sys_env.coin_speed = (20000 / coin_env.coin_speed_time) * 10;
 		coin_env.coin_speed_time = 0;
+		coin_env.motor_stuck = MOTOR_STUCK_TIME;//刷新转盘堵转时间
 		
 		KICK_Q_SCAN(0);
 		KICK_Q_SCAN(1);
@@ -92,6 +97,12 @@ void IR_detect_func(void)
 
 void runfunction(void)   //部件动作函数
 {
+	if(blockflag == 0){//堵币
+		SEND_ERROR(PRESSMLOCKED);
+	}
+	if (coin_env.motor_stuck == 0){//转盘堵转
+		SEND_ERROR(MOTOR_STUCK_ERROR);
+	}
 	switch (runstep){
 		case 0:
 			STORAGE_MOTOR_STARTRUN();	//  开转盘电机

@@ -66,6 +66,7 @@ typedef struct
 	uint16_t inhibit_coin[COIN_TYPE_NUM]; //拒收硬币设置位
 	uint16_t cycle_box_full;
 	uint16_t coin_speed_time;
+	uint16_t motor_stuck;
 }s_coin_env;
 
 //各函数申明    步骤号  参数变量定义
@@ -101,6 +102,7 @@ extern  uint16_t ad1_min;     //贮存每枚硬币过去后的 最大值
 extern  uint16_t ad2_min;     //贮存每枚硬币过去后的 最大值
 
 #define ADBLOCKT  100  //10  //30     //130 00---30     //时间 鉴伪传感器 鉴别 堵币时间
+#define MOTOR_STUCK_TIME 10000 //1s
 extern volatile uint16_t blockflag;      //堵币标志变量
 extern volatile uint32_t adtime;
 

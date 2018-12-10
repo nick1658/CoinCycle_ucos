@@ -317,7 +317,7 @@ void TaskStart(void *pdata)
 	OSTaskCreate(Task4, (void *)0, &Task4Stk[TASK4_STK_SIZE - 1], Task4Prio);
 
 	while (1) {
-		OSTimeDly(10); // LED2 500msÉÁË¸
+		OSTimeDly(10); // LED2 100msÉÁË¸
 
 		switch (sys_env.workstep)
 		{
@@ -360,9 +360,6 @@ void TaskStart(void *pdata)
 			}
 			case 10:{        //main  proceed
 				runfunction();	 //×ªÅÌ¶¯×÷º¯Êý
-				if(blockflag == 0){//¶Â±Ò
-					SEND_ERROR(PRESSMLOCKED);
-				}
 				if (sys_env.coin_over == 1){
 					sys_env.coin_over = 0;
 					disp_allcount ();
@@ -422,9 +419,6 @@ void TaskStart(void *pdata)
 					pc_print("%d$%d;",55, coin_minvalue1);
 					pc_print("%d$%d;",56, coin_maxvalue2);
 					pc_print("%d$%d;",57, coin_minvalue2);
-				}
-				if(blockflag == 0){//¶Â±Ò
-					SEND_ERROR(PRESSMLOCKED);
 				}
 				break;
 			}

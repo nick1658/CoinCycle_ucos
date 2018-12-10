@@ -276,78 +276,18 @@ const char *coin_tips [] = {"Ò»Ôª", "Îå½Ç", "Îå½Ç", "´óÒ»½Ç", "Ò»½Ç", "Ò»½Ç", "Î
  uint16_t prepic_prenum =0;      // ÓÃÓÚ¼ÇÂ¼ ±¨´íÇ°µÄ½çÃæ
 void alertfuc(uint16_t errorflag) //±¨´í
 {
-	char str_buf[256];
+	//char str_buf[256];
 	dbg ("alert flag is %d", errorflag);
 	switch(errorflag)
 	{
-		case COINNGKICKERROR:
-			ALERT_MSG ("ÌáÊ¾", "Â©Ìß´íÎó£¬Çë×¢Òâ¼ì²é£¡");
-			break;
-		case DETECTERROR:
-			ALERT_MSG ("ÌáÊ¾", "µÚ¶ş¸öÌŞ³ı¹¤Î»µçÑÛ¼ÆÊıÃ»ÓĞ¼ÆÊı£¡");
-			break;
-		case KICKCOINFULL:
-			ALERT_MSG ("ÌáÊ¾", "µÚ¶ş¸öÌŞ³ı¹¤Î»¼ÆÊı²»×¼È·»òÓĞÂ©Ìß£¡");
-			break;
-		case KICK1COINERROR:
-			ALERT_MSG ("ÌáÊ¾", "µÚÒ»¸öÌŞ³ı¹¤Î»ÌŞ³ı´íÎó£¡");
-			break;
-		case KICK2COINERROR:
-			ALERT_MSG ("ÌáÊ¾", "µÚ¶ş¸öÌŞ³ı¹¤Î»ÌŞ³ı´íÎó£¡");
-			break;
 		case PRESSMLOCKED:
-			ALERT_MSG ("ÌáÊ¾", "¹ìµÀ¶Â±Ò£¡Çë¼ì²é¹ìµÀ»ò´«¸ĞÆ÷¡£ÔÙ´ÎÆô¶¯Ç°ÇëÏÈÇåÁã£¡");
 			PC_ALERT_MSG ("Coin Rail Stuck in Traffic !");
 			break;
-		case ADSTDEEROR:
-			ALERT_MSG ("ÌáÊ¾", "´«¸ĞÆ÷Òì³££¬Çë¼ì²é´«¸ĞÆ÷ÏÂÃæÊÇ·ñ¿¨ÓĞÓ²±Ò»òÕßµ÷Õû»ù×¼Öµ£¬È»ºóÖØÊÔ£¡");
-			PC_ALERT_MSG ("Sensor Error !");
+		case MOTOR_STUCK_ERROR:
+			PC_ALERT_MSG ("Motor Stuck !!!");
 			break;
-		case COUNT_FINISHED:
-			switch (coin_env.full_stack_num){
-				case 1:
-					if (coin_env.full_coin_stack[0] < TIPS_SIZE){
-						sprintf (str_buf, "Çë¸ü»»%sµÄÖ½Í²¡£", coin_tips[coin_env.full_coin_stack[0]]);
-					}else{
-						sprintf (str_buf, "Êı×éÔ½½ç: %d", coin_env.full_coin_stack[0]);
-					}
-					break;
-				case 2:
-					if ((coin_env.full_coin_stack[0] < TIPS_SIZE) &&
-						(coin_env.full_coin_stack[1] < TIPS_SIZE)){
-						sprintf (str_buf, "Çë¸ü»»%sºÍ%sµÄÖ½Í²¡£", 	coin_tips[coin_env.full_coin_stack[0]],
-																	coin_tips[coin_env.full_coin_stack[1]]);
-					}else{
-						sprintf (str_buf, "Êı×éÔ½½ç: %d, %d", coin_env.full_coin_stack[0], coin_env.full_coin_stack[1]);
-					}
-					break;
-				case 3:
-					if ((coin_env.full_coin_stack[0] < TIPS_SIZE) &&
-						(coin_env.full_coin_stack[1] < TIPS_SIZE) &&
-						(coin_env.full_coin_stack[2] < TIPS_SIZE)){
-						sprintf (str_buf, "Çë¸ü»»%s¡¢%sºÍ%sµÄÖ½Í²¡£", 	coin_tips[coin_env.full_coin_stack[0]],
-																		coin_tips[coin_env.full_coin_stack[1]],
-																		coin_tips[coin_env.full_coin_stack[2]]);
-					}else{
-						sprintf (str_buf, "Êı×éÔ½½ç: %d, %d, %d", coin_env.full_coin_stack[0], coin_env.full_coin_stack[1], coin_env.full_coin_stack[2]);
-					}
-					break;
-				case 4:
-					if ((coin_env.full_coin_stack[0] < TIPS_SIZE) &&
-						(coin_env.full_coin_stack[1] < TIPS_SIZE) &&
-						(coin_env.full_coin_stack[2] < TIPS_SIZE) &&
-						(coin_env.full_coin_stack[3] < TIPS_SIZE)){
-						sprintf (str_buf, "Çë¸ü»»%s¡¢%s¡¢%sºÍ%sµÄÖ½Í²¡£", coin_tips[coin_env.full_coin_stack[0]],
-																		coin_tips[coin_env.full_coin_stack[1]],
-																		coin_tips[coin_env.full_coin_stack[2]],
-																		coin_tips[coin_env.full_coin_stack[3]]);
-					}else{
-						sprintf (str_buf, "Êı×éÔ½½ç: %d, %d, %d, %d", coin_env.full_coin_stack[0], coin_env.full_coin_stack[1], coin_env.full_coin_stack[2], coin_env.full_coin_stack[3]);
-					}
-					break;
-				default:sprintf (str_buf, "ERROR: 1001");break;
-			}
-			ALERT_MSG ("ÌáÊ¾", str_buf);
+		case ADSTDEEROR:
+			PC_ALERT_MSG ("Sensor Error !");
 			break;
 		case COMPLETE_UPDATE:
 			ALERT_MSG ("ÌáÊ¾", "³ÌĞò¸üĞÂÍê³É£¬Çë¶ÏµçÖØĞÂÆô¶¯");

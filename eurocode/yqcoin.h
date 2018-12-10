@@ -63,6 +63,7 @@ void detect_read(void);
 #define ADSTDEEROR    20       //表示传感器下有币
 #define RTCREEROR    21       //表示READ time wrong
 #define READOUTDATA    22       // 读出  数据  内存满
+#define MOTOR_STUCK_ERROR 23
 #define COMPLETE_UPDATE 30
 
 
