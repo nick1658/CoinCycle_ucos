@@ -145,12 +145,16 @@ typedef struct
 	volatile uint32_t coin_total_num[HOPPER_NUM];
 	volatile uint32_t coin_current_receive[HOPPER_NUM];
 	volatile uint16_t hopper_output_timeout[HOPPER_NUM];
-	volatile uint16_t belt_runtime;
+	volatile uint16_t belt_stop_delay;
 	uint16_t coin_Vpp_A[3];
 	uint16_t coin_Sub_value[3];
 	int16_t base_std0;
 	int16_t base_std1;
 	int16_t base_std2;
+	int16_t pan_run_time;
+	int16_t pan_stop_time;
+	int16_t belt_run_time;
+	int16_t belt_stop_time;
 }s_coin_parameter_value;
 
 typedef union

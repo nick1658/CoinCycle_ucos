@@ -67,6 +67,8 @@ typedef struct
 	uint16_t cycle_box_full;
 	uint16_t coin_speed_time;
 	uint16_t motor_stuck;
+	uint16_t pan_test_flag;
+	uint16_t belt_test_flag;
 }s_coin_env;
 
 //各函数申明    步骤号  参数变量定义

@@ -89,8 +89,8 @@ void Timer4_Init(unsigned short us, void (*Callback)(void), unsigned short enabl
 //		hopper_coin_in[X] = 1; \
 //		para_set_value.data.hopper_payout_num[X]++; \
 //		para_set_value.data.hopper_dispense_num[X]--; \
-//		if (para_set_value.data.belt_runtime > 0){ \
-//			para_set_value.data.belt_runtime = BELT_RUN_TIME; \
+//		if (para_set_value.data.belt_stop_delay > 0){ \
+//			para_set_value.data.belt_stop_delay = BELT_RUN_TIME; \
 //		} \
 //	} \
 //}else{ \

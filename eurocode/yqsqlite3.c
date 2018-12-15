@@ -382,7 +382,7 @@ void ini_screen (void)
 		para_set_value.data.hopper_status[i] = 0;
 	}
 	para_set_value.data.hopper_pulse = 200;
-	para_set_value.data.belt_runtime = 0;
+	para_set_value.data.belt_stop_delay = 0;
 
 	//开机 把每个地址的值给初始化赋一下值
 	disp_KJAmount(); // initial addr on zhu jiemian ze zs forge

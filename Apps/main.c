@@ -287,6 +287,7 @@ void Task4(void *pdata)
 			cctalk_env.dispense_event_ctr++;//找零事件加1
 			sys_env.coin_dispense_flag = 0;
 		}
+		motor_test_poll ();
 		OSTimeDly (200);
 	}
 }
@@ -463,7 +464,7 @@ int main (void)
 	Init_OS_ticks ();
 	OSInit(); // 初始化uCOS
 	OSTaskCreate(TaskStart, (void *)0, &TaskStartStk[TASK_START_STK_SIZE-1], TaskStartPrio);
-    OSStart(); // 开始uCOS调度
+  OSStart(); // 开始uCOS调度
 	return 0;
 }
 

@@ -140,6 +140,7 @@ extern volatile uint32_t pulse_time;   // //踢币电磁铁 用的计时
 
 
 void runfunction(void);   //部件动作函数
+void motor_test_poll (void);
 void IR_detect_func(void);	 //红外对射电眼踢币程序
 
 

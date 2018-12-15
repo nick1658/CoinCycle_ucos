@@ -415,7 +415,7 @@ void coin_dispense (void)
 		if (para_set_value.data.hopper_dispense_num[i] > 0){
 			set_active_resister (ACT_L_R_DISPENSING_COIN, 0);
 			BELT_MOTOR_STARTRUN();   //
-			para_set_value.data.belt_runtime = BELT_RUN_TIME;
+			para_set_value.data.belt_stop_delay = BELT_RUN_TIME;
 //			para_set_value.data.hopper_output_timeout[i] = 20;//10s
 			red_flag_env.p_red_flag_payout (i, para_set_value.data.hopper_dispense_num[i]);
 		}
@@ -610,6 +610,18 @@ int get_hex_data (char * buf)
 					case 0x0018://reset hopper
 						red_flag_env.p_reset_hopper_func (0xff);
 						break;
+					case 0x0019://
+						coin_env.pan_test_flag = 1;
+						break;
+					case 0x001A://
+						coin_env.pan_test_flag = 0;
+						break;
+					case 0x001B://
+						coin_env.belt_test_flag = 1;
+						break;
+					case 0x001C://
+						coin_env.belt_test_flag = 0;
+						break;
 					case 0xE001://Çå³ý±¨¾¯
 						coin_clear_alarm ();
 						break;
@@ -744,6 +756,18 @@ int get_hex_data (char * buf)
 						break;
 					case 97:
 						*pre_value.coin[4].data.p_hopper_balance_cur = para_value;
+						break;
+					case 100:
+						para_set_value.data.pan_run_time = para_value;
+						break;
+					case 101:
+						para_set_value.data.pan_stop_time = para_value;
+						break;
+					case 102:
+						para_set_value.data.belt_run_time = para_value;
+						break;
+					case 103:
+						para_set_value.data.belt_stop_time = para_value;
 						break;
 					default:
 						break;
@@ -1326,6 +1350,10 @@ void refresh_data (void)
 	pc_print("%d$%d;",95, *pre_value.coin[0].data.p_hopper_balance_cur);
 	pc_print("%d$%d;",96, *pre_value.coin[1].data.p_hopper_balance_cur);
 	pc_print("%d$%d;",97, *pre_value.coin[4].data.p_hopper_balance_cur);
+	pc_print("%d$%d;",100, para_set_value.data.pan_run_time);
+	pc_print("%d$%d;",101, para_set_value.data.pan_stop_time);
+	pc_print("%d$%d;",102, para_set_value.data.belt_run_time);
+	pc_print("%d$%d;",103, para_set_value.data.belt_stop_time);
 	disp_allcount_to_pc ();
 }
 

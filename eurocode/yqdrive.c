@@ -136,5 +136,72 @@ void runfunction(void)   //部件动作函数
 		default:break;
 	}
 }
-
-
+//
+void motor_test_poll (void)
+{
+	static uint16_t pan_test_status = 0;
+	static uint16_t belt_test_status = 0;
+	static uint16_t one_second_ctr = 0;
+	static uint16_t pan_time_ctr;
+	static uint16_t belt_time_ctr;
+	if (coin_env.pan_test_flag == 1){
+		switch (pan_test_status)
+		{
+			case 0:
+				if (pan_time_ctr > para_set_value.data.pan_run_time){
+					pan_time_ctr = 0;
+					pan_test_status = 1;
+				}else{
+					STORAGE_MOTOR_STARTRUN();
+				}
+				break;
+			case 1:
+				if (pan_time_ctr > para_set_value.data.pan_stop_time){
+					pan_time_ctr = 0;
+					pan_test_status = 0;
+				}else{
+					STORAGE_MOTOR_STOPRUN();
+				}
+				break;
+			default:break;
+		}
+	}else{
+		pan_time_ctr = 0;
+		pan_test_status = 0;
+	}
+	if (coin_env.belt_test_flag == 1){
+		switch (belt_test_status)
+		{
+			case 0:
+				if (belt_time_ctr > para_set_value.data.belt_run_time){
+					belt_time_ctr = 0;
+					belt_test_status = 1;
+				}else{
+					BELT_MOTOR_STARTRUN();
+				}
+				break;
+			case 1:
+				if (belt_time_ctr > para_set_value.data.belt_stop_time){
+					belt_time_ctr = 0;
+					belt_test_status = 0;
+				}else{
+					BELT_MOTOR_STOPRUN();
+				}
+				break;
+			default:
+				break;
+		}
+	}else{
+		//cy_println ("belt stop");
+		belt_time_ctr = 0;
+		belt_test_status = 0;
+	}
+	if (one_second_ctr < 5){
+		belt_time_ctr++;
+		pan_time_ctr++;
+		one_second_ctr++;
+	}else{
+		one_second_ctr = 0;
+	}
+}
+//
