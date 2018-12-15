@@ -144,57 +144,71 @@ void motor_test_poll (void)
 	static uint16_t one_second_ctr = 0;
 	static uint16_t pan_time_ctr;
 	static uint16_t belt_time_ctr;
+	static uint16_t pan_cycle_time_ctr;
+	static uint16_t belt_cycle_time_ctr;
 	if (coin_env.pan_test_flag == 1){
-		switch (pan_test_status)
-		{
-			case 0:
-				if (pan_time_ctr > para_set_value.data.pan_run_time){
-					pan_time_ctr = 0;
-					pan_test_status = 1;
-				}else{
-					STORAGE_MOTOR_STARTRUN();
-				}
-				break;
-			case 1:
-				if (pan_time_ctr > para_set_value.data.pan_stop_time){
-					pan_time_ctr = 0;
-					pan_test_status = 0;
-				}else{
-					STORAGE_MOTOR_STOPRUN();
-				}
-				break;
-			default:break;
+		if (pan_cycle_time_ctr > 0){
+			switch (pan_test_status)
+			{
+				case 0:
+					if (pan_time_ctr > para_set_value.data.pan_run_time){
+						pan_time_ctr = 0;
+						pan_test_status = 1;
+					}else{
+						STORAGE_MOTOR_STARTRUN();
+					}
+					break;
+				case 1:
+					if (pan_time_ctr > para_set_value.data.pan_stop_time){
+						pan_time_ctr = 0;
+						pan_test_status = 0;
+						if (pan_cycle_time_ctr > 0){
+							pan_cycle_time_ctr--;
+						}
+					}else{
+						STORAGE_MOTOR_STOPRUN();
+					}
+					break;
+				default:break;
+			}
 		}
 	}else{
 		pan_time_ctr = 0;
 		pan_test_status = 0;
+		pan_cycle_time_ctr = para_set_value.data.pan_test_cycle_time;
 	}
 	if (coin_env.belt_test_flag == 1){
-		switch (belt_test_status)
-		{
-			case 0:
-				if (belt_time_ctr > para_set_value.data.belt_run_time){
-					belt_time_ctr = 0;
-					belt_test_status = 1;
-				}else{
-					BELT_MOTOR_STARTRUN();
-				}
-				break;
-			case 1:
-				if (belt_time_ctr > para_set_value.data.belt_stop_time){
-					belt_time_ctr = 0;
-					belt_test_status = 0;
-				}else{
-					BELT_MOTOR_STOPRUN();
-				}
-				break;
-			default:
-				break;
+		if (belt_cycle_time_ctr > 0){
+			switch (belt_test_status)
+			{
+				case 0:
+					if (belt_time_ctr > para_set_value.data.belt_run_time){
+						belt_time_ctr = 0;
+						belt_test_status = 1;
+					}else{
+						BELT_MOTOR_STARTRUN();
+					}
+					break;
+				case 1:
+					if (belt_time_ctr > para_set_value.data.belt_stop_time){
+						belt_time_ctr = 0;
+						belt_test_status = 0;
+						if (belt_cycle_time_ctr > 0){
+							belt_cycle_time_ctr--;
+						}
+					}else{
+						BELT_MOTOR_STOPRUN();
+					}
+					break;
+				default:
+					break;
+			}
 		}
 	}else{
 		//cy_println ("belt stop");
 		belt_time_ctr = 0;
 		belt_test_status = 0;
+		belt_cycle_time_ctr = para_set_value.data.belt_test_cycle_time;
 	}
 	if (one_second_ctr < 5){
 		belt_time_ctr++;

@@ -541,7 +541,9 @@ int get_hex_data (char * buf)
 					case 0x0001://刷新数据
 						refresh_data ();
 						break;
-					case 0x0002://启动				
+					case 0x0002://启动		
+						coin_env.pan_test_flag = 0;
+						coin_env.belt_test_flag = 0;		
 						coin_env.inhibit_coin[0] = 1;//1元
 						coin_env.inhibit_coin[1] = 1;//5角铜
 						coin_env.inhibit_coin[2] = 1;//5角钢
@@ -571,6 +573,8 @@ int get_hex_data (char * buf)
 						cy_println("EXPORT OK");
 						break;
 					case 0x0009://特征学习启动
+						coin_env.pan_test_flag = 0;
+						coin_env.belt_test_flag = 0;
 						coin_learn_start ();
 						break;
 					case 0x000A://特征学习停止
@@ -768,6 +772,12 @@ int get_hex_data (char * buf)
 						break;
 					case 103:
 						para_set_value.data.belt_stop_time = para_value;
+						break;
+					case 104:
+						para_set_value.data.pan_test_cycle_time = para_value;
+						break;
+					case 105:
+						para_set_value.data.belt_test_cycle_time = para_value;
 						break;
 					default:
 						break;
@@ -1354,6 +1364,8 @@ void refresh_data (void)
 	pc_print("%d$%d;",101, para_set_value.data.pan_stop_time);
 	pc_print("%d$%d;",102, para_set_value.data.belt_run_time);
 	pc_print("%d$%d;",103, para_set_value.data.belt_stop_time);
+	pc_print("%d$%d;",104, para_set_value.data.pan_test_cycle_time);
+	pc_print("%d$%d;",105, para_set_value.data.belt_test_cycle_time);
 	disp_allcount_to_pc ();
 }
 

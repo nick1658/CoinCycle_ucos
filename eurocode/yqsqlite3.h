@@ -148,13 +148,15 @@ typedef struct
 	volatile uint16_t belt_stop_delay;
 	uint16_t coin_Vpp_A[3];
 	uint16_t coin_Sub_value[3];
-	int16_t base_std0;
-	int16_t base_std1;
-	int16_t base_std2;
-	int16_t pan_run_time;
-	int16_t pan_stop_time;
-	int16_t belt_run_time;
-	int16_t belt_stop_time;
+	uint16_t base_std0;
+	uint16_t base_std1;
+	uint16_t base_std2;
+	uint16_t pan_run_time;
+	uint16_t pan_stop_time;
+	uint16_t pan_test_cycle_time;
+	uint16_t belt_run_time;
+	uint16_t belt_stop_time;
+	uint16_t belt_test_cycle_time;
 }s_coin_parameter_value;
 
 typedef union
