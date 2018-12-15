@@ -619,12 +619,14 @@ int get_hex_data (char * buf)
 						break;
 					case 0x001A://
 						coin_env.pan_test_flag = 0;
+						STORAGE_MOTOR_STOPRUN();
 						break;
 					case 0x001B://
 						coin_env.belt_test_flag = 1;
 						break;
 					case 0x001C://
 						coin_env.belt_test_flag = 0;
+						BELT_MOTOR_STOPRUN();
 						break;
 					case 0xE001://Çå³ý±¨¾¯
 						coin_clear_alarm ();
