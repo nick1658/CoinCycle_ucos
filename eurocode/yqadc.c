@@ -544,7 +544,7 @@ void get_ad_value (void)
 	std_ad2 /= ADSAMPNUM;
 	//cy_print("A0 :%d   A1 :%d  A2 :%d  \r\n",std_ad0,std_ad1,std_ad2);
 }
-uint16_t calc_fb_func (uint16_t ch, uint16_t save_base_v, uint16_t new_base_v, uint16_t save_coin_v)
+uint16_t calc_fb_func (uint16_t ch, uint16_t save_base_v, uint16_t save_coin_base_v, uint16_t new_base_v, uint16_t save_coin_v)
 {
 	float VALUE_0 = 0.00323;
 	float VALUE_3 = 1.0;
@@ -552,7 +552,9 @@ uint16_t calc_fb_func (uint16_t ch, uint16_t save_base_v, uint16_t new_base_v, u
 	float VALUE_1 = 1.0;
 	float VALUE_2 = 1.0;
 	float A = 0.0;
+	float C = 0.0;
 	float HA = 0.0;
+	float HC = 0.0;
 	float HA1 = 0.0;
 	float HB = 0.0;
 	float HB1 = 0.0;
@@ -561,17 +563,19 @@ uint16_t calc_fb_func (uint16_t ch, uint16_t save_base_v, uint16_t new_base_v, u
 	float A1 = 0.0;
 
 	VALUE_3 = para_set_value.data.coin_Sub_value[ch] / 1000.0;
-	A = para_set_value.data.coin_Vpp_A[ch] / 1000.;
+	C = para_set_value.data.coin_Vpp_A[ch] / 1000.;
 	VALUE_1 = VALUE_3 / VALUE_4;
 	VALUE_2 = VALUE_0 / VALUE_4;
-	HA = save_base_v;
+	HC = save_base_v;
+	HA = save_coin_base_v;
 	HA1 = new_base_v;
 	HB = save_coin_v;
 
-	HA *= VALUE_2;
-	Av = HA / (A-VALUE_1);
+	HC *= VALUE_2;
+	Av = HC / (C-VALUE_1);
+	////////////////////////////////////////////////////////////////////////////////////////
 	//cy_println ("ch%d gain is %d",ch, (save_base_v*3230) / (para_set_value.data.coin_Vpp_A[ch] - para_set_value.data.coin_Sub_value[ch]));
-	
+	A = ((HA*VALUE_2)/Av) - VALUE_3;
 	B = ((HB * VALUE_2) / Av) + VALUE_1;
 
 	A1 = ((HA1 * VALUE_2) / Av) + VALUE_1;
@@ -579,9 +583,9 @@ uint16_t calc_fb_func (uint16_t ch, uint16_t save_base_v, uint16_t new_base_v, u
 	HB1 = (((A1 * B * VALUE_4) / A) - VALUE_3) * (Av / VALUE_0);
 	return (uint16_t) HB1;
 }
+
 uint16_t adstd_offset()    //  检测 基准值   有不大偏差进行补偿
 {
-//	int16_t std0_offset, std1_offset, std2_offset;
 	uint16_t is;
 	get_ad_value ();
 	//如果偏差在200 可以进行补偿，否则可能传感器出问题了，给出报警提示
@@ -590,96 +594,27 @@ uint16_t adstd_offset()    //  检测 基准值   有不大偏差进行补偿
 	}else {
 		return 0;
 	}
-
-#define UP_POW (0.3)
-#define DOWN_POW (0.8)
-	/////////////
+	////////////////////////////////////////////////////////////////////////////////////////////
 //	dbg ("real     std0 = %4d          std1 = %4d     std2 = %4d", std_ad0, std_ad1, std_ad2);
 	for (is = 0; is < COIN_TYPE_NUM; is++){ //补偿值
-		coin_cmp_value[is].compare_max0 = calc_fb_func (0, para_set_value.data.base_std0, std_ad0, pre_value.coin[is].data.max0)+pre_value.coin[is].data.offsetmax0;
-		coin_cmp_value[is].compare_max1 = calc_fb_func (0, para_set_value.data.base_std1, std_ad1, pre_value.coin[is].data.max1)+pre_value.coin[is].data.offsetmax1;
-		coin_cmp_value[is].compare_max2 = calc_fb_func (1, para_set_value.data.base_std2, std_ad2, pre_value.coin[is].data.max2)+pre_value.coin[is].data.offsetmax2;
-		coin_cmp_value[is].compare_min0 = calc_fb_func (1, para_set_value.data.base_std0, std_ad0, pre_value.coin[is].data.min0)+pre_value.coin[is].data.offsetmin0;
-		coin_cmp_value[is].compare_min1 = calc_fb_func (2, para_set_value.data.base_std1, std_ad1, pre_value.coin[is].data.min1)+pre_value.coin[is].data.offsetmin1;
-		coin_cmp_value[is].compare_min2 = calc_fb_func (2, para_set_value.data.base_std2, std_ad2, pre_value.coin[is].data.min2)+pre_value.coin[is].data.offsetmin2;
-/*
-//		std0_offset = std_ad0 - pre_value.coin[is].data.std0;
-//		std1_offset = std_ad1 - pre_value.coin[is].data.std1;
-//		std2_offset = std_ad2 - pre_value.coin[is].data.std2;
-///////////////////////////////////////////////////////////////////////////////////
-//		if (std0_offset > 0){
-//			std0_offset *= UP_POW;
-//		}else{
-//			std0_offset *= DOWN_POW;
-//		}
-//		if (std1_offset > 0){
-//			std1_offset *= UP_POW;
-//		}else{
-//			std1_offset *= DOWN_POW;
-//		}
-//		if (std2_offset > 0){
-//			std2_offset *= UP_POW;
-//		}else{
-//			std2_offset *= DOWN_POW;
-//		}
-///////////////////////////////////////////////////////////////////////////////////
-//	#ifdef SAMPLE_METHOD_0
-//		coin_cmp_value[is].compare_max0 = (pre_value.coin[is].data.max0 + pre_value.coin[is].data.offsetmax0 +
-//										  std0_offset);
-//		if (pre_value.coin[is].data.min0 > 5){
-//			coin_cmp_value[is].compare_min0 = (pre_value.coin[is].data.min0 + pre_value.coin[is].data.offsetmin0 +
-//										  std0_offset);
-//		}else{
-//			coin_cmp_value[is].compare_min0 = pre_value.coin[is].data.min0;
-//		}
-
-//		coin_cmp_value[is].compare_max1 = (pre_value.coin[is].data.max1 + pre_value.coin[is].data.offsetmax1 +
-//										  std1_offset - std0_offset);
-//		coin_cmp_value[is].compare_min1 = (pre_value.coin[is].data.min1 + pre_value.coin[is].data.offsetmin1 +
-//										  std1_offset - std0_offset);
-
-//		coin_cmp_value[is].compare_max2 = (pre_value.coin[is].data.max2 + pre_value.coin[is].data.offsetmax2 +
-//										  std2_offset - std1_offset);
-//		coin_cmp_value[is].compare_min2 = (pre_value.coin[is].data.min2 + pre_value.coin[is].data.offsetmin2 +
-//										  std2_offset - std1_offset);
-//	#endif
-//	#ifdef SAMPLE_METHOD_1
-//		coin_cmp_value[is].compare_max0 = (pre_value.coin[is].data.max0 + pre_value.coin[is].data.offsetmax0 +
-//										  std0_offset);
-//		if (pre_value.coin[is].data.min0 > 5){
-//			coin_cmp_value[is].compare_min0 = (pre_value.coin[is].data.min0 + pre_value.coin[is].data.offsetmin0 +
-//										  std0_offset);
-//		}else{
-//			coin_cmp_value[is].compare_min0 = pre_value.coin[is].data.min0;
-//		}
-
-//		coin_cmp_value[is].compare_max1 = (pre_value.coin[is].data.max1 + pre_value.coin[is].data.offsetmax1 +
-//										  std1_offset);
-//		coin_cmp_value[is].compare_min1 = (pre_value.coin[is].data.min1 + pre_value.coin[is].data.offsetmin1 +
-//										  std1_offset);
-
-//		coin_cmp_value[is].compare_max2 = (pre_value.coin[is].data.max2 + pre_value.coin[is].data.offsetmax2 +
-//										  std2_offset);
-//		coin_cmp_value[is].compare_min2 = (pre_value.coin[is].data.min2 + pre_value.coin[is].data.offsetmin2 +
-//										  std2_offset);
-
-//		if (coin_cmp_value[is].compare_max0 < 10){
-//			coin_cmp_value[is].compare_max0 = 10;
-//		}
-//		if (coin_cmp_value[is].compare_max1 < 10){
-//			coin_cmp_value[is].compare_max1 = 10;
-//		}
-//		if (coin_cmp_value[is].compare_max2 < 10){
-//			coin_cmp_value[is].compare_max2 = 10;
-//		}
-
-//	#endif
-*/
+		coin_cmp_value[is].compare_max0 = calc_fb_func (0, para_set_value.data.base_std0, pre_value.coin[is].data.std0, std_ad0, 
+			pre_value.coin[is].data.max0)+pre_value.coin[is].data.offsetmax0;
+		coin_cmp_value[is].compare_max1 = calc_fb_func (1, para_set_value.data.base_std1, pre_value.coin[is].data.std1, std_ad1, 
+			pre_value.coin[is].data.max1)+pre_value.coin[is].data.offsetmax1;
+		coin_cmp_value[is].compare_max2 = calc_fb_func (2, para_set_value.data.base_std2, pre_value.coin[is].data.std2, std_ad2, 
+			pre_value.coin[is].data.max2)+pre_value.coin[is].data.offsetmax2;
+		coin_cmp_value[is].compare_min0 = calc_fb_func (0, para_set_value.data.base_std0, pre_value.coin[is].data.std0, std_ad0, 
+			pre_value.coin[is].data.min0)+pre_value.coin[is].data.offsetmin0;
+		coin_cmp_value[is].compare_min1 = calc_fb_func (1, para_set_value.data.base_std1, pre_value.coin[is].data.std1, std_ad1, 
+			pre_value.coin[is].data.min1)+pre_value.coin[is].data.offsetmin1;
+		coin_cmp_value[is].compare_min2 = calc_fb_func (2, para_set_value.data.base_std2, pre_value.coin[is].data.std2, std_ad2, 
+			pre_value.coin[is].data.min2)+pre_value.coin[is].data.offsetmin2;
 	}
+	
 	adcsininget(std_ad0,std_ad1,std_ad2);//AD 波形进入 的阀值
 
 	return 1;
-	////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////
 }
 
 
