@@ -402,7 +402,7 @@ void ini_screen (void)
 		dgus_tf1word(pre_value.coin[i].data.hmi_pre_count_set_addr, *pre_value.coin[i].data.p_pre_count_set);	//预置值
 	}
 }
-
+//
 void ini_picaddr(void) //币种切换时的 初始化地址函数
 {
 	int pi;

@@ -61,7 +61,7 @@ volatile uint32_t adtime = 0;    //定时中断里 计时
  uint16_t ad2_min = 0;     //贮存每枚硬币过去后的 最大值
  uint32_t ch1_count1temp =0;  //通道1 来硬币 标记
 
-
+ 
 //模拟转换  0  函数
 //目前采用算术平均滤波算法进行处理 N= 10 后加一个消抖计数滤波器进行处理，判断波形的趋势
 
@@ -476,12 +476,12 @@ uint16_t std_ad3= 0;
 
 ///////////////////////////////////////
 // 清分等级
- U8 cn0copmaxc0[COINCNUM] = {15,33,40,10}; //20 //
- U8 cn0copminc0[COINCNUM] = {30,65,40,20};  //20
- U8 cn0copmaxc1[COINCNUM] = {15,40,40,10};  //60
- U8 cn0copminc1[COINCNUM] = {30,50,40,20}; //30
- U8 cn0copmaxc2[COINCNUM] = {15,40,40,10}; //40
- U8 cn0copminc2[COINCNUM] = {50,40,40,20}; //40
+// U8 cn0copmaxc0[COINCNUM] = {15,33,40,10}; //20 //
+// U8 cn0copminc0[COINCNUM] = {30,65,40,20};  //20
+// U8 cn0copmaxc1[COINCNUM] = {15,40,40,10};  //60
+// U8 cn0copminc1[COINCNUM] = {30,50,40,20}; //30
+// U8 cn0copmaxc2[COINCNUM] = {15,40,40,10}; //40
+// U8 cn0copminc2[COINCNUM] = {50,40,40,20}; //40
 
 
  s_coin_compare_value coin_cmp_value[COIN_TYPE_NUM];
@@ -563,7 +563,7 @@ uint16_t calc_fb_func (uint16_t ch, uint16_t save_base_v, uint16_t save_coin_bas
 	float A1 = 0.0;
 
 	VALUE_3 = para_set_value.data.coin_Sub_value[ch] / 1000.0;
-	C = para_set_value.data.coin_Vpp_A[ch] / 1000.;
+	C = para_set_value.data.coin_Vpp_A[ch] / 1000.0;
 	VALUE_1 = VALUE_3 / VALUE_4;
 	VALUE_2 = VALUE_0 / VALUE_4;
 	HC = save_base_v;
@@ -572,15 +572,15 @@ uint16_t calc_fb_func (uint16_t ch, uint16_t save_base_v, uint16_t save_coin_bas
 	HB = save_coin_v;
 
 	HC *= VALUE_2;
-	Av = HC / (C-VALUE_1);
+	Av = HC / (C - VALUE_1);
 	////////////////////////////////////////////////////////////////////////////////////////
 	//cy_println ("ch%d gain is %d",ch, (save_base_v*3230) / (para_set_value.data.coin_Vpp_A[ch] - para_set_value.data.coin_Sub_value[ch]));
-	A = ((HA*VALUE_2)/Av) - VALUE_3;
+	A = ((HA * VALUE_2) / Av) + VALUE_1;
 	B = ((HB * VALUE_2) / Av) + VALUE_1;
 
 	A1 = ((HA1 * VALUE_2) / Av) + VALUE_1;
 
-	HB1 = (((A1 * B * VALUE_4) / A) - VALUE_3) * (Av / VALUE_0);
+	HB1 = (((A1 * B * VALUE_4) / A) - VALUE_1) * (Av / VALUE_0);
 	return (uint16_t) HB1;
 }
 

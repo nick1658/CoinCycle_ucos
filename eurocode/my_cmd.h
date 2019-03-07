@@ -4,7 +4,7 @@
 #include "def.h"
 
 
-#define PROGRAM_VERSION "V1.1\n(Compile Time:", __DATE__, __TIME__, ")"
+#define PROGRAM_VERSION "V1.3\n(Compile Time:", __DATE__, __TIME__, ")"
 #define PRINT_VERSION() cy_println ("Software Version : %s %s %s%s", PROGRAM_VERSION);  
 
 
